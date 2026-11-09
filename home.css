@@ -31,7 +31,8 @@
 .nav nav a { color: var(--muted); text-decoration: none; white-space: nowrap; }
 .nav nav a:hover { color: var(--text); }
 .nav nav .button { color: var(--on-brand); padding: 8px 16px; }
-@media (max-width: 860px) { .nav nav a:not(.button) { display: none; } }
+@media (max-width: 860px) { .nav nav a:not(.button):not(.login) { display: none; } }
+.nav nav a.login { color: var(--text); font-weight: 600; }
 @media (max-width: 380px) { .home header a { font-size: 18px; } .nav nav .button { padding: 7px 13px; font-size: 14px; } }
 
 /* Hero */

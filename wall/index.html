@@ -1,0 +1,2732 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20160%20160%22%20width%3D%22160%22%20height%3D%22160%22%3E%3Crect%20width%3D%22160%22%20height%3D%22160%22%20fill%3D%22%230d0d0c%22%2F%3E%3Cg%20transform%3D%22translate(11.200000000000003%2011.200000000000003)%20scale(0.86)%22%3E%0A%3Cpath%20d%3D%22M80%2036%20C%2062%2026%2C%2036%2024%2C%2016%2030%20V118%20C%2036%20112%2C%2062%20114%2C%2080%20124%20Z%22%20fill%3D%22%23fffaf0%22%2F%3E%0A%3Cpath%20d%3D%22M80%2036%20C%2098%2026%2C%20124%2024%2C%20144%2030%20V118%20C%20124%20112%2C%2098%20114%2C%2080%20124%20Z%22%20fill%3D%22%23f4ead6%22%2F%3E%0A%3Cpath%20d%3D%22M16%20118%20C%2036%20112%2C%2062%20114%2C%2080%20124%20C%2098%20114%2C%20124%20112%2C%20144%20118%20V126%20C%20124%20120%2C%2098%20122%2C%2080%20132%20C%2062%20122%2C%2036%20120%2C%2016%20126%20Z%22%20fill%3D%22%23c98f00%22%2F%3E%3Cpath%20d%3D%22M80%2036%20V124%22%20stroke%3D%22%23c9b897%22%20stroke-width%3D%222.5%22%2F%3E%0A%3Ccircle%20cx%3D%2262%22%20cy%3D%2246%22%20r%3D%227%22%20fill%3D%22%23FFC93C%22%2F%3E%3Cpath%20d%3D%22M62%2034v-3M62%2058v3M50%2046h-3M74%2046h3%22%20stroke%3D%22%23FFC93C%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M28%20102%20V82%20L42%2070%20L56%2082%20V102%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23ff6b6b%22%20stroke-width%3D%223.5%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%3Crect%20x%3D%2238%22%20y%3D%2288%22%20width%3D%228%22%20height%3D%2214%22%20fill%3D%22%234dc9ff%22%2F%3E%0A%3Cpath%20d%3D%22M22%20106%20Q%2046%20101%2074%20107%22%20fill%3D%22none%22%20stroke%3D%22%234caf50%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M112%2042%20L117%2054%20L130%2055%20L120%2063%20L123%2076%20L112%2069%20L101%2076%20L104%2063%20L94%2055%20L107%2054%20Z%22%20fill%3D%22%23FFC93C%22%20stroke%3D%22%231a1408%22%20stroke-width%3D%222.5%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M98%2094%20C%20106%2086%2C%20114%20100%2C%20122%2090%20S%20132%2088%2C%20134%2094%22%20fill%3D%22none%22%20stroke%3D%22%234dc9ff%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M88%2088%20l4%203%20M132%2042%20l-4%204%22%20stroke%3D%22%23ff6b6b%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<title>My Drawing Wall</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one endless black wall (canvas) under small floating controls; a bottom sheet reviews each photo's crops before they join the wall. Single dark look by design. */
+:root{
+  --wall:#000;
+  --panel:rgba(22,21,19,.86);
+  --panel-solid:#171614;
+  --line:rgba(255,248,230,.12);
+  --ink:#f4f1ea;
+  --muted:#a29d92;
+  --crayon:#ffc93c;
+  --crayon-ink:#2a1f00;
+  --danger:#ff6f5c;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --ui:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--wall);color:var(--ink);font-family:var(--ui);font-size:15px;-webkit-tap-highlight-color:transparent}
+#wall{position:fixed;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;display:block}
+#wall.dragging{cursor:grabbing}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-offset:2px}
+
+.top{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:10px;align-items:flex-start;pointer-events:none}
+.badge{pointer-events:auto;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:8px 14px 9px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.badge h1{margin:0;font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em;line-height:1.1}
+.badge p{margin:0;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.left{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:min(250px,48vw);pointer-events:none;min-width:0}
+.hist{display:flex;gap:6px;pointer-events:auto}
+.hist[hidden]{display:none}
+.hbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px}
+.hbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.hbtn:disabled{opacity:.38;cursor:default}
+.search{pointer-events:auto;width:100%;display:flex;flex-direction:column;gap:6px}
+.search input{width:100%;box-sizing:border-box;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);font:inherit;font-size:14px}
+.search input::placeholder{color:var(--muted)}
+.sresults{background:var(--panel-solid);border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:min(46vh,340px);display:flex;flex-direction:column}
+.sresults button{display:flex;align-items:center;gap:10px;padding:7px 10px;text-align:left;min-height:44px;width:100%}
+.sresults button:hover,.sresults button:focus-visible{background:rgba(255,255,255,.08)}
+.sresults img{width:32px;height:32px;object-fit:contain;flex:0 0 auto}
+.sresults .rn{color:var(--crayon);font-weight:700;font-variant-numeric:tabular-nums}
+.sresults .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.sresults .none{padding:10px 12px;color:var(--muted);font-size:13px}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;pointer-events:none}
+.badge{flex:0 0 auto}
+@media (max-width:520px){.right{align-items:flex-start;gap:6px}.right .chip.pick{max-width:118px;padding:9px 10px}.badge h1{white-space:nowrap}.left{min-width:0;flex:1}}
+.morewrap{position:relative;pointer-events:auto}
+.chip.more{padding:7px 10px;display:grid;place-items:center}
+.chip.more svg{width:20px;height:20px;fill:currentColor}
+.moremenu{position:absolute;right:0;top:calc(100% + 6px);min-width:210px;background:var(--panel-solid);border:1px solid var(--line);border-radius:14px;padding:6px;display:flex;flex-direction:column;gap:2px;box-shadow:0 12px 32px rgba(0,0,0,.45);z-index:20}
+.moremenu[hidden]{display:none}
+/* the login screen: CanvassFlow's layout in Drawing Wall's colours */
+.auth{position:fixed;inset:0;z-index:60;background:#0d0d0c;overflow:auto;-webkit-overflow-scrolling:touch}
+.auth[hidden]{display:none}
+.authin{max-width:440px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 48px) 24px calc(env(safe-area-inset-bottom,0px) + 24px);display:flex;flex-direction:column;min-height:100%;box-sizing:border-box}
+.alogo{width:60px;height:60px;margin-bottom:24px}
+.alogo svg{width:60px;height:60px;display:block}
+.authin h1{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:28px;font-weight:500;color:#f3f0e8}
+.asub{margin:4px 0 0;font-size:15px;color:#a4a7b8}
+.aby{margin:2px 0 24px;font-size:7.5px;color:#80868B}
+#aForm{display:flex;flex-direction:column}
+.ain{height:56px;border-radius:6px;border:1px solid #5F6368;background:transparent;color:#f3f0e8;padding:0 16px;font-size:16px;margin-top:12px;font-family:inherit;width:100%;box-sizing:border-box}
+.ain:first-child{margin-top:0}
+.ain[hidden]{display:none}
+.ain::placeholder{color:#a4a7b8}
+.ain:focus{outline:none;border-color:#FFC93C;box-shadow:0 0 0 1px #FFC93C}
+.apw{position:relative;margin-top:12px}
+.apw .ain{margin-top:0}
+.apw .ain{padding-right:52px}
+.aeye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;display:grid;place-items:center;color:#a4a7b8}
+.aeye svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.aeye.on svg path{stroke-dasharray:none}
+.aerr{margin:12px 0 0;font-size:14px;color:#ff6f5c}
+.anote{margin:12px 0 0;font-size:14px;color:#a4a7b8;line-height:1.45}
+.aerr[hidden],.anote[hidden]{display:none}
+.abtn{min-height:54px;margin-top:24px;border-radius:999px;background:#FFC93C;color:#1a1408;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .12s}
+.abtn:active{transform:scale(.98)}
+.abtn:disabled{opacity:.7}
+.aspin{display:none;width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(26,20,8,.25);border-top-color:#1a1408;animation:aspin .8s linear infinite}
+.abtn.busy .aspin{display:block}
+@keyframes aspin{to{transform:rotate(1turn)}}
+.aor{display:flex;align-items:center;gap:12px;margin-top:24px;font-size:13px;color:#a4a7b8}
+.aor[hidden]{display:none}
+.aor span{flex:1;height:1px;background:#3C4043}
+.aalt{min-height:54px;margin-top:16px;border-radius:999px;border:1px solid #5F6368;color:#f3f0e8;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px}
+.aalt:active{background:#202124}
+.aalt[hidden]{display:none}
+.aalt b{color:#4285F4;font-size:20px;font-weight:700}
+.aapple{margin-top:12px;background:#fff;color:#000;border-color:#fff;border-radius:27px}
+.aapple svg{width:20px;height:20px;fill:currentColor}
+.aswap{margin:auto auto 0;padding-top:24px;min-height:44px;color:#FFC93C;font-size:15px;font-weight:600}
+.acancel{margin:4px auto 0;min-height:40px;color:#a4a7b8;font-size:14px}
+.acancel[hidden]{display:none}
+.mitem.acct{font-weight:400;color:var(--muted);font-size:13px;cursor:default}
+.mitem.acct:hover{background:none}
+.mitem.danger{color:var(--danger)}
+#orgSeg[hidden]{display:none}
+.mitem{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;font-size:14px;font-weight:700;color:var(--ink);text-align:left}
+.mitem:hover{background:rgba(255,255,255,.07)}
+.mitem[hidden]{display:none}
+.mitem svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.minfo{font-size:12.5px;color:var(--muted);padding:8px 12px 6px;border-top:1px solid var(--line);margin-top:2px}
+.minfo:first-child{border-top:0;margin-top:0}
+.minfo[hidden]{display:none}
+.chip{pointer-events:auto;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted);white-space:nowrap}
+
+.sample-note{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 96px);background:var(--panel);border:1px dashed rgba(255,201,60,.55);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--ink);max-width:min(92vw,420px);text-align:center;pointer-events:none}
+.sample-note b{color:var(--crayon)}
+
+.zoom{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 92px);display:flex;flex-direction:column;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.zoom button{width:46px;height:44px;display:grid;place-items:center;font-size:20px;line-height:1}
+.zoom button+button{border-top:1px solid var(--line)}
+.zoom button:hover{background:rgba(255,255,255,.06)}
+.zoom svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.add{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);background:var(--crayon);color:var(--crayon-ink);font-weight:700;font-size:16px;border-radius:999px;padding:0 22px;height:56px;display:flex;align-items:center;gap:9px;box-shadow:0 6px 24px rgba(255,201,60,.25);cursor:pointer}
+.add svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.add{overflow:hidden}
+.dock{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;gap:10px;align-items:flex-end}
+.dock .add{position:relative;right:auto;bottom:auto}
+.addround{width:56px;padding:0;justify-content:center}
+.dkicon{display:flex;flex-direction:column;align-items:center;gap:3px;flex:0 0 auto;padding:0;color:var(--ink)}
+.dkicon .dk{width:46px;height:46px;border-radius:999px;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);display:grid;place-items:center}
+.dkicon:hover .dk{background:rgba(40,38,34,.95)}
+.dkicon svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linejoin:round}
+.dkicon small{font-size:11px;line-height:1;color:var(--ink);text-shadow:0 1px 3px #000}
+.dkicon[hidden]{display:none}
+.addround svg{width:26px;height:26px;stroke-width:2.6}
+.addchip{position:relative;overflow:hidden;cursor:pointer}
+.addchip input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:200px;z-index:2}
+.add:active{transform:scale(.97)}
+.dropping #wall{outline:4px dashed var(--crayon);outline-offset:-12px}
+
+.sel{position:fixed;left:max(16px,calc(env(safe-area-inset-left,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);right:auto;width:min(360px,calc(100vw - 32px));max-width:340px;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.sel .when{font-size:13px;color:var(--muted)}
+.sel .when b{color:var(--ink);font-weight:700}
+.sel .row{display:flex;gap:6px;flex-wrap:wrap}
+.selhead{display:flex;align-items:flex-start;gap:8px}
+.selhead .when{flex:1;min-width:0;padding-top:4px}
+.selx{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none}
+.selx:hover{background:rgba(255,255,255,.07)}
+.selx svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round}
+.sgroup{flex:1 0 100%;display:flex;flex-direction:column;gap:6px}
+.sgroup > span{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.stools{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b0b0a}
+.stools button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;font-size:11.5px;color:var(--ink)}
+.stools button+button{border-left:1px solid var(--line)}
+.stools button:hover{background:rgba(255,255,255,.06)}
+.stools.three{grid-template-columns:repeat(3,1fr)}
+.stools svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stools button.on{color:var(--crayon);background:rgba(255,201,60,.12)}
+.srm{flex:1 0 100%;display:flex;justify-content:flex-start;border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
+.srm button{color:var(--danger);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;padding:2px 0}
+.srm svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.selopen .dock{display:none}
+.size{flex:1 0 100%;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);padding:2px 2px 4px}
+.size input{flex:1;min-width:0;height:30px;accent-color:var(--crayon);cursor:pointer}
+.size .pct{min-width:44px;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+.size.kind .seg .pill{padding:6px 11px;font-size:12.5px}
+.size.name input{height:auto;background:#0b0b0a;border:1px solid var(--line);border-radius:10px;padding:7px 10px;color:var(--ink);font:inherit;font-size:14px;cursor:text}
+.pill{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px}
+.pill:hover{background:rgba(255,255,255,.06)}
+.pill.danger{color:var(--danger);border-color:rgba(255,111,92,.4)}
+.pill.solid-danger{background:var(--danger);color:#2b0700;border-color:transparent;font-weight:700}
+@media (max-width:520px){.sel{right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);max-width:none} .sel:not([hidden]) ~ .zoom{display:none}}
+
+/* review sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--panel-solid);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;width:100%;max-width:760px;max-height:min(88vh,100%);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet header{padding:16px max(18px,env(safe-area-inset-right,0px)) 10px max(18px,env(safe-area-inset-left,0px));display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line)}
+.sheet h2{margin:0;font-family:var(--display);font-weight:800;font-size:22px;text-wrap:balance}
+.sheet header p{margin:0;color:var(--muted);font-size:13px;margin-left:auto;font-variant-numeric:tabular-nums}
+.sheet .body{overflow:auto;padding:14px max(18px,env(safe-area-inset-right,0px)) 14px max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:18px;min-height:120px}
+.photo{display:flex;flex-direction:column;gap:10px}
+.photo-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.photo-head .lbl{font-size:13px;color:var(--muted)}
+.photo-head .lbl b{color:var(--ink)}
+.photo-head .acts{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.crops{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.crop{position:relative;background:#0b0b0a;border:2px solid var(--line);border-radius:12px;aspect-ratio:1;max-width:100%;display:grid;place-items:center;padding:6px;overflow:hidden}
+.crop img{position:absolute;inset:10% 10% 24%;width:80%;height:66%;object-fit:contain;border-radius:4px}
+.crop.on{border-color:var(--crayon)}
+.crop .tick{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.6);border:2px solid var(--muted);display:grid;place-items:center}
+.crop.on .tick{background:var(--crayon);border-color:var(--crayon)}
+.crop .tick svg{width:12px;height:12px;stroke:var(--crayon-ink);stroke-width:3;fill:none;opacity:0}
+.crop.on .tick svg{opacity:1}
+.working{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:14px;padding:18px 0}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--crayon);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(1turn)}}
+.sheet footer{padding:12px max(18px,env(safe-area-inset-right,0px)) 14px max(18px,env(safe-area-inset-left,0px));border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.sheet footer .msg{color:var(--muted);font-size:13px;margin-right:auto}
+.btn{height:46px;border-radius:999px;padding:0 20px;font-weight:700}
+.btn.primary{background:var(--crayon);color:var(--crayon-ink)}
+.btn.primary:disabled{opacity:.45;cursor:default}
+.btn.ghost{border:1px solid var(--line)}
+.err{color:var(--danger);font-size:13px}
+.help{position:fixed;left:max(16px,calc(env(safe-area-inset-left,0px) + 16px));right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 86px);max-width:420px;background:var(--panel-solid);border:1px solid rgba(255,201,60,.55);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.4}
+.help b{color:var(--crayon)}
+.chip.act{color:var(--ink);font-weight:700;padding:9px 14px;font-size:13px}
+.chip.act:hover{background:rgba(255,255,255,.08)}
+.chip.pick{font-family:inherit;cursor:pointer;max-width:170px}
+.chip.pick option{background:var(--panel-solid);color:var(--ink)}
+/* the story book opens over the whole wall */
+.story{position:fixed;top:env(safe-area-inset-top,0px);left:env(safe-area-inset-left,0px);border:0;background:#13151f;z-index:50;
+  width:calc(100% - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));height:calc(100% - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+.cell{position:relative;min-width:0}
+.cell .crop{width:100%}
+.pill.mini{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.72);border-color:rgba(255,248,230,.25);padding:4px 10px;font-size:12px;font-weight:700}
+.scrim.center{align-items:center;padding:16px}
+.confirm{background:var(--panel-solid);border:1px solid var(--line);border-radius:18px;max-width:380px;width:100%;padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px}
+.confirm h2{margin:0;font-family:var(--display);font-weight:800;font-size:21px}
+.confirm p{margin:0;color:var(--muted);line-height:1.45;font-size:14px}
+.confirm .row{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+#orgScrim .confirm{max-height:calc(100dvh - 32px);overflow:auto}
+.colsaved{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.colhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.colhead h3{margin:0;font-size:15px;font-weight:700}
+.colrow{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:start;background:#0b0b0a;border:1px solid var(--line);border-radius:12px;padding:8px}
+.colrow canvas{width:76px;height:57px;border-radius:8px;background:#000;display:block}
+.colrow .cname{width:100%;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--ink);font:700 14px var(--ui);padding:2px 4px;margin:-2px -4px 0}
+.colrow .cname:hover,.colrow .cname:focus{border-color:var(--line);outline:none}
+.colrow .ctiles{font-size:12px;color:var(--muted);line-height:1.35;margin:2px 0 6px}
+.colrow .cact{display:flex;gap:6px;flex-wrap:wrap}
+.colempty{font-size:13px;color:var(--muted);margin:0}
+.phgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.phday{margin:4px 0 -4px;font-family:var(--display);font-size:17px;font-weight:800;display:flex;align-items:baseline;gap:8px}
+.phday span{font-family:var(--ui);font-size:12.5px;font-weight:400;color:var(--muted)}
+.phcard{display:flex;flex-direction:column;gap:6px;text-align:left;background:#0b0b0a;border:2px solid var(--line);border-radius:12px;padding:6px;min-width:0}
+.phcard:hover{border-color:rgba(255,201,60,.5)}
+.phcard img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;display:block}
+.phcard span{font-size:12.5px;color:var(--muted);padding:0 4px 2px}
+.phcard b{color:var(--ink)}
+.phview{position:relative;align-self:center;max-width:100%;line-height:0}
+.phview img{max-width:100%;max-height:min(58vh,620px);border-radius:8px;display:block}
+.phbox{position:absolute;border:2px solid var(--crayon);border-radius:6px;background:rgba(255,201,60,.08);cursor:pointer;padding:0}
+.phbox:hover,.phbox:focus-visible{background:rgba(255,201,60,.22)}
+.phbox i{position:absolute;left:-2px;top:-2px;transform:translateY(-100%);background:var(--crayon);color:var(--crayon-ink);font:700 12px/1 var(--ui);font-style:normal;padding:3px 6px;border-radius:6px 6px 6px 0;white-space:nowrap}
+.phtiles{display:flex;gap:6px;flex-wrap:wrap}
+.tu-hist{display:flex;gap:6px;margin-left:auto}
+.tu-undo svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tu-undo:not(:disabled){border-color:rgba(255,201,60,.55);color:var(--crayon);font-weight:700}
+.tu-n{font-size:11.5px;font-weight:700;min-width:18px;height:18px;border-radius:9px;background:var(--crayon);color:var(--crayon-ink);display:inline-grid;place-items:center;padding:0 5px}
+.tu-n:empty{display:none}
+.tu-stage{display:grid;place-items:center;padding:12px;background:repeating-conic-gradient(#1d1b18 0% 25%, #121110 0% 50%) 50% / 24px 24px;min-height:160px}
+#tuCanvas,#pcCanvas{display:block;touch-action:none;cursor:crosshair}
+.tu-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px max(18px,env(safe-area-inset-right,0px)) 4px max(18px,env(safe-area-inset-left,0px))}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg .pill{border:0;border-radius:0}
+.seg .pill+.pill{border-left:1px solid var(--line)}
+.seg .pill.on{background:var(--crayon);color:var(--crayon-ink);font-weight:700}
+.pill:disabled{opacity:.4;cursor:default}
+.sheet.tu footer .msg{font-size:12.5px}
+.help .link{font-size:12.5px;color:var(--muted);word-break:break-all;user-select:all;-webkit-user-select:all}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
+</style>
+
+<canvas id="wall" aria-label="Collage of drawing tiles. Drag a tile to move it, put two fingers on a tile to turn or resize it, drag the wall to look around, pinch or scroll to zoom."></canvas>
+
+<div class="top">
+  <div class="left">
+    <div class="badge"><h1>Drawing Wall</h1><p id="count">Loading the wall…</p></div>
+    <div class="search" id="search" hidden role="search">
+      <input type="text" id="searchIn" placeholder="Find by number or name" aria-label="Find a tile by number or name" autocomplete="off" enterkeyhint="search">
+      <div class="sresults" id="searchOut" hidden></div>
+    </div>
+    <div class="hist" id="hist" hidden role="group" aria-label="Undo and redo">
+      <button class="chip act hbtn" id="histUndo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Undo</button>
+      <button class="chip act hbtn" id="histRedo" aria-label="Redo" title="Redo (Ctrl+Y)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>Redo</button>
+    </div>
+  </div>
+  <div class="right">
+    <select class="chip act pick" id="kindSel" aria-label="Which tiles to show" hidden></select>
+    <div class="morewrap">
+      <button class="chip act more" id="moreBtn" aria-label="More" aria-haspopup="true" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
+      <div class="moremenu" id="moreMenu" role="menu" hidden>
+        <button class="mitem" id="photosBtn" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Photos</button>
+        <div class="minfo" id="mode" hidden></div>
+        <div class="minfo" id="acctWho" hidden></div>
+        <button class="mitem" id="acctIn" role="menuitem" hidden>Sign in to Drawing Wall</button>
+        <button class="mitem" id="acctMove" role="menuitem" hidden>Move this device's drawings into my account</button>
+        <button class="mitem" id="acctOut" role="menuitem" hidden>Sign out</button>
+        <button class="mitem danger" id="acctDel" role="menuitem" hidden>Delete account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sample-note" id="sampleNote" hidden><b>Example drawings.</b> Try them in the Story book to make a story right away. Add a photo of real artwork and these disappear.</div>
+
+<div class="auth" id="auth" hidden>
+  <div class="authin">
+    <div class="alogo"><svg viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="80" fill="#FFC93C"/><g transform="translate(16 20) scale(.8)"><path d="M80 36 C 62 26, 36 24, 16 30 V118 C 36 112, 62 114, 80 124 Z" fill="#fffaf0"/><path d="M80 36 C 98 26, 124 24, 144 30 V118 C 124 112, 98 114, 80 124 Z" fill="#f4ead6"/><path d="M16 118 C 36 112, 62 114, 80 124 C 98 114, 124 112, 144 118 V126 C 124 120, 98 122, 80 132 C 62 122, 36 120, 16 126 Z" fill="#c98f00"/><path d="M28 102 V82 L42 70 L56 82 V102 Z" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linejoin="round"/><path d="M22 106 Q 46 101 74 107" fill="none" stroke="#4caf50" stroke-width="5" stroke-linecap="round"/><path d="M112 42 L117 54 L130 55 L120 63 L123 76 L112 69 L101 76 L104 63 L94 55 L107 54 Z" fill="#FFC93C" stroke="#1a1408" stroke-width="3" stroke-linejoin="round"/></g></svg></div>
+    <h1 id="aTitle">Sign in</h1>
+    <p class="asub" id="aSub">Welcome back to Drawing Wall</p>
+    <p class="aby">By Taryn Maloney</p>
+    <form id="aForm" novalidate>
+      <input class="ain" id="aName" placeholder="Full name" autocomplete="name" hidden>
+      <input class="ain" id="aEmail" type="email" placeholder="Email" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email">
+      <div class="apw"><input class="ain" id="aPass" type="password" placeholder="Password" autocomplete="current-password" enterkeyhint="go"><button type="button" class="aeye" id="aEye" aria-label="Show password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+      <p class="aerr" id="aErr" role="alert" hidden></p>
+      <p class="anote" id="aNote" hidden></p>
+      <button class="abtn" id="aGo" type="submit"><span id="aGoText">Sign in</span><i class="aspin" aria-hidden="true"></i></button>
+    </form>
+    <div class="aor" id="aOr" hidden><span></span>or<span></span></div>
+    <button class="aalt" id="aGoogle" hidden><b>G</b>Continue with Google</button>
+    <button class="aalt aapple" id="aApple" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.7zM14.2 5.6c.6-.8 1.1-1.8 1-2.9-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.7-1 2.7 1 .1 2.1-.5 2.7-1.2z"/></svg>Continue with Apple</button>
+    <button class="aswap" id="aSwap">New here? Create an account</button>
+    <button class="acancel" id="aCancel" hidden>Not now, keep using my Claude account</button>
+  </div>
+</div>
+
+<div class="scrim center" id="migScrim" hidden>
+  <div class="confirm" role="alertdialog" aria-modal="true" aria-labelledby="migTitle">
+    <h2 id="migTitle">Bring your drawings along?</h2>
+    <p id="migText"></p>
+    <p class="anote" id="migMsg" hidden></p>
+    <div class="row"><button class="btn ghost" id="migNo">Not now</button><button class="btn primary" id="migGo">Move them</button></div>
+  </div>
+</div>
+
+<div class="sel" id="sel" hidden>
+  <div class="selhead"><div class="when" id="selWhen"></div><button class="selx" id="selClose" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="row" id="selRow"></div>
+</div>
+
+<div class="zoom" id="zoom">
+  <button id="zIn" aria-label="Zoom in">+</button>
+  <button id="zOut" aria-label="Zoom out">−</button>
+  <button id="zFit" aria-label="Show all the drawings" title="Show all the drawings"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button id="zHome" aria-label="Go to the newest tiles"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+</div>
+
+<div class="dock">
+<button class="dkicon" id="orgBtn" hidden title="Auto-organize"><span class="dk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span><small>Organize</small></button>
+<button class="dkicon" id="collageBtn" hidden title="Auto collage"><span class="dk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10.5a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.5 9.2 4.5 4.5 0 0 0 7 18z"/></svg></span><small>Collage</small></button>
+<label class="add addchip addround" id="addBtn" title="Add drawings">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+  <input type="file" id="file" accept="image/*" multiple aria-label="Add drawings">
+</label>
+<button class="add" id="storyBtn">
+  <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>
+  Story book
+</button>
+</div>
+
+<div class="help" id="pickHelp" role="alertdialog" aria-labelledby="pickHelpTitle" hidden>
+  <div><b id="pickHelpTitle">The photo picker didn't open.</b> The Claude app on Android can't open photos from this page yet. Open the wall in Chrome to add drawings. Everything you add there shows up here too.</div>
+  <div class="link" id="pickLink">https://claude.ai/artifact/4trbGbJAzkfBfcjtDNFfVq</div>
+  <div class="row" style="display:flex;gap:6px;flex-wrap:wrap"><button class="pill" id="copyLink">Copy link</button><button class="pill" id="helpClose">OK</button></div>
+</div>
+
+<div class="scrim center" id="orgScrim" hidden>
+  <div class="confirm" role="alertdialog" aria-modal="true" aria-labelledby="orgTitle" aria-describedby="orgText">
+    <h2 id="orgTitle">Auto-organize the wall?</h2>
+    <div class="seg" id="orgSeg" role="group" aria-label="How to organize" style="align-self:flex-start"><button class="pill on" id="orgTime" aria-pressed="true">Oldest first</button><button class="pill" id="orgType" aria-pressed="false">By type</button></div>
+    <p id="orgText"></p>
+    <section id="colSaved" class="colsaved" hidden aria-label="Saved collages">
+      <div class="colhead"><h3>Saved collages</h3><button class="pill" id="colSave">Save the wall as it is</button></div>
+      <div id="colList"></div>
+    </section>
+    <div class="row"><button class="btn ghost" id="orgCancel">Cancel</button><button class="btn primary" id="orgGo">Organize</button></div>
+  </div>
+</div>
+
+<div class="scrim" id="tuScrim" hidden>
+  <div class="sheet tu" role="dialog" aria-modal="true" aria-labelledby="tuTitle">
+    <header><h2 id="tuTitle">Touch up</h2><p>Paint over the tile</p></header>
+    <div class="tu-stage" id="tuStage"><canvas id="tuCanvas" aria-label="The tile. Paint on it to erase or bring back parts."></canvas></div>
+    <div class="tu-tools">
+      <div class="seg" role="group" aria-label="Brush"><button class="pill" id="tuErase">Erase</button><button class="pill" id="tuRestore">Bring back</button></div>
+      <div class="seg" id="tuBrush" role="group" aria-label="Brush size"><button class="pill" data-b="0.02" aria-label="Small brush">S</button><button class="pill" data-b="0.045" aria-label="Medium brush">M</button><button class="pill" data-b="0.09" aria-label="Large brush">L</button></div>
+      <div class="tu-hist" role="group" aria-label="Undo">
+        <button class="pill tu-undo" id="tuUndo" title="Undo last (Ctrl+Z)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Undo last<span class="tu-n" id="tuUndoN"></span></button>
+        <button class="pill" id="tuReset">Start over</button>
+      </div>
+    </div>
+    <footer>
+      <span class="msg" id="tuMsg"></span>
+      <button class="btn ghost" id="tuCancel">Cancel</button>
+      <button class="btn primary" id="tuSave" disabled>Save</button>
+    </footer>
+  </div>
+</div>
+
+<div class="scrim" id="phScrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="phTitle">
+    <header><h2 id="phTitle">Photos</h2><p id="phSub"></p></header>
+    <div class="body" id="phBody"></div>
+    <footer><span class="msg" id="phMsg"></span><button class="btn ghost" id="phBack" hidden>All photos</button><button class="btn ghost" id="phClose">Close</button></footer>
+  </div>
+</div>
+
+<div class="scrim" id="pcScrim" hidden>
+  <div class="sheet tu" role="dialog" aria-modal="true" aria-labelledby="pcTitle">
+    <header><h2 id="pcTitle">Recrop from the photo</h2><p>Drag a box around the drawing</p></header>
+    <div class="tu-stage" id="pcStage"><canvas id="pcCanvas" aria-label="The original photo. Drag a box around the drawing you want."></canvas></div>
+    <div class="tu-tools">
+      <div class="seg" id="pcMode" role="group" aria-label="What to keep"><button class="pill" data-m="all">Everything in the box</button><button class="pill" data-m="big">Biggest piece only</button></div>
+    </div>
+    <footer>
+      <span class="msg" id="pcMsg"></span>
+      <button class="btn ghost" id="pcCancel">Cancel</button>
+      <button class="btn primary" id="pcSave" disabled>Save</button>
+    </footer>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <header><h2 id="sheetTitle">New drawings</h2><p id="sheetSub"></p></header>
+    <div class="body" id="sheetBody"></div>
+    <footer>
+      <span class="msg" id="sheetMsg"></span>
+      <button class="btn ghost" id="cancelBtn">Cancel</button>
+      <button class="btn primary" id="saveBtn" disabled>Add to wall</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+(() => {
+/* ---------------- world layout ---------------- */
+// one huge black board: tiles look like specks until you zoom in
+const WORLD_W = 20000, ROW_H = 400, GAP = 28;
+// the board takes the screen's shape, so fully zoomed out its border sits right on the screen's edges
+// Tiles keep the same spot on every device; the board is centred on one fixed point and only its shape changes.
+// A tile placed beyond the edge on another device makes the board bigger all round, so it still fits the screen.
+const BOARD_C = WORLD_W/2;
+function board(){
+  const shape = vw && vh ? vh / vw : 1;
+  let hw = BOARD_C;
+  for (const p of shown()){ if (p.x == null) continue;
+    hw = Math.max(hw, Math.abs(p.x + p.dw/2 - BOARD_C) + p.dw/2, (Math.abs(p.y + p.dh/2 - BOARD_C) + p.dh/2) / shape); }
+  const hh = hw * shape;
+  return {x0: BOARD_C - hw, y0: BOARD_C - hh, x1: BOARD_C + hw, y1: BOARD_C + hh, w: hw*2, h: hh*2};
+}
+// tiles nobody has placed by hand gather in rows in the middle of the board
+const FLOW_W = 4000, FLOW_X = (WORLD_W - FLOW_W)/2, flowY = () => BOARD_C - 2*ROW_H;
+let pieces = [];        // real drawings
+let samples = [];       // example drawings when empty
+let rows = [];
+let store = null;       // {kind:'cloud'|'local'|'view', ...}
+let selected = null;
+
+let order = [];         // tiles in stacking order, bottom first
+let showKind = 'all';   // the top right selector: 'all', a tile type, or 'none' for tiles with no type
+// a selected tile stays visible while it's being relabelled
+const shows = p => showKind === 'all' || !!p.canvas || (p.kind || 'none') === showKind || p === selected;
+// a tile's natural size on the wall, before anyone resizes it
+function baseSize(w, h){
+  let dw = Math.min(ROW_H * (w / h), FLOW_W), dh = dw * h / w;
+  if (dh > ROW_H) { dh = ROW_H; dw = dh * w / h; }
+  return [dw, dh];
+}
+// tiles someone has dragged keep their spot (px, py); the rest flow into rows below them
+// once tiles have been arranged, new ones wait in a little group just to the right of them,
+// so they can be dragged into the collage wherever they fit
+const SIDE_GAP = 320, SIDE_W = 1700;
+function layout(list){
+  rows = [];
+  let placed = null; const flow = [];
+  for (const p of list){
+    const [dw, dh] = baseSize(p.w, p.h), k = p.size || 1; p.dw = dw*k; p.dh = dh*k;
+    if (p.px != null && p.py != null){
+      p.x = p.px; p.y = p.py;
+      placed = placed ? {x0: Math.min(placed.x0, p.x), y0: Math.min(placed.y0, p.y), x1: Math.max(placed.x1, p.x + p.dw)} : {x0: p.x, y0: p.y, x1: p.x + p.dw};
+    }
+    else flow.push(p);
+  }
+  const left = placed ? placed.x1 + SIDE_GAP : FLOW_X, width = placed ? SIDE_W : FLOW_W;
+  let x = left, y = placed ? placed.y0 : flowY();
+  let row = {y, items:[]};
+  for (const p of flow){
+    if (x + p.dw > left + width && row.items.length){
+      rows.push(row); x = left; y += ROW_H + GAP; row = {y, items:[]};
+    }
+    p.x = x; p.y = y + Math.max(0, ROW_H - p.dh)/2;
+    row.items.push(p); x += p.dw + GAP;
+  }
+  if (row.items.length) rows.push(row);
+  order = list.map((p, i) => [p, i]).sort((a, b) => (a[0].z || 0) - (b[0].z || 0) || a[1] - b[1]).map(e => e[0]);
+}
+const shown = () => pieces.length ? pieces : samples;
+const canEdit = () => !!store && store.kind !== 'view' && pieces.length > 0;
+
+/* ---------------- canvas + camera ---------------- */
+const cv = document.getElementById('wall'), ctx = cv.getContext('2d');
+let vw = 0, vh = 0, dpr = 1;
+const cam = {s:.2, tx:16, ty:90};
+let needs = true;
+function resize(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  vw = cv.clientWidth; vh = cv.clientHeight;
+  cv.width = Math.round(vw*dpr); cv.height = Math.round(vh*dpr);
+  needs = true;
+}
+const sMin = () => { const b = board(); return Math.min(vw / b.w, vh / b.h); };
+const S_MAX = 8;
+// the board always covers the screen (where it's narrower than the screen one way, it sits centred)
+function clampView(v){
+  const b = board(), s = Math.max(sMin(), Math.min(S_MAX, v.s)), ww = b.w*s, wh = b.h*s;
+  return {s, tx: ww <= vw + 0.5 ? (vw - ww)/2 - b.x0*s : Math.min(-b.x0*s, Math.max(vw - b.x1*s, v.tx)),
+             ty: wh <= vh + 0.5 ? (vh - wh)/2 - b.y0*s : Math.min(-b.y0*s, Math.max(vh - b.y1*s, v.ty))};
+}
+function clampCam(){ Object.assign(cam, clampView(cam)); }
+function zoomAt(f, sx, sy){
+  const ns = Math.max(sMin(), Math.min(S_MAX, cam.s * f));
+  const k = ns / cam.s;
+  cam.tx = sx - (sx - cam.tx)*k; cam.ty = sy - (sy - cam.ty)*k; cam.s = ns;
+  clampCam(); needs = true;
+}
+let anim = null;
+function animateTo(t){
+  t = clampView(t);
+  const from = {...cam}, t0 = performance.now(), dur = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 340;
+  anim = now => {
+    let u = Math.min(1, (now - t0)/dur); u = 1 - Math.pow(1-u, 3);
+    // interpolate scale logarithmically so zoom feels even
+    const s = Math.exp(Math.log(from.s) + (Math.log(t.s) - Math.log(from.s))*u);
+    // keep the motion of the screen-center world point linear
+    const cx0 = (vw/2 - from.tx)/from.s, cy0 = (vh/2 - from.ty)/from.s;
+    const cx1 = (vw/2 - t.tx)/t.s, cy1 = (vh/2 - t.ty)/t.s;
+    const cx = cx0 + (cx1-cx0)*u, cy = cy0 + (cy1-cy0)*u;
+    cam.s = s; cam.tx = vw/2 - cx*s; cam.ty = vh/2 - cy*s;
+    needs = true;
+    if (u >= 1) anim = null;
+  };
+}
+function fitView(){
+  return clampView({s: sMin(), tx: 0, ty: 0});
+}
+// the drawings themselves filling the screen, clear of the buttons along the top and bottom
+function tilesView(){
+  const list = shown().filter(p => p.x != null); if (!list.length) return fitView();
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const p of list){ x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x + p.dw); y1 = Math.max(y1, p.y + p.dh); }
+  const top = vw < 600 ? 150 : 90, bottom = 110, side = 24, w = Math.max(1, x1 - x0), h = Math.max(1, y1 - y0);
+  const s = Math.min(S_MAX, Math.max(sMin(), Math.min((vw - 2*side)/w, (vh - top - bottom)/h)));
+  return clampView({s, tx: vw/2 - (x0 + w/2)*s, ty: top + (vh - top - bottom)/2 - (y0 + h/2)*s});
+}
+function newestView(){
+  const list = shown(); if (!list.length) return fitView();
+  const p = list[list.length-1];
+  const s = Math.min(S_MAX, Math.max(sMin(), Math.min((vw-48)/(p.dw*2.2), (vh-220)/(ROW_H*1.6))));
+  return {s, tx: vw/2 - (p.x + p.dw/2)*s, ty: vh/2 - (p.y + p.dh/2)*s};
+}
+
+/* ---------------- images ---------------- */
+function getImg(p, which){
+  const key = which === 'full' ? 'imgFull' : 'imgThumb';
+  if (p[key]) return p[key].complete && p[key].naturalWidth ? p[key] : null;
+  const src = which === 'full' ? p.fullSrc : p.thumbSrc;
+  if (!src) return null;
+  const im = new Image(); im.decoding = 'async'; if (/^https?:/.test(src) && !src.startsWith(location.origin)) im.crossOrigin = 'anonymous';
+  im.onload = () => { needs = true; };
+  im.src = src; p[key] = im; return null;
+}
+
+/* ---------------- draw ---------------- */
+function draw(){
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const s = cam.s;
+  ctx.fillStyle = '#000'; ctx.fillRect(0,0,vw,vh);
+  // a thin line around the wall shows where it ends while you move around
+  ctx.strokeStyle = 'rgba(255,248,230,0.38)'; ctx.lineWidth = 2;
+  const bd = board();
+  ctx.strokeRect(Math.round(cam.tx + bd.x0*s) + 1, Math.round(cam.ty + bd.y0*s) + 1, Math.round(bd.w*s) - 2, Math.round(bd.h*s) - 2);
+  // faint dot grid gives a sense of place on the big black field
+  const step = 200*s;
+  if (step > 14){
+    ctx.fillStyle = 'rgba(255,248,230,0.07)';
+    const x0 = Math.max(Math.ceil(bd.x0/200), Math.floor(-cam.tx/step)), y0 = Math.max(Math.ceil(bd.y0/200), Math.floor(-cam.ty/step));
+    const x1 = Math.min(Math.floor(bd.x1/200), Math.ceil((vw-cam.tx)/step));
+    const y1 = Math.min(Math.floor(bd.y1/200), Math.ceil((vh-cam.ty)/step));
+    const r = Math.min(1.6, Math.max(.8, step/120));
+    for (let gx=x0; gx<=x1; gx++) for (let gy=y0; gy<=y1; gy++){
+      ctx.beginPath(); ctx.arc(cam.tx+gx*step, cam.ty+gy*step, r, 0, 6.283); ctx.fill();
+    }
+  }
+  for (const p of order){
+    if (!shows(p)) continue;
+    const w = p.dw*s, h = p.dh*s, cx = cam.tx + (p.x + p.dw/2)*s, cy = cam.ty + (p.y + p.dh/2)*s, rr = Math.hypot(w, h)/2;
+    if (cx - rr > vw || cx + rr < 0 || cy - rr > vh || cy + rr < 0) continue;
+    let im = null;
+    if (p.canvas) im = p.canvas;
+    else {
+      const wantFull = h*dpr > 300;
+      im = wantFull ? (getImg(p,'full') || getImg(p,'thumb')) : getImg(p,'thumb');
+    }
+    const lifted = (tileDrag && tileDrag.moved && tileDrag.p === p) || (twist && twist.p === p);
+    ctx.save(); ctx.translate(cx, cy); if (p.rot) ctx.rotate(p.rot); if (p.fx || p.fy) ctx.scale(p.fx ? -1 : 1, p.fy ? -1 : 1);
+    if (lifted){ ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 10; }
+    if (im){ ctx.drawImage(im, -w/2, -h/2, w, h); }
+    else { ctx.fillStyle = 'rgba(255,248,230,0.08)'; ctx.fillRect(-w/2, -h/2, w, h); }
+    if (lifted) ctx.restore();
+    if (p === selected){
+      ctx.strokeStyle = '#ffc93c'; ctx.lineWidth = 2; ctx.setLineDash([8, 6]);
+      ctx.strokeRect(-w/2-5, -h/2-5, w+10, h+10);
+    }
+    ctx.restore();
+  }
+}
+let vel = null;
+function frame(now){
+  if (anim) anim(now);
+  if (vel && !drag){
+    cam.tx += vel.x; cam.ty += vel.y; vel.x *= .92; vel.y *= .92;
+    if (Math.hypot(vel.x, vel.y) < .3) vel = null;
+    clampCam(); needs = true;
+  }
+  // a tile dragged to the screen's edge scrolls the wall along with it
+  if (tileDrag && tileDrag.moved && tileDrag.sx != null){
+    const m = 44, sp = 10; let dx = 0, dy = 0;
+    if (tileDrag.sx < m) dx = sp; else if (tileDrag.sx > vw - m) dx = -sp;
+    if (tileDrag.sy < m) dy = sp; else if (tileDrag.sy > vh - m) dy = -sp;
+    if (dx || dy){ cam.tx += dx; cam.ty += dy; clampCam(); moveTile(tileDrag.sx, tileDrag.sy); }
+  }
+  if (needs){ needs = false; draw(); }
+  requestAnimationFrame(frame);
+}
+
+/* ---------------- gestures ---------------- */
+const pts = new Map();
+let drag = false, pinch = null, tapStart = null, lastMove = null, lastTap = 0;
+let tileDrag = null;    // {p, ox, oy, moved, sx, sy}: one finger pressed on a tile moves that tile
+let twist = null;       // a second finger on a held tile turns it (and pinching resizes it)
+const fingers = () => { const [a, b] = [...pts.values()]; return {ang: Math.atan2(b.y-a.y, b.x-a.x), d: Math.max(1, Math.hypot(b.x-a.x, b.y-a.y)), mx: (a.x+b.x)/2, my: (a.y+b.y)/2}; };
+function startTwist(p){
+  beginEdit(); const f = fingers(), k = p.size || 1;
+  twist = {p, ang: f.ang, d: f.d, rot: p.rot || 0, size: k, bw: p.dw/k, bh: p.dh/k,
+    cx: p.x + p.dw/2, cy: p.y + p.dh/2, mx: (f.mx - cam.tx)/cam.s, my: (f.my - cam.ty)/cam.s};
+  pinAll(); bringToFront(p); cv.classList.add('dragging'); needs = true;
+}
+function moveTwist(){
+  const t = twist, p = t.p, f = fingers();
+  let rot = t.rot + (f.ang - t.ang);
+  // settle onto straight (0, 90, 180, 270 degrees) when it's close
+  const q = Math.round(rot / (Math.PI/2)) * (Math.PI/2); if (Math.abs(rot - q) < 0.09) rot = q;
+  p.rot = Math.atan2(Math.sin(rot), Math.cos(rot));
+  if (Math.abs(p.rot) < 1e-6) p.rot = 0;
+  const k = Math.max(SIZE_MIN, Math.min(SIZE_MAX, t.size * f.d / t.d)); p.size = k; p.dw = t.bw*k; p.dh = t.bh*k;
+  const cx = t.cx + (f.mx - cam.tx)/cam.s - t.mx, cy = t.cy + (f.my - cam.ty)/cam.s - t.my;
+  p.x = p.px = cx - p.dw/2; p.y = p.py = cy - p.dh/2; needs = true;
+}
+function moveTile(sx, sy){
+  const p = tileDrag.p, wx = (sx - cam.tx)/cam.s, wy = (sy - cam.ty)/cam.s;
+  const b = board();
+  p.x = Math.max(b.x0, Math.min(b.x1 - p.dw, wx - tileDrag.ox));
+  p.y = Math.max(b.y0, Math.min(b.y1 - p.dh, wy - tileDrag.oy));
+  p.px = p.x; p.py = p.y; needs = true;
+}
+// the first time anything is arranged by hand, every tile keeps the spot it's in now, so moving
+// one never shuffles the others (new tiles then arrive below everything)
+function pinAll(){
+  for (const q of pieces) if (q.px == null || q.py == null){ q.px = q.x; q.py = q.y; savePlace(q); }
+}
+function bringToFront(p){
+  p.z = Math.max(0, ...pieces.map(q => q.z || 0)) + 1;
+  order = order.filter(q => q !== p).concat(p);
+}
+function endTileDrag(){
+  const t = tileDrag; tileDrag = null; if (!t) return;
+  if (t.moved){ savePlace(t.p); if (selected === t.p) select(t.p); commitEdit('moving a tile'); } else cancelEdit();
+  needs = true;
+}
+/* ---------------- undo and redo: every change to where tiles sit ----------------
+   A change starts with beginEdit() (a note of where every tile is) and ends with commitEdit(), which keeps
+   just the tiles that changed. Undo puts those back; Redo moves them again. */
+const hist = {undo: [], redo: []}; let editStart = null;
+const fullPlace = p => ({px: p.px ?? null, py: p.py ?? null, z: p.z || 0, size: p.size || 1, rot: p.rot || 0, fx: !!p.fx, fy: !!p.fy});
+function beginEdit(){ if (!editStart) editStart = new Map(pieces.map(p => [p.id, fullPlace(p)])); }
+function cancelEdit(){ editStart = null; }
+function commitEdit(label){
+  const b = editStart; editStart = null; if (!b) return;
+  const before = new Map(), after = new Map();
+  for (const p of pieces){ const was = b.get(p.id); if (!was) continue; const now = fullPlace(p);
+    if (Object.keys(now).some(k => typeof now[k] === 'number' ? Math.abs(now[k] - (was[k] ?? 0)) > 1e-6 || (was[k] === null) !== (now[k] === null) : now[k] !== was[k])){ before.set(p.id, was); after.set(p.id, now); } }
+  if (!before.size) return;
+  hist.undo.push({before, after, label}); if (hist.undo.length > 60) hist.undo.shift(); hist.redo = []; paintHist();
+}
+function applyPlaces(map){
+  const moved = []; for (const p of pieces){ const v = map.get(p.id); if (v){ Object.assign(p, v); moved.push(p); } }
+  layout(shown()); needs = true; for (const p of moved) savePlace(p);
+  if (selected && moved.includes(selected)) select(selected);
+}
+function histStep(from, to, which){
+  if (tileDrag || twist) return; const h = from.pop(); if (!h) return;
+  applyPlaces(which === 'undo' ? h.before : h.after); to.push(h); paintHist();
+  showToast(`${which === 'undo' ? 'Undone' : 'Redone'}: ${h.label}`);
+}
+const undoWall = () => histStep(hist.undo, hist.redo, 'undo'), redoWall = () => histStep(hist.redo, hist.undo, 'redo');
+function paintHist(){
+  document.getElementById('hist').hidden = !canEdit();
+  document.getElementById('histUndo').disabled = !hist.undo.length; document.getElementById('histRedo').disabled = !hist.redo.length;
+  const top = hist.undo[hist.undo.length - 1], nx = hist.redo[hist.redo.length - 1];
+  document.getElementById('histUndo').title = top ? `Undo ${top.label} (Ctrl+Z)` : 'Nothing to undo';
+  document.getElementById('histRedo').title = nx ? `Redo ${nx.label} (Ctrl+Y)` : 'Nothing to redo';
+}
+document.getElementById('histUndo').onclick = undoWall; document.getElementById('histRedo').onclick = redoWall;
+// one write at a time per tile, in order
+function savePlace(p){
+  if (!store || !store.place) return;
+  p.pending = (p.pending || 0) + 1;
+  p.saving = (p.saving || Promise.resolve()).then(() => store.place(p))
+    .catch(() => showToast("Couldn't save where that tile went. Check your connection."))
+    .finally(() => { p.pending--; });
+}
+cv.addEventListener('pointerdown', e => {
+  try { cv.setPointerCapture(e.pointerId); } catch {}
+  pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  anim = null; vel = null;
+  if (pts.size === 1){
+    tapStart = {x:e.clientX, y:e.clientY, t:performance.now()};
+    lastMove = {x:e.clientX, y:e.clientY, t:performance.now()};
+    const p = canEdit() ? hit(e.clientX, e.clientY) : null;
+    if (p && !p.canvas){
+      beginEdit(); tileDrag = {p, ox:(e.clientX - cam.tx)/cam.s - p.x, oy:(e.clientY - cam.ty)/cam.s - p.y, moved:false, sx:e.clientX, sy:e.clientY};
+    } else { drag = true; cv.classList.add('dragging'); }
+  } else if (pts.size === 2 && tileDrag){
+    const p = tileDrag.p; tileDrag = null; tapStart = null; select(null); startTwist(p);
+  } else if (pts.size === 2 && !twist && canEdit() && (q => q && !q.canvas)(hit(e.clientX, e.clientY))){
+    const q = hit(e.clientX, e.clientY); drag = false; vel = null; tapStart = null; select(null); startTwist(q);
+  } else if (pts.size === 2 && !twist){
+    endTileDrag(); drag = true;
+    const [a,b] = [...pts.values()];
+    pinch = {d: Math.hypot(a.x-b.x, a.y-b.y), s: cam.s, mx:(a.x+b.x)/2, my:(a.y+b.y)/2, tx:cam.tx, ty:cam.ty};
+    tapStart = null;
+  }
+});
+cv.addEventListener('pointermove', e => {
+  if (!pts.has(e.pointerId)) return;
+  const prev = pts.get(e.pointerId);
+  pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (twist){ if (pts.size >= 2) moveTwist(); return; }
+  if (tileDrag && pts.size === 1){
+    tileDrag.sx = e.clientX; tileDrag.sy = e.clientY;
+    if (!tileDrag.moved && tapStart && Math.hypot(e.clientX-tapStart.x, e.clientY-tapStart.y) >= 8){
+      tileDrag.moved = true; tapStart = null; pinAll(); bringToFront(tileDrag.p); cv.classList.add('dragging');
+    }
+    if (tileDrag.moved) moveTile(e.clientX, e.clientY);
+    return;
+  }
+  if (pinch && pts.size >= 2){
+    const [a,b] = [...pts.values()];
+    const d = Math.hypot(a.x-b.x, a.y-b.y), mx = (a.x+b.x)/2, my = (a.y+b.y)/2;
+    const ns = Math.max(sMin(), Math.min(S_MAX, pinch.s * d / pinch.d));
+    const wx = (pinch.mx - pinch.tx)/pinch.s, wy = (pinch.my - pinch.ty)/pinch.s;
+    cam.s = ns; cam.tx = mx - wx*ns; cam.ty = my - wy*ns;
+    clampCam(); needs = true;
+  } else if (drag && pts.size === 1){
+    cam.tx += e.clientX - prev.x; cam.ty += e.clientY - prev.y;
+    clampCam(); needs = true;
+    const now = performance.now();
+    if (lastMove){ const dt = Math.max(1, now - lastMove.t); vel = {x:(e.clientX-lastMove.x)/dt*16, y:(e.clientY-lastMove.y)/dt*16}; }
+    lastMove = {x:e.clientX, y:e.clientY, t:now};
+  }
+});
+function endPointer(e){
+  if (!pts.has(e.pointerId)) return;
+  pts.delete(e.pointerId);
+  if (pts.size < 2) pinch = null;
+  if (twist && pts.size < 2){
+    const p = twist.p; twist = null; savePlace(p); needs = true; commitEdit('turning a tile');
+    // the finger still down carries on moving the tile
+    if (pts.size === 1){ const [f] = pts.values(); beginEdit(); tileDrag = {p, ox:(f.x - cam.tx)/cam.s - p.x, oy:(f.y - cam.ty)/cam.s - p.y, moved:true, sx:f.x, sy:f.y}; }
+    else cv.classList.remove('dragging');
+  }
+  if (pts.size === 1){ const [p] = pts.values(); lastMove = {x:p.x, y:p.y, t:performance.now()}; vel = null; }
+  if (pts.size === 0){
+    drag = false; cv.classList.remove('dragging'); endTileDrag();
+    if (lastMove && performance.now() - lastMove.t > 80) vel = null;
+    if (tapStart && Math.hypot(e.clientX-tapStart.x, e.clientY-tapStart.y) < 8 && performance.now()-tapStart.t < 350){
+      vel = null;
+      const now = performance.now();
+      if (now - lastTap < 300){ lastTap = 0; animateDoubleTap(e.clientX, e.clientY); }
+      else { lastTap = now; handleTap(e.clientX, e.clientY); }
+    }
+    tapStart = null;
+  }
+}
+cv.addEventListener('pointerup', endPointer);
+cv.addEventListener('pointercancel', endPointer);
+cv.addEventListener('wheel', e => {
+  e.preventDefault(); anim = null; vel = null;
+  // a mouse wheel zooms toward the pointer; touchpads send small or sideways deltas, so two fingers still pan.
+  // A wheel notch is about 100, but display scaling makes it 66.7, 83.3, 125 and so on, so it isn't always a whole number.
+  const mouseWheel = e.deltaMode !== 0 || (Math.abs(e.deltaX) < 1 && Math.abs(e.deltaY) >= 40);
+  if (e.ctrlKey || mouseWheel){
+    const dy = Math.max(-240, Math.min(240, e.deltaMode === 1 ? e.deltaY*33 : e.deltaMode === 2 ? e.deltaY*400 : e.deltaY));
+    const f = Math.exp(-dy * (e.ctrlKey ? 0.012 : 0.0022));
+    // with a tile selected, scrolling over it (inside its dashed outline) makes the tile bigger or smaller instead
+    if (selected && canEdit() && inBox(selected, e.clientX, e.clientY)){ wheelResize(selected, f); return; }
+    zoomAt(f, e.clientX, e.clientY);
+  } else {
+    cam.tx -= e.deltaX; cam.ty -= e.deltaY; clampCam(); needs = true;
+  }
+}, {passive:false});
+function animateDoubleTap(sx, sy){
+  const ns = Math.min(S_MAX, cam.s * 2.4), k = ns/cam.s;
+  animateTo({s:ns, tx: sx - (sx-cam.tx)*k, ty: sy - (sy-cam.ty)*k});
+}
+// tiles are cut-outs: only the drawing itself (or close to it) grabs, not the empty space around it
+function solidAt(p, u, v){
+  if (p.canvas) return true;
+  if (p.hitMap === undefined){
+    const im = getImg(p, 'thumb'); if (!im) return true;
+    const hw = Math.max(1, Math.round(96 * Math.min(1, p.w/p.h))), hh = Math.max(1, Math.round(96 * Math.min(1, p.h/p.w)));
+    try { const c = mkCanvas(hw, hh), g = c.getContext('2d', {willReadFrequently:true}); g.drawImage(im, 0, 0, hw, hh);
+      const d = g.getImageData(0, 0, hw, hh).data, a = new Uint8Array(hw*hh); for (let k=0;k<a.length;k++) a[k] = d[k*4+3];
+      p.hitMap = {a, hw, hh}; }
+    catch { p.hitMap = null; }
+  }
+  if (!p.hitMap) return true;
+  const {a, hw, hh} = p.hitMap, cx = Math.floor(u*hw), cy = Math.floor(v*hh);
+  for (let y=cy-2; y<=cy+2; y++) for (let x=cx-2; x<=cx+2; x++) if (x>=0 && y>=0 && x<hw && y<hh && a[y*hw+x] > 40) return true;
+  return false;
+}
+// inside a tile's (turned) outline, see-through parts included
+function inBox(p, sx, sy){
+  const wx = (sx - cam.tx)/cam.s, wy = (sy - cam.ty)/cam.s, dx = wx - (p.x + p.dw/2), dy = wy - (p.y + p.dh/2), c = Math.cos(p.rot || 0), sn = Math.sin(p.rot || 0);
+  const pad = 12/cam.s, u = dx*c + dy*sn, v = -dx*sn + dy*c;
+  return Math.abs(u) <= p.dw/2 + pad && Math.abs(v) <= p.dh/2 + pad;
+}
+let wheelSaveT = null;
+function wheelResize(p, f){
+  const old = p.size || 1; let k = old*f;
+  // it stops on 100% on the way through, like the size slider
+  if ((old < 1 && k > 1) || (old > 1 && k < 1) || Math.abs(k - 1) < 0.02) k = 1;
+  beginEdit(); setTileSize(p, k); syncSizeSlider(p);
+  clearTimeout(wheelSaveT); wheelSaveT = setTimeout(() => { savePlace(p); commitEdit('resizing a tile'); }, 350);
+}
+function syncSizeSlider(p){
+  const r = document.querySelector('#selRow .size input[type=range]'), pct = document.querySelector('#selRow .size .pct'); if (!r) return;
+  r.value = Math.round(100*Math.log((p.size || 1)/SIZE_MIN)/Math.log(SIZE_MAX/SIZE_MIN)); if (pct) pct.textContent = Math.round((p.size || 1)*100) + '%';
+}
+function hit(sx, sy){
+  const wx = (sx - cam.tx)/cam.s, wy = (sy - cam.ty)/cam.s;
+  for (let i=order.length-1; i>=0; i--){ const p = order[i];
+    if (!shows(p)) continue;
+    const dx = wx - (p.x + p.dw/2), dy = wy - (p.y + p.dh/2), c = Math.cos(p.rot || 0), sn = Math.sin(p.rot || 0);
+    const u = (dx*c + dy*sn)/p.dw + 0.5, v = (-dx*sn + dy*c)/p.dh + 0.5;
+    if (u >= 0 && u <= 1 && v >= 0 && v <= 1 && solidAt(p, p.fx ? 1-u : u, p.fy ? 1-v : v)) return p; }
+  return null;
+}
+function handleTap(sx, sy){
+  const p = hit(sx, sy);
+  if (!p || p.canvas){ select(null); return; }
+  select(p === selected ? null : p);
+}
+window.addEventListener('keydown', e => {
+  if (!document.getElementById('phScrim').hidden) { if (e.key === 'Escape') closePhotos(); return; }
+  if (!document.getElementById('pcScrim').hidden) { if (e.key === 'Escape') closePC(); return; }
+  if (!document.getElementById('tuScrim').hidden) { if (e.key === 'Escape') closeTU(); return; }
+  if (!document.getElementById('orgScrim').hidden) { if (e.key === 'Escape') closeOrg(); return; }
+  if (!document.getElementById('scrim').hidden) { if (e.key === 'Escape') closeSheet(); return; }
+  if (e.target.closest && e.target.closest('input[type=text]')) return; // typing a name
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && canEdit()){ const k = e.key.toLowerCase();
+    if (k === 'z' && !e.shiftKey){ e.preventDefault(); undoWall(); return; }
+    if (k === 'y' || (k === 'z' && e.shiftKey)){ e.preventDefault(); redoWall(); return; } }
+  if (e.target.closest && e.target.closest('input,button,select')) { if (e.key !== '+' && e.key !== '-' && e.key !== '=') return; }
+  const step = 80;
+  if (e.key === '+' || e.key === '=') zoomAt(1.4, vw/2, vh/2);
+  else if (e.key === '-') zoomAt(1/1.4, vw/2, vh/2);
+  else if (e.key === 'ArrowLeft') { cam.tx += step; clampCam(); needs = true; }
+  else if (e.key === 'ArrowRight') { cam.tx -= step; clampCam(); needs = true; }
+  else if (e.key === 'ArrowUp') { cam.ty += step; clampCam(); needs = true; }
+  else if (e.key === 'ArrowDown') { cam.ty -= step; clampCam(); needs = true; }
+  else if (e.key === 'Escape') select(null);
+});
+document.getElementById('zIn').onclick = () => { const ns=Math.min(S_MAX,cam.s*1.8),k=ns/cam.s; animateTo({s:ns,tx:vw/2-(vw/2-cam.tx)*k,ty:vh/2-(vh/2-cam.ty)*k}); };
+document.getElementById('zOut').onclick = () => { const ns=Math.max(sMin(),cam.s/1.8),k=ns/cam.s; animateTo({s:ns,tx:vw/2-(vw/2-cam.tx)*k,ty:vh/2-(vh/2-cam.ty)*k}); };
+document.getElementById('zFit').onclick = () => animateTo(tilesView());
+document.getElementById('zHome').onclick = () => animateTo(newestView());
+
+/* ---------------- selection card ---------------- */
+const fmtDate = t => new Date(t).toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+function select(p){
+  selected = p; needs = true;
+  const sel = document.getElementById('sel');
+  document.body.classList.toggle('selopen', !!p);
+  if (!p){ sel.hidden = true; return; }
+  sel.hidden = false;
+  showSelWhen(p);
+  renderSelButtons(false);
+}
+function showSelWhen(p){
+  const w = document.getElementById('selWhen'); w.innerHTML = '';
+  const b = document.createElement('b'); b.textContent = (p.ref ? `#${p.ref} ` : '') + (p.name || 'Tile');
+  w.append(b, document.createTextNode(`${p.kind ? ' · ' + kindName(p.kind) : ''} · added ${fmtDate(p.added)}`));
+}
+// a tile's name (the character's name, say); saved a moment after typing stops
+function nameField(p){
+  const wrap = document.createElement('label'); wrap.className = 'size name';
+  const lbl = document.createElement('span'); lbl.textContent = 'Name';
+  const inp = document.createElement('input'); inp.type = 'text'; inp.maxLength = 40; inp.placeholder = 'Name this tile'; inp.value = p.name || ''; inp.autocomplete = 'off';
+  let t = null;
+  const save = () => { clearTimeout(t); t = null; const v = inp.value.trim(); if (v === (p.name || '')) return;
+    p.name = v; if (selected === p) showSelWhen(p);
+    notifyStory();
+    store.rename(p, v).catch(() => showToast("Couldn't save the name. Check your connection.")); };
+  inp.oninput = () => { clearTimeout(t); t = setTimeout(save, 700); };
+  inp.onchange = save;
+  inp.onkeydown = e => { if (e.key === 'Enter') inp.blur(); };
+  wrap.append(lbl, inp);
+  return wrap;
+}
+// what a tile is, for organizing and the story book; tap the chosen one again to clear it
+const KINDS = [['character', 'Character'], ['object', 'Object'], ['background', 'Background']];
+const kindName = k => (KINDS.find(e => e[0] === k) || [0, ''])[1];
+function kindPicker(p){
+  const wrap = document.createElement('div'); wrap.className = 'size kind';
+  const lbl = document.createElement('span'); lbl.textContent = 'Type';
+  const seg = document.createElement('div'); seg.className = 'seg'; seg.setAttribute('role', 'group'); seg.setAttribute('aria-label', 'What this tile is');
+  const paint = () => seg.querySelectorAll('button').forEach(b => { const on = b.dataset.k === p.kind; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  for (const [k, name] of KINDS){
+    const b = document.createElement('button'); b.className = 'pill'; b.dataset.k = k; b.textContent = name;
+    b.onclick = () => { p.kind = p.kind === k ? null : k; paint(); if (selected === p) showSelWhen(p); refreshCount(); savePlace(p); };
+    seg.append(b);
+  }
+  paint(); wrap.append(lbl, seg);
+  return wrap;
+}
+// grow or shrink a tile around its centre; it stays where it is from then on
+const SIZE_MIN = 0.1, SIZE_MAX = 20;
+function setTileSize(p, k){
+  k = Math.max(SIZE_MIN, Math.min(SIZE_MAX, k)); if (k === (p.size || 1)) return;
+  pinAll();
+  const cx = p.x + p.dw/2, cy = p.y + p.dh/2, bw = p.dw/(p.size || 1), bh = p.dh/(p.size || 1);
+  p.size = k; p.dw = bw*k; p.dh = bh*k;
+  p.x = p.px = cx - p.dw/2; p.y = p.py = cy - p.dh/2;
+  if (order[order.length-1] !== p) bringToFront(p);
+  needs = true;
+}
+// a size slider on the tile's card; it moves evenly from small to big (log scale) and settles on 100%
+function sizeSlider(p){
+  const wrap = document.createElement('label'); wrap.className = 'size';
+  const name = document.createElement('span'); name.textContent = 'Size';
+  const r = document.createElement('input'); r.type = 'range'; r.min = 0; r.max = 100; r.step = 1; r.setAttribute('aria-label', 'Tile size');
+  const pct = document.createElement('span'); pct.className = 'pct';
+  const span = Math.log(SIZE_MAX/SIZE_MIN), toV = k => Math.round(100*Math.log(k/SIZE_MIN)/span), toK = v => SIZE_MIN*Math.exp(span*v/100);
+  const show = () => { pct.textContent = Math.round((p.size || 1)*100) + '%'; };
+  r.value = toV(p.size || 1); show();
+  r.oninput = () => { beginEdit(); let k = toK(+r.value); if (Math.abs(k - 1) < 0.05) k = 1; setTileSize(p, k); show(); };
+  r.onchange = () => { savePlace(p); commitEdit('resizing a tile'); };
+  wrap.append(name, r, pct);
+  return wrap;
+}
+// Mirror swaps left and right; Flip turns it upside down
+function flipTile(p, k){
+  beginEdit(); pinAll(); p[k] = !p[k];
+  if (order[order.length-1] !== p) bringToFront(p);
+  needs = true; savePlace(p); commitEdit(k === 'fx' ? 'mirroring' : 'flipping');
+}
+// the buttons turn in 15 degree steps (two fingers on the tile turn it freely)
+const snapRot = r => { const q = Math.round(r / (Math.PI/12)) * (Math.PI/12); return Math.abs(Math.sin(q)) < 1e-6 && Math.cos(q) > 0 ? 0 : Math.atan2(Math.sin(q), Math.cos(q)); };
+function turnTile(p, a){
+  beginEdit(); pinAll(); p.rot = snapRot((p.rot || 0) + a);
+  bringToFront(p); needs = true; savePlace(p); commitEdit('turning a tile');
+}
+// the tile's card: name, type and size; then Turn and mirror, and Picture tools as rows of icon buttons; Remove set apart
+const ICONS = {
+  left: '<path d="M3 4v6h6"/><path d="M3.5 10a9 9 0 1 1 2.1 8.4"/>', right: '<path d="M21 4v6h-6"/><path d="M20.5 10a9 9 0 1 0-2.1 8.4"/>',
+  mirror: '<path d="M12 3v18"/><path d="M8 7L3 12l5 5z"/><path d="M16 7l5 5-5 5z"/>', flip: '<path d="M3 12h18"/><path d="M7 8l5-5 5 5z"/><path d="M7 16l5 5 5-5z"/>',
+  touch: '<path d="M18.4 2.6a2 2 0 0 1 3 3L12 15l-4 1 1-4z"/><path d="M7 18c-1.5 0-3 1-3 3h4c1.7 0 3-1.3 3-3"/>', crop: '<path d="M6 2v14a2 2 0 0 0 2 2h14M18 22V8a2 2 0 0 0-2-2H2"/>',
+  zoom: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
+function toolRow(label, items, cls){
+  const g = document.createElement('div'); g.className = 'sgroup'; const t = document.createElement('span'); t.textContent = label;
+  const bar = document.createElement('div'); bar.className = 'stools ' + (cls || ''); bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', label);
+  for (const it of items){ const b = document.createElement('button'); b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[it.icon]}</svg>`; b.append(it.text);
+    if (it.aria) b.setAttribute('aria-label', it.aria); if (it.on !== undefined){ b.classList.toggle('on', it.on); b.setAttribute('aria-pressed', String(it.on)); } b.onclick = it.fn; bar.append(b); }
+  g.append(t, bar); return g;
+}
+document.getElementById('selClose').onclick = () => select(null);
+function renderSelButtons(confirming){
+  const row = document.getElementById('selRow'); row.innerHTML = '';
+  const mk = (txt, cls, fn) => { const b = document.createElement('button'); b.className = 'pill ' + (cls||''); b.textContent = txt; b.onclick = fn; row.append(b); return b; };
+  const p = selected;
+  const zoomIn = () => { const s=Math.min(S_MAX,Math.min((vw-40)/p.dw,(vh-240)/p.dh)); animateTo({s,tx:vw/2-(p.x+p.dw/2)*s,ty:(vh-120)/2-(p.y+p.dh/2)*s}); };
+  if (!confirming){
+    if (!canEdit()){ row.append(toolRow('Picture', [{icon:'zoom', text:'Zoom in', fn: zoomIn}], 'three')); return; }
+    const again = () => renderSelButtons(false);
+    row.append(nameField(p), kindPicker(p), sizeSlider(p),
+      toolRow('Turn and mirror', [
+        {icon:'left', text:'Turn left', aria:'Turn left 15 degrees', fn: () => turnTile(p, -Math.PI/12)},
+        {icon:'right', text:'Turn right', aria:'Turn right 15 degrees', fn: () => turnTile(p, Math.PI/12)},
+        {icon:'mirror', text:'Mirror', aria:'Mirror the tile left to right', on: !!p.fx, fn: () => { flipTile(p, 'fx'); again(); }},
+        {icon:'flip', text:'Flip', aria:'Flip the tile upside down', on: !!p.fy, fn: () => { flipTile(p, 'fy'); again(); }}]),
+      toolRow('Picture', [
+        {icon:'touch', text:'Touch up', fn: () => openTouchUp(p)}, {icon:'crop', text:'Recrop', fn: () => recropTile(p)}, {icon:'zoom', text:'Zoom in', fn: zoomIn}], 'three'));
+    const rm = document.createElement('div'); rm.className = 'srm'; const rb = document.createElement('button');
+    rb.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.trash}</svg>Remove tile`; rb.onclick = () => renderSelButtons(true); rm.append(rb); row.append(rm);
+  } else {
+    mk('Remove this tile', 'solid-danger', async () => {
+      const target = p; select(null);
+      try { await store.remove(target); }
+      catch(err){ showToast("Couldn't remove it. Check your connection and try again."); }
+    });
+    mk('Keep it', '', () => renderSelButtons(false));
+  }
+}
+/* ---------------- search: by reference number or name ---------------- */
+const searchIn = document.getElementById('searchIn'), searchOut = document.getElementById('searchOut');
+function findTiles(q){
+  q = q.trim().toLowerCase(); if (!q) return [];
+  const num = /^#?\s*(\d+)$/.exec(q), n = q.replace(/^#\s*/, ''), score = p => {
+    const name = (p.name || '').toLowerCase();
+    if (num && p.ref === +num[1]) return 0;
+    if (name === n) return 1;
+    if (name.startsWith(n)) return 2;
+    if (name.includes(n)) return 3;
+    if (num && String(p.ref || '').startsWith(num[1])) return 4;
+    return 9; };
+  return pieces.map(p => [score(p), p]).filter(e => e[0] < 9).sort((a, b) => a[0] - b[0] || (a[1].ref || 0) - (b[1].ref || 0)).map(e => e[1]);
+}
+function closeSearch(){ searchOut.hidden = true; }
+// fly to a tile and select it, framed in the space its card leaves free
+function goToTile(p){
+  if (!shows({kind: p.kind})) setShowKind('all');
+  closeSearch(); searchIn.blur(); select(p);
+  const top = Math.max(document.querySelector('.left').getBoundingClientRect().bottom, document.querySelector('.right').getBoundingClientRect().bottom) + 8, bottom = Math.max(top + 140, vw <= 520 ? document.getElementById('sel').getBoundingClientRect().top - 8 : vh - 8);
+  const s = Math.min(S_MAX, (vw - 40)/p.dw, (bottom - top - 16)/p.dh);
+  animateTo({s, tx: vw/2 - (p.x + p.dw/2)*s, ty: (top + bottom)/2 - (p.y + p.dh/2)*s});
+}
+function renderSearch(){
+  const q = searchIn.value, hits = findTiles(q).slice(0, 8);
+  searchOut.innerHTML = ''; searchOut.hidden = !q.trim();
+  if (!q.trim()) return;
+  if (!hits.length){ const e = document.createElement('div'); e.className = 'none'; e.textContent = 'No tile matches that.'; searchOut.append(e); return; }
+  for (const p of hits){
+    const b = document.createElement('button'), im = document.createElement('img'), r = document.createElement('span'), n = document.createElement('span');
+    im.alt = ''; im.src = p.thumbSrc; r.className = 'rn'; r.textContent = `#${p.ref || '?'}`; n.className = 'nm'; n.textContent = p.name || kindName(p.kind) || 'Tile';
+    b.append(im, r, n); b.setAttribute('aria-label', `Go to tile ${p.ref || ''} ${p.name || ''}`.trim());
+    b.onclick = () => goToTile(p);
+    searchOut.append(b);
+  }
+}
+searchIn.oninput = renderSearch;
+searchIn.onfocus = renderSearch;
+searchIn.onkeydown = e => {
+  if (e.key === 'Enter'){ const hit = findTiles(searchIn.value)[0]; if (hit) goToTile(hit); else renderSearch(); }
+  else if (e.key === 'Escape'){ searchIn.value = ''; closeSearch(); searchIn.blur(); }
+  e.stopPropagation();
+};
+cv.addEventListener('pointerdown', closeSearch);
+
+/* ---------------- auto-organize (asks first: it undoes everyone's arranging) ---------------- */
+const orgScrim = document.getElementById('orgScrim');
+function closeOrg(){ orgScrim.hidden = true; document.getElementById('orgBtn').focus(); }
+let orgMode = 'time';
+function setOrgMode(m){
+  orgMode = m;
+  document.getElementById('orgSeg').hidden = m === 'collage';
+  for (const [id, v] of [['orgTime', 'time'], ['orgType', 'type']]){ const b = document.getElementById(id); b.classList.toggle('on', m === v); b.setAttribute('aria-pressed', m === v); }
+  document.getElementById('orgTitle').textContent = m === 'collage' ? 'Make a collage?' : 'Auto-organize the wall?';
+  document.getElementById('orgGo').textContent = m === 'collage' ? 'Make a new collage' : 'Organize';
+  document.getElementById('colSaved').hidden = m !== 'collage'; if (m === 'collage') renderSaved();
+  document.getElementById('orgText').textContent = (m === 'collage'
+    ? 'Every tile is fitted together into a brand new cloud-shaped collage in the middle of the wall, packed close with as few black gaps and as little overlap as it can manage. Each one comes out a little different. New tiles will wait just beside it.'
+    : m === 'type'
+    ? 'Tiles go into neat rows grouped by type: characters, then objects, then backgrounds, with backgrounds sent behind everything. Tiles with no type go last.'
+    : 'Every tile goes back into neat rows, oldest first.') + " They'll be straight and at their normal size, and where you've dragged, turned or resized tiles will change. You can take it back with Undo.";
+}
+document.getElementById('collageBtn').onclick = () => { select(null); setOrgMode('collage'); orgScrim.hidden = false; document.getElementById('orgCancel').focus(); };
+function loadThumb(p){
+  return new Promise(res => { const im = p.imgThumb || (getImg(p, 'thumb'), p.imgThumb);
+    if (!im || (im.complete && im.naturalWidth)) return res();
+    im.addEventListener('load', () => res(), {once:true}); im.addEventListener('error', () => res(), {once:true}); setTimeout(res, 8000); });
+}
+// The collage: each tile's real outline on a coarse grid, biggest first, each one placed where it touches the most
+// of the tiles already down while covering as little of them as possible, and staying inside a cloud shape:
+// a wide oval with puffy bumps around the top and sides and a flatter bottom.
+async function makeCollage(){
+  const list = pieces.slice(); if (!list.length) return [];
+  await Promise.all(list.map(loadThumb));
+  const CELL = 16;
+  const shapes = list.map(p => {
+    p.size = 1; p.rot = 0; const [dw, dh] = baseSize(p.w, p.h); p.dw = dw; p.dh = dh;
+    const cw = Math.max(1, Math.ceil(dw/CELL)), ch = Math.max(1, Math.ceil(dh/CELL)), cells = [];
+    try { const c = mkCanvas(cw, ch), g = c.getContext('2d', {willReadFrequently:true});
+      if (p.fx || p.fy){ g.translate(p.fx ? cw : 0, p.fy ? ch : 0); g.scale(p.fx ? -1 : 1, p.fy ? -1 : 1); }
+      g.drawImage(p.imgThumb, 0, 0, cw, ch); const d = g.getImageData(0, 0, cw, ch).data;
+      for (let i=0;i<cw*ch;i++) if (d[i*4 + 3] > 60) cells.push(i % cw, (i/cw) | 0); } catch {}
+    if (!cells.length) for (let y=0;y<ch;y++) for (let x=0;x<cw;x++) cells.push(x, y);
+    return {p, cw, ch, cells, n: cells.length/2};
+  }).sort((a, b) => b.n - a.n);
+  const total = shapes.reduce((a, s) => a + s.n, 0), big = Math.max(...shapes.map(s => Math.max(s.cw, s.ch)));
+  const G = Math.ceil(Math.sqrt(total)*2.4 + big*3), occ = new Uint8Array(G*G), near = new Uint8Array(G*G), mid = G/2;
+  let bx0 = mid, by0 = mid, bx1 = mid, by1 = mid;
+  // how far each grid cell is outside the cloud (0 inside), so placements that bulge out of it cost more
+  const rb = Math.sqrt(total*.68/(Math.PI*1.4)), ra = rb*1.4, ph = Math.random()*6.28, outside = new Float32Array(G*G);
+  for (let y=0;y<G;y++) for (let x=0;x<G;x++){
+    const dx = (x - mid)/ra, dy = (y - mid)/rb, th = Math.atan2(dy, dx), up = dy < 0;
+    const edge = (1 + (up ? .14 : .05)*Math.sin(5*th + ph) + (up ? .07 : .02)*Math.sin(9*th + ph*2))*(up ? 1 : .88);
+    outside[y*G + x] = Math.max(0, Math.hypot(dx, dy) - edge);
+  }
+  const put = (sh, ox, oy) => {
+    for (let k=0;k<sh.cells.length;k+=2){ const X = ox + sh.cells[k], Y = oy + sh.cells[k+1]; occ[Y*G + X] = 1;
+      for (let dy=-1; dy<=1; dy++) for (let dx=-1; dx<=1; dx++) near[(Y + dy)*G + X + dx] = 1; }
+    bx0 = Math.min(bx0, ox); by0 = Math.min(by0, oy); bx1 = Math.max(bx1, ox + sh.cw); by1 = Math.max(by1, oy + sh.ch);
+    sh.ox = ox; sh.oy = oy;
+  };
+  put(shapes[0], Math.round(mid - shapes[0].cw/2), Math.round(mid - shapes[0].ch/2)); bx0 = shapes[0].ox; by0 = shapes[0].oy;
+  for (let i=1;i<shapes.length;i++){
+    const sh = shapes[i]; let best = null;
+    if (i % 3 === 0) await new Promise(r => setTimeout(r, 0));   // keep the page responsive while it thinks
+    for (let oy = Math.max(1, by0 - sh.ch + 1); oy <= Math.min(G - sh.ch - 2, by1 - 1); oy += 2)
+      for (let ox = Math.max(1, bx0 - sh.cw + 1); ox <= Math.min(G - sh.cw - 2, bx1 - 1); ox += 2){
+        let over = 0, touch = 0, out = 0;
+        for (let k=0;k<sh.cells.length;k+=2){ const j = (oy + sh.cells[k+1])*G + ox + sh.cells[k]; if (occ[j]) over++; else if (near[j]) touch++; out += outside[j]; }
+        if (!touch && !over) continue;
+        const cx = (ox + sh.cw/2 - mid)/ra, cy = (oy + sh.ch/2 - mid)/rb;
+        const score = over*.9/sh.n - touch*2.6/sh.n + out*6/sh.n + Math.hypot(cx, cy)*.7;
+        if (!best || score < best.score) best = {score, ox, oy};
+      }
+    if (!best) best = {ox: bx1 + 1, oy: by0};
+    put(sh, best.ox, best.oy);
+  }
+  // squeeze: every tile slides toward the middle a cell at a time while it covers no more than ~20% of the others,
+  // which closes the black gaps the first pass leaves (a little overlap is fine)
+  const cnt = new Uint16Array(G*G), mark = (sh, d) => { for (let k=0;k<sh.cells.length;k+=2) cnt[(sh.oy + sh.cells[k+1])*G + sh.ox + sh.cells[k]] += d; };
+  shapes.forEach(sh => mark(sh, 1));
+  const dist = sh => Math.hypot((sh.ox + sh.cw/2 - mid)/ra, (sh.oy + sh.ch/2 - mid)/rb);
+  for (let it=0; it<60; it++){
+    let moved = false;
+    for (const sh of shapes.slice(1).sort((a, b) => dist(b) - dist(a))){
+      mark(sh, -1);
+      const sx = Math.sign(Math.round(mid - (sh.ox + sh.cw/2))), sy = Math.sign(Math.round(mid - (sh.oy + sh.ch/2))), d0 = dist(sh);
+      for (const [dx, dy] of [[sx, sy], [sx, 0], [0, sy]]){
+        if (!dx && !dy) continue;
+        const nx = sh.ox + dx, ny = sh.oy + dy; if (nx < 1 || ny < 1 || nx + sh.cw > G - 2 || ny + sh.ch > G - 2) continue;
+        let over = 0; for (let k=0;k<sh.cells.length;k+=2) if (cnt[(ny + sh.cells[k+1])*G + nx + sh.cells[k]]) over++;
+        const ox = sh.ox, oy = sh.oy; sh.ox = nx; sh.oy = ny;
+        if (over <= Math.max(3, sh.n*.2) && dist(sh) < d0){ moved = true; break; }
+        sh.ox = ox; sh.oy = oy;
+      }
+      mark(sh, 1);
+    }
+    if (!moved) break;
+    if (it % 10 === 9) await new Promise(r => setTimeout(r, 0));
+  }
+  bx0 = Math.min(...shapes.map(sh => sh.ox)); by0 = Math.min(...shapes.map(sh => sh.oy));
+  bx1 = Math.max(...shapes.map(sh => sh.ox + sh.cw)); by1 = Math.max(...shapes.map(sh => sh.oy + sh.ch));
+  // into the middle of the wall; the biggest tiles sit at the back
+  const cx = (bx0 + bx1)/2*CELL, cy = (by0 + by1)/2*CELL;
+  shapes.forEach((sh, i) => { const p = sh.p; p.px = BOARD_C + sh.ox*CELL - cx; p.py = BOARD_C + sh.oy*CELL - cy; p.z = i + 1; });
+  collageBox = {x0: BOARD_C - (bx1 - bx0)*CELL/2, y0: BOARD_C - (by1 - by0)*CELL/2, w: (bx1 - bx0)*CELL, h: (by1 - by0)*CELL};
+  return list;
+}
+let collageBox = null;
+
+/* ---------------- saved collages ----------------
+   A saved collage keeps only where each tile sat, by the tile's id. Names shown with it are always read
+   from the tiles themselves, so renaming a tile on the wall renames it in every saved collage too. */
+let collages = [];
+const PLACE_KEYS = ['px', 'py', 'z', 'size', 'rot', 'fx', 'fy'];
+function collageBounds(c){
+  let b = null;
+  for (const p of pieces){ const t = c.tiles && c.tiles[p.id]; if (!t) continue;
+    const [dw, dh] = baseSize(p.w, p.h), k = t.size || 1, x0 = t.px, y0 = t.py, x1 = x0 + dw*k, y1 = y0 + dh*k;
+    b = b ? {x0: Math.min(b.x0, x0), y0: Math.min(b.y0, y0), x1: Math.max(b.x1, x1), y1: Math.max(b.y1, y1)} : {x0, y0, x1, y1}; }
+  return b;
+}
+async function drawCollagePreview(cnv, c){
+  const W = 152, H = 114; cnv.width = W; cnv.height = H; const g = cnv.getContext('2d'), b = collageBounds(c); if (!b) return;
+  const items = pieces.filter(p => c.tiles[p.id]).sort((a, z) => (c.tiles[a.id].z || 0) - (c.tiles[z.id].z || 0));
+  await Promise.all(items.map(loadThumb));
+  const k = Math.min(W/(b.x1 - b.x0), H/(b.y1 - b.y0))*.92, ox = (W - (b.x1 - b.x0)*k)/2, oy = (H - (b.y1 - b.y0)*k)/2;
+  for (const p of items){ const t = c.tiles[p.id], im = getImg(p, 'thumb'); if (!im) continue;
+    const [dw, dh] = baseSize(p.w, p.h), w = dw*(t.size || 1)*k, h = dh*(t.size || 1)*k;
+    g.save(); g.translate(ox + (t.px - b.x0)*k + w/2, oy + (t.py - b.y0)*k + h/2); if (t.rot) g.rotate(t.rot); if (t.fx || t.fy) g.scale(t.fx ? -1 : 1, t.fy ? -1 : 1);
+    g.drawImage(im, -w/2, -h/2, w, h); g.restore(); }
+}
+function renderSaved(){
+  const list = document.getElementById('colList'); if (!list || document.getElementById('colSaved').hidden) return;
+  const edit = canEdit() && store && store.saveCollage;
+  document.getElementById('colSave').hidden = !edit;
+  document.getElementById('colSave').disabled = !pieces.some(p => p.px != null && p.py != null);
+  list.innerHTML = '';
+  if (!collages.length){ const e = document.createElement('p'); e.className = 'colempty'; e.textContent = edit ? 'Nothing saved yet. Make a collage you like, then save it here to come back to it any time.' : 'No saved collages yet.'; list.append(e); return; }
+  for (const c of collages.slice().sort((a, b) => b.saved - a.saved)){
+    const row = document.createElement('div'); row.className = 'colrow';
+    const cnv = document.createElement('canvas'); cnv.setAttribute('aria-hidden', 'true'); drawCollagePreview(cnv, c);
+    const info = document.createElement('div');
+    const nm = document.createElement('input'); nm.className = 'cname'; nm.value = c.name || 'Collage'; nm.maxLength = 40; nm.setAttribute('aria-label', 'Collage name'); nm.readOnly = !edit;
+    nm.onchange = () => { const v = nm.value.trim() || 'Collage'; nm.value = v; if (v !== c.name){ c.name = v; store.renameCollage(c, v).catch(() => showToast("Couldn't rename that collage.")); } };
+    nm.onkeydown = e => { if (e.key === 'Enter') nm.blur(); };
+    const onWall = pieces.filter(p => c.tiles[p.id]).sort((a, b) => (a.ref || 0) - (b.ref || 0));
+    const gone = Object.keys(c.tiles).length - onWall.length;
+    const tl = document.createElement('div'); tl.className = 'ctiles';
+    tl.textContent = onWall.map(p => `#${p.ref || '?'} ${p.name || kindName(p.kind) || 'Tile'}`).join(', ') + (gone ? ` · ${gone} tile${gone === 1 ? '' : 's'} no longer on the wall` : '');
+    const act = document.createElement('div'); act.className = 'cact';
+    if (edit){
+      const use = document.createElement('button'); use.className = 'pill'; use.textContent = 'Put it back on the wall'; use.onclick = () => useCollage(c);
+      const del = document.createElement('button'); del.className = 'pill'; del.textContent = 'Delete';
+      del.onclick = () => { if (del.dataset.sure){ store.removeCollage(c).catch(() => showToast("Couldn't delete that collage.")); collages = collages.filter(x => x !== c); renderSaved(); } else { del.dataset.sure = 1; del.textContent = 'Tap again to delete'; } };
+      act.append(use, del);
+    }
+    info.append(nm, tl, act); row.append(cnv, info); list.append(row);
+  }
+}
+document.getElementById('colSave').onclick = async () => {
+  const tiles = {};
+  for (const p of pieces) if (p.px != null && p.py != null){ const t = {}; for (const k of PLACE_KEYS) t[k] = k === 'fx' || k === 'fy' ? !!p[k] : (p[k] || (k === 'size' ? 1 : 0)); t.px = p.px; t.py = p.py; tiles[p.id] = t; }
+  let n = collages.length + 1; while (collages.some(c => c.name === 'Collage ' + n)) n++;
+  const c = {name: 'Collage ' + n, saved: Date.now(), tiles};
+  try { await store.saveCollage(c); showToast(`Saved as "${c.name}"`); } catch { showToast("Couldn't save the collage. Check your connection."); }
+  renderSaved();
+};
+function useCollage(c){
+  orgScrim.hidden = true; cancelEdit(); beginEdit();
+  const moved = [];
+  for (const p of pieces){
+    const t = c.tiles[p.id];
+    if (t){ for (const k of PLACE_KEYS) p[k] = t[k]; }
+    else if (p.px == null && p.py == null) continue;
+    else { p.px = p.py = null; p.size = 1; p.rot = 0; p.z = 0; }   // tiles added since wait beside it
+    moved.push(p);
+  }
+  layout(shown()); needs = true;
+  const b = collageBounds(c);
+  if (b){ const w = b.x1 - b.x0, h = b.y1 - b.y0, s = Math.min(S_MAX, vw*.86/w, vh*.72/h); animateTo({s, tx: vw/2 - (b.x0 + w/2)*s, ty: vh/2 - (b.y0 + h/2)*s}); }
+  commitEdit('putting back a saved collage'); offerUndo(`"${c.name}" is back`);
+  for (const p of moved) savePlace(p);
+}
+document.getElementById('orgTime').onclick = () => setOrgMode('time');
+document.getElementById('orgType').onclick = () => setOrgMode('type');
+document.getElementById('orgBtn').onclick = () => { select(null); setOrgMode(orgMode === 'collage' ? 'time' : orgMode); orgScrim.hidden = false; document.getElementById('orgCancel').focus(); };
+// rows for each type in turn, with extra space between the groups; every tile is pinned where it lands
+function organizeByType(){
+  const groups = ['character', 'object', 'background', null], zOf = {character: 3, object: 2, background: 1};
+  let y = flowY();
+  for (const g of groups){
+    const items = pieces.filter(p => (p.kind || null) === g); if (!items.length) continue;
+    let x = FLOW_X;
+    for (const p of items){
+      const [dw, dh] = baseSize(p.w, p.h);
+      if (x + dw > FLOW_X + FLOW_W && x > FLOW_X){ x = FLOW_X; y += ROW_H + GAP; }
+      p.size = 1; p.rot = 0; p.z = zOf[g] || 2; p.px = x; p.py = y + (ROW_H - dh)/2; x += dw + GAP;
+    }
+    y += ROW_H + GAP*8;
+  }
+  return pieces.slice();
+}
+document.getElementById('orgCancel').onclick = closeOrg;
+orgScrim.addEventListener('click', e => { if (e.target === orgScrim) closeOrg(); });
+// after Organize, Collage or a saved collage, a short note; the Undo and Redo buttons take it back
+function offerUndo(text){ showToast(text + ' · Undo is up top'); }
+
+document.getElementById('orgGo').onclick = async () => {
+  orgScrim.hidden = true; cancelEdit(); beginEdit();
+
+  let moved;
+  if (orgMode === 'collage'){ showToast('Making the collage…'); moved = await makeCollage(); }
+  else if (orgMode === 'type') moved = organizeByType();
+  else {
+    moved = pieces.filter(p => p.px != null || p.py != null || (p.size || 1) !== 1 || p.z || p.rot);
+    for (const p of moved){ p.px = p.py = null; p.size = 1; p.z = 0; p.rot = 0; }
+  }
+  layout(shown()); needs = true;
+  if (orgMode === 'collage' && collageBox){ const b = collageBox, s = Math.min(S_MAX, vw*.86/b.w, vh*.72/b.h); animateTo({s, tx: vw/2 - (b.x0 + b.w/2)*s, ty: vh/2 - (b.y0 + b.h/2)*s}); }
+  else animateTo(tilesView());
+  commitEdit(orgMode === 'collage' ? 'the collage' : 'organizing');
+  offerUndo(orgMode === 'collage' ? 'Collage made' : 'Wall organized');
+  for (const p of moved) savePlace(p);
+};
+let toastT;
+function showToast(msg){
+  const c = document.getElementById('count'); const old = c.dataset.base || c.textContent;
+  c.dataset.base = old; c.textContent = msg; clearTimeout(toastT);
+  toastT = setTimeout(() => { c.textContent = c.dataset.base; delete c.dataset.base; }, 4000);
+}
+
+/* ---------------- counts ---------------- */
+function refreshKindSel(){
+  const sel = document.getElementById('kindSel'), n = k => pieces.filter(p => (p.kind || 'none') === k).length;
+  const opts = [['all', `All tiles (${pieces.length})`], ['character', `Characters (${n('character')})`], ['object', `Objects (${n('object')})`],
+    ['background', `Backgrounds (${n('background')})`], ['none', `No type (${n('none')})`]];
+  sel.hidden = !pieces.length;
+  sel.innerHTML = '';
+  for (const [v, t] of opts){ const o = document.createElement('option'); o.value = v; o.textContent = t; sel.append(o); }
+  sel.value = showKind;
+}
+function setShowKind(v){
+  showKind = v;
+  if (selected && !shows({kind: selected.kind})) select(null);
+  refreshCount(); needs = true;
+}
+document.getElementById('kindSel').onchange = e => setShowKind(e.target.value);
+// the ⋯ menu: Photos and where the wall is saved; the button shows only when there's something in it
+function syncMore(){
+  const has = !document.getElementById('photosBtn').hidden || !document.getElementById('mode').hidden || !document.getElementById('acctOut').hidden || !document.getElementById('acctIn').hidden;
+  document.getElementById('moreBtn').hidden = !has; if (!has) closeMore();
+}
+function closeMore(){ document.getElementById('moreMenu').hidden = true; document.getElementById('moreBtn').setAttribute('aria-expanded', 'false'); }
+document.getElementById('moreBtn').onclick = e => { e.stopPropagation(); const m = document.getElementById('moreMenu'); m.hidden = !m.hidden; document.getElementById('moreBtn').setAttribute('aria-expanded', String(!m.hidden)); };
+document.addEventListener('pointerdown', e => { if (!e.target.closest('.morewrap')) closeMore(); });
+function refreshCount(){
+  const c = document.getElementById('count');
+  let txt;
+  if (!pieces.length) txt = store && store.kind === 'view' ? 'No tiles yet' : 'Ready for the first drawing';
+  else {
+    const first = Math.min(...pieces.map(p => p.added));
+    const seen = pieces.filter(p => (p.kind || 'none') === showKind).length;
+    txt = showKind === 'all' ? `${pieces.length} tile${pieces.length===1?'':'s'} · since ${new Date(first).toLocaleDateString(undefined,{month:'short', year:'numeric'})}`
+      : `Showing ${seen} of ${pieces.length} tiles`;
+  }
+  if (c.dataset.base !== undefined) c.dataset.base = txt; else c.textContent = txt;
+  document.getElementById('orgBtn').hidden = document.getElementById('collageBtn').hidden = !canEdit() || pieces.length < 2;
+  document.getElementById('photosBtn').hidden = !pieces.length; syncMore(); paintHist();
+  refreshKindSel();
+  document.getElementById('search').hidden = !pieces.length;
+  notifyStory();
+  document.getElementById('sampleNote').hidden = pieces.length > 0 || (store && store.kind === 'view');
+}
+// every tile gets a reference number when it first arrives, oldest first, and keeps it
+function ensureRefs(){
+  if (!wallLoaded || !store || store.kind === 'view') return;
+  let top = pieces.reduce((m, p) => Math.max(m, p.ref || 0), 0);
+  for (const p of pieces) if (!p.ref){ p.ref = ++top; savePlace(p); }
+}
+function setPieces(list){
+  const prevSel = selected && selected.id;
+  pieces = list.sort((a,b) => a.added - b.added || String(a.id).localeCompare(String(b.id)));
+  ensureRefs();
+  layout(shown());
+  selected = prevSel ? pieces.find(p => p.id === prevSel) || null : null;
+  if (!selected) document.getElementById('sel').hidden = true;
+  refreshCount(); needs = true;
+}
+
+/* ---------------- example doodles (shown only while empty) ---------------- */
+function makeSamples(){
+  const rnd = (() => { let s = 7; return () => (s = (s*16807) % 2147483647) / 2147483647; })();
+  const paper = (w,h) => { const c = document.createElement('canvas'); c.width=w; c.height=h; const g=c.getContext('2d'); g.fillStyle='#fbf8f1'; g.fillRect(0,0,w,h); g.lineCap='round'; g.lineJoin='round'; return [c,g]; };
+  const wob = (g, pts, color, wdt) => { g.strokeStyle=color; g.lineWidth=wdt; g.globalAlpha=.88; g.beginPath(); pts.forEach(([x,y],i)=>{ const jx=x+(rnd()-.5)*4, jy=y+(rnd()-.5)*4; i?g.lineTo(jx,jy):g.moveTo(jx,jy); }); g.stroke(); g.globalAlpha=1; };
+  const circlePts = (cx,cy,r,n=40) => Array.from({length:n+1},(_,i)=>[cx+Math.cos(i/n*6.283)*r, cy+Math.sin(i/n*6.283)*r]);
+  const scribble = (g, clip, color, x0,y0,x1,y1) => { g.save(); g.beginPath(); clip(g); g.clip(); g.strokeStyle=color; g.globalAlpha=.55; g.lineWidth=9; g.beginPath(); for(let x=x0-80; x<x1; x+=11){ g.moveTo(x+(rnd()-.5)*6,y1); g.lineTo(x+80+(rnd()-.5)*6,y0);} g.stroke(); g.restore(); g.globalAlpha=1; };
+  const out = [];
+  // sun
+  { const [c,g]=paper(420,400); scribble(g,g=>g.arc(210,200,85,0,6.283),'#ffb703',100,100,320,300); wob(g,circlePts(210,200,85),'#f48c06',9); for(let i=0;i<12;i++){const a=i/12*6.283; wob(g,[[210+Math.cos(a)*110,200+Math.sin(a)*110],[210+Math.cos(a)*165,200+Math.sin(a)*165]],'#f48c06',9);} wob(g,[[180,185],[182,190]],'#3a2a1a',12); wob(g,[[240,185],[242,190]],'#3a2a1a',12); wob(g,[[175,225],[195,245],[225,245],[245,225]],'#3a2a1a',8); out.push(c); }
+  // house
+  { const [c,g]=paper(480,420); scribble(g,g=>g.rect(110,190,260,190),'#e63946',110,190,370,380); wob(g,[[110,190],[370,190],[370,380],[110,380],[110,190]],'#9d0208',9); scribble(g,g=>{g.moveTo(90,195);g.lineTo(240,70);g.lineTo(390,195);g.closePath();},'#457b9d',90,70,390,195); wob(g,[[90,195],[240,70],[390,195]],'#1d3557',9); wob(g,[[210,380],[210,290],[270,290],[270,380]],'#3a2a1a',8); wob(g,[[140,230],[190,230],[190,270],[140,270],[140,230]],'#3a2a1a',7); wob(g,[[30,395],[450,395]],'#2a9d8f',10); out.push(c); }
+  // flower
+  { const [c,g]=paper(300,440); wob(g,[[150,230],[148,300],[152,410]],'#2a9d8f',10); wob(g,[[150,330],[100,300],[150,320]],'#2a9d8f',9); for(let i=0;i<6;i++){const a=i/6*6.283; const cx=150+Math.cos(a)*55, cy=150+Math.sin(a)*55; scribble(g,g=>g.arc(cx,cy,38,0,6.283),'#ff70a6',cx-40,cy-40,cx+40,cy+40); wob(g,circlePts(cx,cy,38,24),'#d6336c',7);} scribble(g,g=>g.arc(150,150,30,0,6.283),'#ffd166',110,110,190,190); wob(g,circlePts(150,150,30,24),'#e09f3e',7); out.push(c); }
+  // rainbow
+  { const [c,g]=paper(560,320); ['#e63946','#f77f00','#fcbf49','#2a9d8f','#457b9d','#7b2cbf'].forEach((col,i)=>{ const r=230-i*22; wob(g,Array.from({length:31},(_,k)=>[280+Math.cos(Math.PI+k/30*Math.PI)*r, 290+Math.sin(Math.PI+k/30*Math.PI)*r]),col,18); }); out.push(c); }
+  // cat face
+  { const [c,g]=paper(380,360); scribble(g,g=>g.arc(190,200,110,0,6.283),'#adb5bd',80,90,300,310); wob(g,circlePts(190,200,110),'#495057',8); wob(g,[[110,130],[105,45],[165,100]],'#495057',8); wob(g,[[270,130],[275,45],[215,100]],'#495057',8); wob(g,circlePts(150,180,10,12),'#2b9348',10); wob(g,circlePts(230,180,10,12),'#2b9348',10); wob(g,[[180,215],[200,215],[190,228],[180,215]],'#d6336c',7); wob(g,[[190,228],[175,248]],'#495057',6); wob(g,[[190,228],[205,248]],'#495057',6); [[120,225,40,215],[120,235,40,245],[260,225,340,215],[260,235,340,245]].forEach(([a,b,c2,d])=>wob(g,[[a,b],[c2,d]],'#495057',5)); out.push(c); }
+  // fish
+  { const [c,g]=paper(460,280); scribble(g,g=>g.ellipse(200,140,130,75,0,0,6.283),'#4cc9f0',70,65,330,215); wob(g,Array.from({length:41},(_,k)=>[200+Math.cos(k/40*6.283)*130,140+Math.sin(k/40*6.283)*75]),'#4361ee',8); scribble(g,g=>{g.moveTo(325,140);g.lineTo(420,70);g.lineTo(420,210);g.closePath();},'#f72585',325,70,420,210); wob(g,[[325,140],[420,70],[420,210],[325,140]],'#b5179e',8); wob(g,circlePts(130,120,12,14),'#1b1b1b',9); out.push(c); }
+  return out.map((cv2,i) => ({id:'sample'+i, w:cv2.width, h:cv2.height, canvas:cv2, added:0}));
+}
+
+/* ---------------- drawing detection ---------------- */
+function mkCanvas(w,h){ const c = document.createElement('canvas'); c.width = Math.max(1,Math.round(w)); c.height = Math.max(1,Math.round(h)); return c; }
+async function loadSource(file){
+  let bmp, w, h;
+  try { bmp = await createImageBitmap(file, {imageOrientation:'from-image'}); w = bmp.width; h = bmp.height; }
+  catch { const url = URL.createObjectURL(file); bmp = new Image(); bmp.src = url; await bmp.decode(); w = bmp.naturalWidth; h = bmp.naturalHeight; }
+  const k = Math.min(1, 2600 / Math.max(w,h));
+  const c = mkCanvas(w*k, h*k); c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+  if (bmp.close) bmp.close();
+  return c;
+}
+// connected components on a 0/1 mask; returns boxes with pixel count and optional weight sum
+function components(mask, w, h, weight){
+  const lab = new Int32Array(w*h), out = [], stack = new Int32Array(w*h);
+  let id = 0;
+  for (let i=0;i<w*h;i++){
+    if (!mask[i] || lab[i]) continue;
+    id++; let sp = 0; stack[sp++] = i; lab[i] = id;
+    let x0=w, y0=h, x1=0, y1=0, n=0, wt=0;
+    while (sp){
+      const j = stack[--sp], x = j % w, y = (j - x)/w; n++; if (weight) wt += weight[j];
+      if (x<x0)x0=x; if (x>x1)x1=x; if (y<y0)y0=y; if (y>y1)y1=y;
+      if (x>0   && mask[j-1] && !lab[j-1]){ lab[j-1]=id; stack[sp++]=j-1; }
+      if (x<w-1 && mask[j+1] && !lab[j+1]){ lab[j+1]=id; stack[sp++]=j+1; }
+      if (y>0   && mask[j-w] && !lab[j-w]){ lab[j-w]=id; stack[sp++]=j-w; }
+      if (y<h-1 && mask[j+w] && !lab[j+w]){ lab[j+w]=id; stack[sp++]=j+w; }
+    }
+    out.push({x0,y0,x1,y1,n,wt});
+  }
+  out.lab = lab;
+  return out;
+}
+// characters drawn touching (a paw on an ear) meet at a narrow neck, and each body is much thicker
+// than that neck. Shrink the filled shape until it falls apart into thick cores, then give every
+// pixel to the core it reaches first. Returns the separate tiles, or null when it's one character.
+const SPLIT_AUTO = {ratio:2.4, minPart:0.12}, SPLIT_HARD = {ratio:1.5, minPart:0.04};
+function splitShape(s, o){
+  if (!s.mask) return null;
+  const {mw, mh, mask} = s, M = mw*mh;
+  let total = 0; for (let k=0;k<M;k++) total += mask[k];
+  if (total < 400) return null;
+  // chamfer distance to the outside: 3 per step, 4 per diagonal (the mask has a blank 1px border)
+  const D = new Int32Array(M);
+  for (let k=0;k<M;k++) D[k] = mask[k] ? 1e9 : 0;
+  for (let y=1;y<mh-1;y++) for (let x=1;x<mw-1;x++){ const k = y*mw+x; if (!D[k]) continue;
+    D[k] = Math.min(D[k], D[k-1]+3, D[k-mw]+3, D[k-mw-1]+4, D[k-mw+1]+4); }
+  let maxD = 0;
+  for (let y=mh-2;y>0;y--) for (let x=mw-2;x>0;x--){ const k = y*mw+x; if (!D[k]) continue;
+    D[k] = Math.min(D[k], D[k+1]+3, D[k+mw]+3, D[k+mw+1]+4, D[k+mw-1]+4); if (D[k] > maxD) maxD = D[k]; }
+  const lab = new Int32Array(M), stack = new Int32Array(M), own = new Int32Array(M), queue = new Int32Array(M);
+  const grow = seeds => { // seeds: list of core ids → own[k] = index+1
+    own.fill(0); let qh = 0, qt = 0; const idx = new Map(seeds.map((c, i) => [c, i+1]));
+    for (let k=0;k<M;k++){ const v = idx.get(lab[k]); if (v){ own[k] = v; queue[qt++] = k; } }
+    while (qh < qt){ const j = queue[qh++], x = j % mw;
+      for (const k of [x>0?j-1:-1, x<mw-1?j+1:-1, j-mw, j+mw]) if (k>=0 && k<M && mask[k] && !own[k]){ own[k] = own[j]; queue[qt++] = k; } }
+    // pieces that don't touch the rest (a pumpkin segment drawn apart) go to the nearest part
+    qh = 0; qt = 0; for (let k=0;k<M;k++) if (own[k]) queue[qt++] = k;
+    while (qh < qt){ const j = queue[qh++], x = j % mw;
+      for (const k of [x>0?j-1:-1, x<mw-1?j+1:-1, j-mw, j+mw]) if (k>=0 && k<M && !own[k]){ own[k] = own[j]; queue[qt++] = k; } }
+    for (let k=0;k<M;k++) if (!mask[k]) own[k] = 0;
+    const areas = new Array(seeds.length).fill(0); for (let k=0;k<M;k++) if (own[k]) areas[own[k]-1]++;
+    return areas;
+  };
+  const step = Math.max(3, Math.round(maxD/48));
+  for (let t = 6; t < maxD*0.75; t += step){
+    lab.fill(0); const cores = []; let id = 0;
+    for (let i=0;i<M;i++){ if (D[i] <= t || lab[i]) continue;
+      id++; let sp = 0, n = 0, peak = 0; stack[sp++] = i; lab[i] = id;
+      while (sp){ const j = stack[--sp], x = j % mw; n++; if (D[j] > peak) peak = D[j];
+        for (const k of [x>0?j-1:-1, x<mw-1?j+1:-1, j-mw, j+mw]) if (k>=0 && k<M && D[k] > t && !lab[k]){ lab[k] = id; stack[sp++] = k; } }
+      cores.push({id, n, peak}); }
+    let big = cores.filter(c => c.peak >= o.ratio*t).map(c => c.id);
+    if (big.length < 2) continue;
+    let areas = grow(big);
+    const keep = big.filter((c, i) => areas[i] >= total*o.minPart);
+    if (keep.length < 2) continue;
+    if (keep.length < big.length){ big = keep; areas = grow(big); }
+    // each part becomes its own tile, cropped to its own outline
+    const sx = s.w/mw, sy = s.h/mh;
+    return big.map((c, i) => {
+      let x0=mw, y0=mh, x1=0, y1=0;
+      for (let y=0;y<mh;y++) for (let x=0;x<mw;x++) if (own[y*mw+x] === i+1){ if (x<x0)x0=x; if (x>x1)x1=x; if (y<y0)y0=y; if (y>y1)y1=y; }
+      const nw = x1-x0+3, nh = y1-y0+3, m = new Uint8Array(nw*nh);
+      for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++) if (own[y*mw+x] === i+1) m[(y-y0+1)*nw + x-x0+1] = 1;
+      return {x: s.x + (x0-1)*sx, y: s.y + (y0-1)*sy, w: nw*sx, h: nh*sy, mask: m, mw: nw, mh: nh};
+    }).sort((a, b) => Math.abs(a.y-b.y) < 0.15*s.h ? a.x-b.x : a.y-b.y);
+  }
+  return null;
+}
+function analyze(src){
+  const A = Math.min(1, 1100 / Math.max(src.width, src.height));
+  const w = Math.max(8, Math.round(src.width*A)), h = Math.max(8, Math.round(src.height*A));
+  const c = mkCanvas(w,h), g = c.getContext('2d', {willReadFrequently:true});
+  g.drawImage(src, 0, 0, w, h);
+  const d = g.getImageData(0,0,w,h).data, N = w*h;
+  // 3x3 average first, so camera grain doesn't read as faint pencil
+  const blur3 = arr => { const o = new Float32Array(N);
+    for (let y=0;y<h;y++) for (let x=0;x<w;x++){ let s2=0, n=0;
+      for (let yy=Math.max(0,y-1); yy<=Math.min(h-1,y+1); yy++) for (let xx=Math.max(0,x-1); xx<=Math.min(w-1,x+1); xx++){ s2 += arr[yy*w+xx]; n++; }
+      o[y*w+x] = s2/n; }
+    return o; };
+  const R0 = new Float32Array(N), G0 = new Float32Array(N), B0 = new Float32Array(N);
+  for (let i=0,p=0;i<N;i++,p+=4){ R0[i]=d[p]; G0[i]=d[p+1]; B0[i]=d[p+2]; }
+  const Rs = blur3(R0), Gs = blur3(G0), Bs = blur3(B0);
+  // brightness and chromaticity (colour with brightness divided out, so shade doesn't change it)
+  const Ls = new Float32Array(N), cR = new Float32Array(N), cG = new Float32Array(N);
+  for (let i=0;i<N;i++){
+    const s2 = Rs[i]+Gs[i]+Bs[i]+1;
+    Ls[i] = (Rs[i]*299 + Gs[i]*587 + Bs[i]*114)/1000; cR[i] = Rs[i]/s2; cG[i] = Gs[i]/s2;
+  }
+  const chromaDist = (i, r0, g0) => Math.abs(cR[i]-r0) + Math.abs(cG[i]-g0) + Math.abs((cR[i]+cG[i]) - (r0+g0));
+  /* 1. the paper: whatever colour it is, it's the most common bright colour in the middle of the photo */
+  const cx0 = Math.round(w*.2), cx1 = Math.round(w*.8), cy0 = Math.round(h*.2), cy1 = Math.round(h*.8);
+  const lh = new Uint32Array(256); let cn = 0;
+  for (let y=cy0;y<cy1;y++) for (let x=cx0;x<cx1;x++){ lh[Math.min(255, Ls[y*w+x]|0)]++; cn++; }
+  let lCut = 0; for (let k=0, acc=0; k<256; k++){ acc += lh[k]; if (acc >= cn*0.4){ lCut = k; break; } }
+  const q = new Uint32Array(4096), bin = i => ((Rs[i]>>4)<<8) | ((Gs[i]>>4)<<4) | (Bs[i]>>4);
+  for (let y=cy0;y<cy1;y++) for (let x=cx0;x<cx1;x++){ const i = y*w+x; if (Ls[i] >= lCut) q[bin(i)]++; }
+  let bestBin = 0, bestN = -1;
+  for (let k=0;k<4096;k++){ if (!q[k]) continue;
+    const r2 = k>>8, g2 = (k>>4)&15, b2 = k&15; let n = 0;
+    for (let dr=-1;dr<=1;dr++) for (let dg=-1;dg<=1;dg++) for (let db=-1;db<=1;db++){
+      const rr=r2+dr, g3=g2+dg, bb=b2+db; if (rr<0||g3<0||bb<0||rr>15||g3>15||bb>15) continue; n += q[(rr<<8)|(g3<<4)|bb]; }
+    if (n > bestN){ bestN = n; bestBin = k; } }
+  let sr=0, sg=0, sl=0, sn=0;
+  for (let y=cy0;y<cy1;y++) for (let x=cx0;x<cx1;x++){ const i = y*w+x, k = bin(i);
+    if (Ls[i] >= lCut && Math.abs((k>>8)-(bestBin>>8))<=1 && Math.abs(((k>>4)&15)-((bestBin>>4)&15))<=1 && Math.abs((k&15)-(bestBin&15))<=1){ sr+=cR[i]; sg+=cG[i]; sl+=Ls[i]; sn++; } }
+  const paperR = sn ? sr/sn : 1/3, paperG = sn ? sg/sn : 1/3, paperL = sn ? sl/sn : 200;
+  const paperLike = new Uint8Array(N);
+  for (let i=0;i<N;i++) paperLike[i] = chromaDist(i, paperR, paperG) < 0.07 && Ls[i] > paperL*0.6 ? 1 : 0;
+  // the sheet = the biggest paper-coloured area plus everything it encloses (the drawings)
+  const pcs = components(paperLike, w, h);
+  const page = new Uint8Array(N);
+  let px0=0, py0=0, px1=w-1, py1=h-1;
+  const bigIdx = pcs.reduce((bi, b, k) => b.n > (pcs[bi] ? pcs[bi].n : -1) ? k : bi, -1);
+  if (bigIdx >= 0 && pcs[bigIdx].n > 0.1*N){
+    const big = pcs[bigIdx], id = bigIdx+1, lab0 = pcs.lab;
+    // the sheet's outline (convex hull), so drawings running off the edge of the photo still count
+    // rows (then columns) far narrower than the sheet are leaks into white things behind it
+    // (a paper towel, a wall), not the sheet: leave them out of the outline
+    const rowA = new Int32Array(h).fill(-1), rowB = new Int32Array(h).fill(-1);
+    for (let y=big.y0; y<=big.y1; y++) for (let x=big.x0; x<=big.x1; x++) if (lab0[y*w+x] === id){ if (rowA[y]<0) rowA[y]=x; rowB[y]=x; }
+    const ext = []; for (let y=big.y0; y<=big.y1; y++) if (rowA[y]>=0) ext.push(rowB[y]-rowA[y]);
+    ext.sort((p1,p2)=>p1-p2); const medW = ext[Math.floor(ext.length*0.6)] || w;
+    const keepRow = y => rowA[y]>=0 && rowB[y]-rowA[y] >= medW*0.55;
+    const colA = new Int32Array(w).fill(-1), colB = new Int32Array(w).fill(-1);
+    for (let y=big.y0; y<=big.y1; y++) if (keepRow(y)) for (let x=rowA[y]; x<=rowB[y]; x++) if (lab0[y*w+x] === id){ if (colA[x]<0) colA[x]=y; colB[x]=y; }
+    const cext = []; for (let x=0;x<w;x++) if (colA[x]>=0) cext.push(colB[x]-colA[x]);
+    cext.sort((p1,p2)=>p1-p2); const medH = cext[Math.floor(cext.length*0.6)] || h;
+    const keepCol = x => colA[x]>=0 && colB[x]-colA[x] >= medH*0.55;
+    const pts = [];
+    for (let y=big.y0; y<=big.y1; y++){ if (!keepRow(y)) continue; let a=-1, b=-1;
+      for (let x=rowA[y]; x<=rowB[y]; x++) if (lab0[y*w+x] === id && keepCol(x)){ if (a<0) a=x; b=x; }
+      if (a >= 0){ pts.push([a,y]); if (b !== a) pts.push([b,y]); } }
+    pts.sort((p1,p2) => p1[0]-p2[0] || p1[1]-p2[1]);
+    const cross = (o,a2,b2) => (a2[0]-o[0])*(b2[1]-o[1]) - (a2[1]-o[1])*(b2[0]-o[0]);
+    const lo = [], hi = [];
+    for (const p2 of pts){ while (lo.length>=2 && cross(lo[lo.length-2], lo[lo.length-1], p2) <= 0) lo.pop(); lo.push(p2); }
+    for (let k=pts.length-1;k>=0;k--){ const p2 = pts[k]; while (hi.length>=2 && cross(hi[hi.length-2], hi[hi.length-1], p2) <= 0) hi.pop(); hi.push(p2); }
+    const hull = lo.slice(0,-1).concat(hi.slice(0,-1));
+    // outside the outline is outside; from there, spread through anything that isn't paper (a hand reaching in)
+    const outside = new Uint8Array(N), st2 = [];
+    for (let y=0;y<h;y++){
+      let xa = Infinity, xb = -Infinity;
+      for (let k=0;k<hull.length;k++){ const [x1,y1] = hull[k], [x2,y2] = hull[(k+1)%hull.length];
+        if ((y1<=y && y<=y2) || (y2<=y && y<=y1)){
+          if (y1 === y2){ xa = Math.min(xa, x1, x2); xb = Math.max(xb, x1, x2); }
+          else { const xi = x1 + (y-y1)*(x2-x1)/(y2-y1); xa = Math.min(xa, xi); xb = Math.max(xb, xi); } } }
+      for (let x=0;x<w;x++) if (x < xa || x > xb){ outside[y*w+x] = 1; st2.push(y*w+x); }
+    }
+    // ...but marker outlines stop it, so a drawing the hand touches isn't swallowed with the hand
+    // (thickened a little, so a small gap where the marker skipped doesn't let it in)
+    const wall = new Uint8Array(N), dark = paperL*0.45, WR = Math.max(1, Math.round(0.003*Math.max(w,h))), rmin = new Float32Array(N);
+    for (let y=0;y<h;y++) for (let x=0;x<w;x++){ let m = 255;
+      for (let xx=Math.max(0,x-WR); xx<=Math.min(w-1,x+WR); xx++) m = Math.min(m, Ls[y*w+xx]);
+      rmin[y*w+x] = m; }
+    for (let y=0;y<h;y++) for (let x=0;x<w;x++){ let m = 255;
+      for (let yy=Math.max(0,y-WR); yy<=Math.min(h-1,y+WR); yy++) m = Math.min(m, rmin[yy*w+x]);
+      wall[y*w+x] = m < dark ? 1 : 0; }
+    let hx0=w, hy0=h, hx1=0, hy1=0;
+    for (const [x,y] of hull){ hx0=Math.min(hx0,x); hx1=Math.max(hx1,x); hy0=Math.min(hy0,y); hy1=Math.max(hy1,y); }
+    while (st2.length){ const j = st2.pop(), x = j % w;
+      for (const k of [x>0?j-1:-1, x<w-1?j+1:-1, j-w, j+w]) if (k>=0 && k<N && !outside[k] && lab0[k] !== id && !wall[k]){ outside[k] = 1; st2.push(k); } }
+    // where the sheet is in shadow the outline can cut across a drawing; that part is closed in by
+    // its own marker lines and never reaches the photo's edge, so give it back (with its lines)
+    const seen = new Uint8Array(N), back = new Uint8Array(N), part = [];
+    for (let i=0;i<N;i++){ if (!outside[i] || wall[i] || seen[i]) continue;
+      part.length = 0; let edge = false, sx = 0, sy = 0; seen[i] = 1; st2.push(i);
+      while (st2.length){ const j = st2.pop(), x = j % w, y = (j - x)/w; part.push(j); sx += x; sy += y;
+        if (x === 0 || y === 0 || x === w-1 || y === h-1) edge = true;
+        for (const k of [x>0?j-1:-1, x<w-1?j+1:-1, j-w, j+w]) if (k>=0 && k<N && outside[k] && !wall[k] && !seen[k]){ seen[k] = 1; st2.push(k); } }
+      const mx = sx/part.length, my = sy/part.length;
+      if (!edge && part.length < 0.15*N && mx >= hx0 && mx <= hx1 && my >= hy0 && my <= hy1) for (const j of part) back[j] = 1; }
+    for (let y=0;y<h;y++) for (let x=0;x<w;x++){ const i = y*w+x; if (!back[i]) continue; outside[i] = 0;
+      for (let yy=Math.max(0,y-WR-1); yy<=Math.min(h-1,y+WR+1); yy++) for (let xx=Math.max(0,x-WR-1); xx<=Math.min(w-1,x+WR+1); xx++){
+        const k = yy*w+xx; if (wall[k] && outside[k]){ outside[k] = 0; hx0 = Math.min(hx0, xx); hx1 = Math.max(hx1, xx); hy0 = Math.min(hy0, yy); hy1 = Math.max(hy1, yy); } } }
+    for (let i=0;i<N;i++) page[i] = outside[i] ? 0 : 1;
+    px0 = Math.max(0,hx0|0); py0 = Math.max(0,hy0|0); px1 = Math.min(w-1,Math.ceil(hx1)); py1 = Math.min(h-1,Math.ceil(hy1));
+  } else page.fill(1);
+  const pw = px1-px0+1, ph = py1-py0+1, PN = pw*ph;
+  // stay a little inside the sheet's edge, where shadows and the table live
+  const e = Math.max(2, Math.round(0.006*Math.max(pw,ph)));
+  const PI1 = new Int32Array((w+1)*(h+1));
+  for (let y=0;y<h;y++){ let row=0; for (let x=0;x<w;x++){ row += page[y*w+x]; PI1[(y+1)*(w+1)+x+1] = PI1[y*(w+1)+x+1] + row; } }
+  const inPage = (x, y) => { const xa=Math.max(0,x-e), xb=Math.min(w,x+e+1), ya=Math.max(0,y-e), yb=Math.min(h,y+e+1);
+    return PI1[yb*(w+1)+xb] - PI1[ya*(w+1)+xb] - PI1[yb*(w+1)+xa] + PI1[ya*(w+1)+xa] === (xb-xa)*(yb-ya); };
+  /* 2. the paper's own colour and brightness, block by block (handles shadows, lamps and tinted light) */
+  const B = Math.max(8, Math.round(Math.max(pw,ph)/14));
+  const nbx = Math.ceil(pw/B), nby = Math.ceil(ph/B), NB = nbx*nby;
+  const bL = new Float32Array(NB), bR = new Float32Array(NB), bG = new Float32Array(NB), have = new Uint8Array(NB);
+  const bh = new Uint32Array(256);
+  for (let by=0; by<nby; by++) for (let bx=0; bx<nbx; bx++){
+    bh.fill(0); let n = 0, tot = 0, rr = 0, gg = 0;
+    for (let y=by*B; y<Math.min(ph,(by+1)*B); y++) for (let x=bx*B; x<Math.min(pw,(bx+1)*B); x++){
+      const i = (y+py0)*w + x+px0; tot++;
+      if (!paperLike[i]) continue; bh[Math.min(255, Ls[i]|0)]++; rr += cR[i]; gg += cG[i]; n++;
+    }
+    const k = by*nbx+bx;
+    if (n < Math.max(6, tot*0.08)) continue;
+    let acc=0, v=255; for (let t=0;t<256;t++){ acc+=bh[t]; if (acc >= n*0.7){ v=t; break; } }
+    bL[k] = v; bR[k] = rr/n; bG[k] = gg/n; have[k] = 1;
+  }
+  // blocks with no bare paper (fully coloured in) borrow from their neighbours
+  for (let pass=0, missing=1; missing && pass<NB; pass++){
+    missing = 0; const nowHave = have.slice();
+    for (let by=0; by<nby; by++) for (let bx=0; bx<nbx; bx++){
+      const k = by*nbx+bx; if (have[k]) continue;
+      let n=0, l=0, rr=0, gg=0;
+      for (let yy=Math.max(0,by-1); yy<=Math.min(nby-1,by+1); yy++) for (let xx=Math.max(0,bx-1); xx<=Math.min(nbx-1,bx+1); xx++){
+        const k2 = yy*nbx+xx; if (!have[k2]) continue; n++; l += bL[k2]; rr += bR[k2]; gg += bG[k2]; }
+      if (n){ bL[k]=l/n; bR[k]=rr/n; bG[k]=gg/n; nowHave[k]=1; } else missing = 1;
+    }
+    have.set(nowHave);
+  }
+  for (let k=0;k<NB;k++) if (!have[k]){ bL[k]=paperL; bR[k]=paperR; bG[k]=paperG; }
+  const sample = (arr, x, y) => {
+    const fx = Math.max(0, Math.min(nbx-1, x/B - .5)), fy = Math.max(0, Math.min(nby-1, y/B - .5));
+    const x0 = Math.floor(fx), y0 = Math.floor(fy), x1 = Math.min(nbx-1, x0+1), y1 = Math.min(nby-1, y0+1), ax = fx-x0, ay = fy-y0;
+    return (arr[y0*nbx+x0]*(1-ax) + arr[y0*nbx+x1]*ax)*(1-ay) + (arr[y1*nbx+x0]*(1-ax) + arr[y1*nbx+x1]*ax)*ay;
+  };
+  /* 3. ink = on the sheet, and noticeably darker than the paper there or a different colour from it */
+  const ink = new Uint8Array(PN);
+  for (let y=0;y<ph;y++) for (let x=0;x<pw;x++){
+    if (!inPage(x+px0, y+py0)) continue;
+    const i = (y+py0)*w + x+px0, bl = sample(bL,x,y);
+    ink[y*pw+x] = (bl - Ls[i] > Math.max(13, bl*0.08)) || chromaDist(i, sample(bR,x,y), sample(bG,x,y)) > 0.08 ? 1 : 0;
+  }
+  // drop lone specks
+  const clean = new Uint8Array(PN);
+  for (let y=1;y<ph-1;y++) for (let x=1;x<pw-1;x++){
+    const i = y*pw+x; if (!ink[i]) continue;
+    const n = ink[i-1]+ink[i+1]+ink[i-pw]+ink[i+pw]+ink[i-pw-1]+ink[i-pw+1]+ink[i+pw-1]+ink[i+pw+1];
+    if (n >= 2) clean[i] = 1;
+  }
+  /* 4. grow strokes so one drawing becomes one blob */
+  const r = Math.max(3, Math.round(0.004*Math.max(pw,ph)));
+  const W1 = pw+1, I = new Int32Array(W1*(ph+1));
+  for (let y=0;y<ph;y++){ let row=0; for (let x=0;x<pw;x++){ row += clean[y*pw+x]; I[(y+1)*W1+x+1] = I[y*W1+x+1] + row; } }
+  const dil = new Uint8Array(PN);
+  for (let y=0;y<ph;y++){ const ya=Math.max(0,y-r), yb=Math.min(ph,y+r+1);
+    for (let x=0;x<pw;x++){ const xa=Math.max(0,x-r), xb=Math.min(pw,x+r+1);
+      const s = I[yb*W1+xb] - I[ya*W1+xb] - I[yb*W1+xa] + I[ya*W1+xa];
+      dil[y*pw+x] = s >= 3 ? 1 : 0; } }
+  const comps = components(dil, pw, ph, clean), lab = comps.lab;
+  let boxes = comps.map((b, k) => ({
+    x0: Math.max(0, b.x0 + r*0.8), y0: Math.max(0, b.y0 + r*0.8),
+    x1: Math.min(pw-1, b.x1 - r*0.8), y1: Math.min(ph-1, b.y1 - r*0.8), ink: b.wt,
+    ids: [k+1], ox0: b.x0, oy0: b.y0, ox1: b.x1, oy1: b.y1
+  })).filter(b => b.x1 > b.x0 && b.y1 > b.y0);
+  /* 5. throw away specks and paper-edge shadows */
+  // a shadow or a curled corner is a smooth patch of shade; a drawing is full of crisp strokes
+  const gsum = new Float64Array(comps.length+1), gn = new Uint32Array(comps.length+1);
+  for (let y=1;y<ph-1;y++) for (let x=1;x<pw-1;x++){ const li = y*pw+x; if (!clean[li]) continue;
+    const i = (y+py0)*w + x+px0, gx = Ls[i+1]-Ls[i-1], gy = Ls[i+w]-Ls[i-w], L = lab[li];
+    gsum[L] += Math.hypot(gx, gy) + 600*Math.abs(chromaDist(i, sample(bR,x,y), sample(bG,x,y))); gn[L]++; }
+  boxes.forEach(b => { let s=0, n=0; for (const id of b.ids){ s += gsum[id]; n += gn[id]; } b.crisp = n ? s/n : 0; });
+  boxes = boxes.filter(b => {
+    const bw = b.x1-b.x0, bh2 = b.y1-b.y0;
+    if (b.ink < 0.00012*PN) return false;
+    if (bw*bh2 < 0.0004*PN) return false;
+    // long thin strips are the sheet's edge against the table, not drawings
+    const thin = (bw < 0.035*pw && bh2 > 0.25*ph) || (bh2 < 0.035*ph && bw > 0.25*pw);
+    if (thin) return false;
+    // smooth shade: at the sheet's edge it's a curl or shadow; anywhere it's too soft to be a drawing
+    const edge = b.ox0 < 0.04*pw || b.oy0 < 0.04*ph || b.ox1 > 0.96*pw || b.oy1 > 0.96*ph;
+    return b.crisp >= (edge ? 45 : 18);
+  });
+  /* 6. merge pieces that sit close together */
+  // a piece mostly inside another drawing's box (eyes in a face, a sun's rays) joins that drawing;
+  // neighbours whose boxes merely overlap stay separate
+  const area = b => (b.x1-b.x0+1)*(b.y1-b.y0+1);
+  const inside = (a, b) => Math.max(0, Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0)+1) * Math.max(0, Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0)+1) / area(a);
+  let merged = true;
+  while (merged){
+    merged = false;
+    outer: for (let i=0;i<boxes.length;i++) for (let j=i+1;j<boxes.length;j++){
+      const a = boxes[i], b = boxes[j], small = area(a) < area(b) ? a : b, large = small === a ? b : a;
+      if (inside(small, large) > 0.6){
+        boxes[i] = {x0:Math.min(a.x0,b.x0), y0:Math.min(a.y0,b.y0), x1:Math.max(a.x1,b.x1), y1:Math.max(a.y1,b.y1), ink:a.ink+b.ink,
+                    ids:a.ids.concat(b.ids), ox0:Math.min(a.ox0,b.ox0), oy0:Math.min(a.oy0,b.oy0), ox1:Math.max(a.ox1,b.ox1), oy1:Math.max(a.oy1,b.oy1)};
+        boxes.splice(j,1); merged = true; break outer;
+      }
+    }
+  }
+  const toShape = b => {
+    const mw = b.ox1-b.ox0+3, mh = b.oy1-b.oy0+3, m = new Uint8Array(mw*mh), ids = new Set(b.ids);
+    for (let y=b.oy0; y<=b.oy1; y++) for (let x=b.ox0; x<=b.ox1; x++)
+      if (ids.has(lab[y*pw+x])) m[(y-b.oy0+1)*mw + x-b.ox0+1] = 1;
+    // anything the outside can't reach is paper inside the drawing: keep it
+    const out = new Uint8Array(mw*mh), st = [0]; out[0] = 1;
+    while (st.length){ const j = st.pop(), x = j % mw;
+      for (const k of [x>0?j-1:-1, x<mw-1?j+1:-1, j-mw, j+mw]) if (k>=0 && k<mw*mh && !out[k] && !m[k]){ out[k] = 1; st.push(k); } }
+    for (let k=0;k<mw*mh;k++) m[k] = out[k] ? 0 : 1;
+    return {x:(px0+b.ox0-1)/A, y:(py0+b.oy0-1)/A, w:mw/A, h:mh/A, mask:m, mw, mh};
+  };
+  const paperBox = {x:px0/A, y:py0/A, w:pw/A, h:ph/A};
+  // reading order: top to bottom, then left to right
+  const band = 0.12*ph;
+  boxes.sort((a,b) => Math.abs(a.y0-b.y0) < band ? a.x0-b.x0 : a.y0-b.y0);
+  let found = boxes.map(toShape).flatMap(sh => splitShape(sh, SPLIT_AUTO) || [sh]);
+  if (!found.length) found = [paperBox];
+  return {paper: paperBox, drawings: found};
+}
+function crop(src, b, maxSide){
+  const k = Math.min(1, maxSide / Math.max(b.w, b.h));
+  const c = mkCanvas(b.w*k, b.h*k), g = c.getContext('2d');
+  g.imageSmoothingQuality = 'high';
+  g.drawImage(src, b.x, b.y, b.w, b.h, 0, 0, c.width, c.height);
+  if (b.mask){
+    const mc = mkCanvas(b.mw, b.mh), mg = mc.getContext('2d'), id = mg.createImageData(b.mw, b.mh);
+    for (let k=0;k<b.mask.length;k++) id.data[k*4+3] = b.mask[k] ? 255 : 0;
+    mg.putImageData(id, 0, 0);
+    g.globalCompositeOperation = 'destination-in';
+    g.drawImage(mc, 0, 0, c.width, c.height); // smoothing softens the cut edge
+    g.globalCompositeOperation = 'source-over';
+  }
+  return c;
+}
+function encode(c){
+  return new Promise(res => c.toBlob(b => {
+    if (b && b.type === 'image/webp') return res(b);
+    c.toBlob(j => res(j), 'image/png');
+  }, 'image/webp', 0.86));
+}
+
+/* ---------------- review sheet ---------------- */
+const scrim = document.getElementById('scrim'), body = document.getElementById('sheetBody');
+const saveBtn = document.getElementById('saveBtn'), msg = document.getElementById('sheetMsg');
+let review = null, saving = false;
+/* Android's Claude app ignores file inputs inside artifacts: if tapping the button
+   doesn't take the page out of focus, assume no picker opened and say what to do. */
+const pickHelp = document.getElementById('pickHelp');
+let pickedFiles = false;
+document.getElementById('file').addEventListener('click', () => {
+  pickHelp.hidden = true; pickedFiles = false;
+  if (!window.claude || !/Android/i.test(navigator.userAgent)) return;
+  let left = false; const mark = () => { left = true; };
+  window.addEventListener('blur', mark, {once:true});
+  document.addEventListener('visibilitychange', mark, {once:true});
+  setTimeout(() => {
+    window.removeEventListener('blur', mark); document.removeEventListener('visibilitychange', mark);
+    if (!left && !pickedFiles && document.hasFocus()) { select(null); pickHelp.hidden = false; }
+  }, 1500);
+});
+document.getElementById('helpClose').onclick = () => { pickHelp.hidden = true; };
+document.getElementById('copyLink').onclick = async e => {
+  const url = document.getElementById('pickLink').textContent;
+  try { await navigator.clipboard.writeText(url); e.target.textContent = 'Copied'; }
+  catch { const r = document.createRange(); r.selectNodeContents(document.getElementById('pickLink')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); e.target.textContent = 'Press and hold the link to copy'; }
+};
+document.getElementById('file').addEventListener('change', e => {
+  pickedFiles = true; pickHelp.hidden = true;
+  const files = [...(e.target.files || [])];
+  handleFiles(files).catch(() => showToast("Couldn't open those photos. Try picking them again."));
+  setTimeout(() => { try { e.target.value = ''; } catch {} }, 0);
+});
+function canAdd(){ return !(store && store.kind === 'view'); }
+['dragenter','dragover'].forEach(t => window.addEventListener(t, e => { if (!canAdd()) return; e.preventDefault(); document.body.classList.add('dropping'); }));
+['dragleave','drop'].forEach(t => window.addEventListener(t, e => { e.preventDefault(); if (t === 'dragleave' && e.relatedTarget) return; document.body.classList.remove('dropping'); }));
+window.addEventListener('drop', e => { if (!canAdd()) return; const f = [...(e.dataTransfer && e.dataTransfer.files || [])].filter(x => /^image\//.test(x.type)); if (f.length) handleFiles(f); });
+window.addEventListener('paste', e => { if (!canAdd() || !scrim.hidden) return; const f = [...(e.clipboardData && e.clipboardData.files || [])].filter(x => /^image\//.test(x.type)); if (f.length) handleFiles(f); });
+async function handleFiles(files){
+  files = files.filter(f => !f.type || /^image\//.test(f.type) || /\.(heic|heif|jpe?g|png|webp)$/i.test(f.name || ''));
+  if (!files.length) { showToast('Pick a photo file (JPEG, PNG or HEIC).'); return; }
+  await runReview(files.map(f => () => loadSource(f)), {});
+}
+// opts.replace: recropping that tile; what's picked takes its place on the wall
+// each opening of the review sheet gets a number; an older one still loading stops instead of adding to the new one
+let reviewRun = 0;
+async function runReview(loaders, opts){
+  if (saving) return;
+  const run = ++reviewRun;
+  select(null);
+  const list = review = []; review.replace = opts.replace || null; saving = false;
+  scrim.hidden = false; body.innerHTML = '';
+  document.getElementById('sheetTitle').textContent = opts.replace ? 'Recrop this tile' : 'New drawings';
+  document.getElementById('sheetSub').textContent = opts.replace ? '' : `${loaders.length} photo${loaders.length===1?'':'s'}`;
+  msg.textContent = ''; saveBtn.disabled = true; saveBtn.textContent = opts.replace ? 'Replace' : 'Add to wall';
+  const work = document.createElement('div'); work.className = 'working';
+  work.innerHTML = '<span class="spin"></span><span></span>'; body.append(work);
+  for (let i=0;i<loaders.length;i++){
+    work.lastChild.textContent = opts.replace ? 'Looking for a better cut-out…' : `Finding each drawing and character in photo ${i+1} of ${loaders.length}…`;
+    await new Promise(r => setTimeout(r, 30));
+    if (run !== reviewRun) return;
+    try {
+      const src = await loaders[i]();
+      if (run !== reviewRun) return;
+      const res = analyze(src);
+      const item = {src, mode:'pieces', crops: res.drawings.map(b => ({box:b, on:true})), paper:res.paper, label:opts.label};
+      list.push(item); renderPhoto(item, i, loaders.length, work);
+    } catch(err){
+      if (run !== reviewRun) return;
+      const p = document.createElement('p'); p.className = 'err';
+      p.textContent = `Photo ${i+1} couldn't be opened. Try a JPEG or PNG photo.`;
+      body.insertBefore(p, work);
+    }
+  }
+  if (run !== reviewRun) return;
+  work.remove();
+  updateSave();
+}
+function thumbURL(src, box){ return crop(src, box, 260).toDataURL(box.mask ? 'image/png' : 'image/jpeg', .8); }
+function renderPhoto(item, i, total, before){
+  const wrap = document.createElement('section'); wrap.className = 'photo';
+  const head = document.createElement('div'); head.className = 'photo-head';
+  const lbl = document.createElement('span'); lbl.className = 'lbl';
+  const tog = document.createElement('button'); tog.className = 'pill';
+  const all = document.createElement('button'); all.className = 'pill';
+  const acts = document.createElement('div'); acts.className = 'acts'; acts.append(all, tog);
+  const grid = document.createElement('div'); grid.className = 'crops';
+  head.append(lbl, acts); wrap.append(head, grid);
+  const paint = () => {
+    grid.innerHTML = '';
+    const list = item.mode === 'page' ? [item.pageCrop || (item.pageCrop = {box:item.paper, on:true})] : item.crops;
+    lbl.innerHTML = '';
+    const b = document.createElement('b'); b.textContent = item.label || (total > 1 ? `Photo ${i+1}` : 'Your photo');
+    lbl.append(b, document.createTextNode(item.mode === 'page' ? ' · whole page' : ` · ${item.crops.length} tile${item.crops.length===1?'':'s'} found`));
+    tog.textContent = item.mode === 'page' ? 'Split into tiles' : 'Keep as one page';
+    const onCount = item.crops.filter(c => c.on).length;
+    all.hidden = item.mode === 'page' || item.crops.length < 2;
+    all.textContent = onCount === item.crops.length ? 'Select none' : 'Select all';
+    if (item.mode !== 'page') lbl.append(document.createTextNode(` · ${onCount} picked`));
+    for (const cr of list){
+      const btn = document.createElement('button'); btn.className = 'crop' + (cr.on ? ' on' : '');
+      btn.setAttribute('aria-pressed', cr.on);
+      btn.setAttribute('aria-label', cr.on ? 'Included. Tap to leave out' : 'Left out. Tap to include');
+      const im = document.createElement('img'); im.alt = ''; im.src = cr.url || (cr.url = thumbURL(item.src, cr.box));
+      const tick = document.createElement('span'); tick.className = 'tick'; tick.innerHTML = '<svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.5L10 3"/></svg>';
+      btn.append(im, tick);
+      btn.onclick = () => { if (saving) return; cr.on = !cr.on; paint(); updateSave(); };
+      const cell = document.createElement('div'); cell.className = 'cell'; cell.append(btn);
+      // Split: look harder for characters stuck together; Join puts a split tile back as it was
+      if (item.mode !== 'page' && (cr.from || cr.box.mask)){
+        const sp = document.createElement('button'); sp.className = 'pill mini';
+        sp.textContent = cr.from ? 'Join' : 'Split';
+        sp.setAttribute('aria-label', cr.from ? 'Join these pieces back into one tile' : 'Split this tile into separate characters');
+        sp.onclick = () => {
+          if (saving) return;
+          const at = item.crops.indexOf(cr);
+          if (cr.from){
+            const first = item.crops.findIndex(c => c.from === cr.from);
+            item.crops = item.crops.filter(c => c.from !== cr.from); item.crops.splice(first, 0, cr.from);
+          } else {
+            const parts = splitShape(cr.box, SPLIT_HARD);
+            if (!parts){ msg.textContent = "Couldn't find separate characters in that tile."; return; }
+            item.crops.splice(at, 1, ...parts.map(box => ({box, on:cr.on, from:cr})));
+          }
+          paint(); updateSave();
+        };
+        cell.append(sp);
+      }
+      grid.append(cell);
+    }
+  };
+  all.onclick = () => { if (saving) return; const turnOn = item.crops.some(c => !c.on); item.crops.forEach(c => c.on = turnOn); paint(); updateSave(); };
+  tog.onclick = () => { if (saving) return; item.mode = item.mode === 'page' ? 'pieces' : 'page'; paint(); updateSave(); };
+  paint(); body.insertBefore(wrap, before);
+}
+function chosen(){
+  const out = [];
+  for (const it of review || []){
+    const list = it.mode === 'page' ? [it.pageCrop] : it.crops;
+    for (const c of list) if (c && c.on) out.push({src: it.src, box: c.box});
+  }
+  return out;
+}
+function updateSave(){
+  const n = chosen().length;
+  saveBtn.disabled = !n || saving || !store || store.kind === 'view';
+  saveBtn.textContent = review && review.replace ? (n ? `Replace with ${n}` : 'Replace') : (n ? `Add ${n} to wall` : 'Add to wall');
+  if (!saving) msg.textContent = review && review.length ? 'Tap a tile to leave it out.' : '';
+}
+function closeSheet(){ if (saving) return; reviewRun++; scrim.hidden = true; review = null; body.innerHTML = ''; backToStory(); }
+document.getElementById('cancelBtn').onclick = closeSheet;
+scrim.addEventListener('click', e => { if (e.target === scrim) closeSheet(); });
+// a recropped piece goes where it sat inside the old tile, at the same scale and turn
+function placeLike(rp, item){
+  const t = item.src.tile || {x: 0, y: 0, w: item.src.width};
+  const b = item.box, k = rp.dw / t.w, w = b.w*k, h = b.h*k, [bw] = baseSize(b.w, b.h);
+  const ox = (b.x - t.x + b.w/2)*k - rp.dw/2, oy = (b.y - t.y + b.h/2)*k - rp.dh/2, c = Math.cos(rp.rot || 0), sn = Math.sin(rp.rot || 0);
+  const cx = rp.x + rp.dw/2 + ox*c - oy*sn, cy = rp.y + rp.dh/2 + ox*sn + oy*c;
+  return {px: cx - w/2, py: cy - h/2, size: w / bw, rot: rp.rot || 0, z: rp.z || 0, fx: !!rp.fx, fy: !!rp.fy, kind: rp.kind || null};
+}
+function encodeJpeg(c){ return new Promise(res => c.toBlob(b => res(b), 'image/jpeg', 0.86)); }
+saveBtn.onclick = async () => {
+  const list = chosen(); if (!list.length) return;
+  saving = true; updateSave();
+  const base = Date.now(), rp = review.replace, photos = new Map();
+  if (rp) pinAll();
+  let done = 0;
+  try {
+    for (const item of list){
+      msg.textContent = `Saving ${done+1} of ${list.length}…`;
+      const full = await encode(crop(item.src, item.box, 1400));
+      const thumb = await encode(crop(item.src, item.box, 360));
+      // the same rectangle without the cut-out, so touch up can bring parts back and recrop can look again
+      const src = item.box.mask ? await encodeJpeg(crop(item.src, {x:item.box.x, y:item.box.y, w:item.box.w, h:item.box.h}, 1400)) : null;
+      // the whole photo it came from (once per photo), and where on it this tile sits, for Recrop from the photo
+      let photo = null, pbox = null;
+      if (!rp){
+        if (!photos.has(item.src)) photos.set(item.src, encodeJpeg(scaled(item.src, 2200)));
+        photo = await photos.get(item.src); const W = item.src.width, H = item.src.height;
+        pbox = {x: item.box.x/W, y: item.box.y/H, w: item.box.w/W, h: item.box.h/H};
+      }
+      const pkey = photo ? 'ph' + base + '-' + review.indexOf(review.find(it => it.src === item.src)) : null;
+      await store.add({full, thumb, src, photo, pbox, pkey, w: item.box.w, h: item.box.h, added: rp ? rp.added + done*0.001 : base + done, ...(rp ? placeLike(rp, item) : {})});
+      done++;
+    }
+    if (rp) await store.remove(rp);
+    saving = false; closeSheet();
+    layout(shown());
+    if (!rp) setTimeout(() => animateTo(newestView()), 60);
+  } catch(err){
+    saving = false; updateSave();
+    msg.textContent = '';
+    const p = document.createElement('p'); p.className = 'err';
+    p.textContent = done ? `Saved ${done} of ${list.length}. The rest didn't save. Check your connection, then tap Add again.` :
+      "Nothing saved yet. Check your connection, then tap Add again.";
+    body.prepend(p);
+    // drop what already saved so a retry doesn't duplicate it
+    if (done){ let k = 0; for (const it of review){ const l = it.mode==='page'?[it.pageCrop]:it.crops; for (const c of l){ if (c && c.on && k < done){ c.on = false; k++; } } } }
+  }
+};
+
+/* ---------------- touch up (erase more, or bring back part of the drawing) and recrop ---------------- */
+function loadImage(url){ return new Promise((res, rej) => { const im = new Image(); if (/^https?:/.test(url) && !url.startsWith(location.origin)) im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = url; }); }
+async function tileCanvas(url, bg){
+  const im = await loadImage(url), c = mkCanvas(im.naturalWidth, im.naturalHeight), g = c.getContext('2d');
+  if (bg){ g.fillStyle = bg; g.fillRect(0, 0, c.width, c.height); }
+  g.drawImage(im, 0, 0); return c;
+}
+function scaled(c, maxSide){
+  const k = Math.min(1, maxSide / Math.max(c.width, c.height)), o = mkCanvas(c.width*k, c.height*k), g = o.getContext('2d');
+  g.imageSmoothingQuality = 'high'; g.drawImage(c, 0, 0, o.width, o.height); return o;
+}
+let recropping = false;
+async function recropTile(p){
+  if (recropping) return; recropping = true;
+  try { await recropTileNow(p); } finally { recropping = false; }
+}
+async function recropTileNow(p){
+  if (p.photoSrc && p.pbox) return openPhotoCrop(p);
+  let base;
+  // tiles added before recrop existed only have their cut-out: look again at that, on plain paper
+  try { base = p.srcSrc ? await tileCanvas(p.srcSrc) : await tileCanvas(p.fullSrc, '#fbfaf6'); }
+  catch { showToast("Couldn't open that tile's picture. Check your connection."); return; }
+  // the tile is cropped tight, so give it a margin of its own paper colour: the detection needs to see paper around a drawing
+  const d = base.getContext('2d').getImageData(0, 0, base.width, base.height).data, W = base.width, H = base.height, ch = [[], [], []];
+  const take = (x, y) => { const i = (y*W + x)*4; for (let k=0;k<3;k++) ch[k].push(d[i+k]); };
+  for (let x=0;x<W;x+=2){ take(x, 0); take(x, H-1); } for (let y=0;y<H;y+=2){ take(0, y); take(W-1, y); }
+  const med = a => a.sort((u, v) => u - v)[a.length >> 1];
+  // only look near the tile's current outline, so bits of neighbouring drawings in the same rectangle stay out
+  let look = base;
+  if (p.srcSrc){
+    try {
+      const full = await tileCanvas(p.fullSrc), m = mkCanvas(W, H), mg = m.getContext('2d'), r = Math.max(2, Math.round(0.02*Math.max(W, H)));
+      for (let a=0;a<16;a++) mg.drawImage(full, Math.cos(a/16*6.283)*r, Math.sin(a/16*6.283)*r, W, H);
+      mg.drawImage(full, 0, 0, W, H);
+      look = mkCanvas(W, H); const lg = look.getContext('2d');
+      lg.drawImage(base, 0, 0); lg.globalCompositeOperation = 'destination-in'; lg.drawImage(m, 0, 0);
+    } catch {}
+  }
+  const pad = Math.round(0.12*Math.max(W, H)), c = mkCanvas(W + 2*pad, H + 2*pad), g = c.getContext('2d');
+  g.fillStyle = `rgb(${med(ch[0])},${med(ch[1])},${med(ch[2])})`; g.fillRect(0, 0, c.width, c.height); g.drawImage(look, pad, pad);
+  c.tile = {x: pad, y: pad, w: W, h: H};
+  await runReview([async () => c], {replace:p, label:'This tile'});
+}
+const tuScrim = document.getElementById('tuScrim'), tuCv = document.getElementById('tuCanvas'), tuCtx = tuCv.getContext('2d');
+const tuSave = document.getElementById('tuSave'), tuMsg = document.getElementById('tuMsg');
+let tu = null;   // {p, base, mask, comp, w, h, k, d, undo, mode, brush, stroke, hover, saving}
+async function openTouchUp(p){
+  let full, base;
+  try { full = await tileCanvas(p.fullSrc); base = p.srcSrc ? await tileCanvas(p.srcSrc) : full; }
+  catch { showToast("Couldn't open that tile's picture. Check your connection."); return; }
+  select(null);
+  const w = base.width, h = base.height, mask = mkCanvas(w, h);
+  mask.getContext('2d').drawImage(full, 0, 0, w, h);   // only how see-through it is matters
+  tu = {p, base, mask, comp: mkCanvas(w, h), w, h, undo: [], mode: 'erase', brush: 0.045, stroke: null, hover: null, saving: false};
+  tu.start = mask.getContext('2d').getImageData(0, 0, w, h);   // how it looked when touch up opened, for Start over
+  tuMsg.textContent = p.srcSrc ? '' : 'This tile was added before touch up, so Bring back only returns what you erase now.';
+  tuScrim.hidden = false; setTuMode('erase'); setTuBrush(0.045); sizeTU(); paintTU(); updateTU();
+}
+function sizeTU(){
+  if (!tu) return;
+  const st = document.getElementById('tuStage'), maxW = st.clientWidth - 24, maxH = Math.max(160, Math.min(window.innerHeight*0.5, 560));
+  const k = Math.min(maxW / tu.w, maxH / tu.h), cw = Math.max(1, Math.round(tu.w*k)), ch = Math.max(1, Math.round(tu.h*k)), d = Math.min(window.devicePixelRatio || 1, 2.5);
+  tuCv.style.width = cw + 'px'; tuCv.style.height = ch + 'px'; tuCv.width = Math.round(cw*d); tuCv.height = Math.round(ch*d);
+  tu.k = cw / tu.w; tu.d = d; paintTU();
+}
+function paintTU(){
+  if (!tu) return;
+  const g = tu.comp.getContext('2d');
+  g.clearRect(0, 0, tu.w, tu.h); g.drawImage(tu.base, 0, 0);
+  g.globalCompositeOperation = 'destination-in'; g.drawImage(tu.mask, 0, 0); g.globalCompositeOperation = 'source-over';
+  tuCtx.setTransform(1, 0, 0, 1, 0, 0); tuCtx.clearRect(0, 0, tuCv.width, tuCv.height);
+  tuCtx.setTransform(tu.k*tu.d, 0, 0, tu.k*tu.d, 0, 0);
+  // a faint ghost of everything that can come back
+  tuCtx.globalAlpha = 0.22; tuCtx.drawImage(tu.base, 0, 0); tuCtx.globalAlpha = 1;
+  tuCtx.drawImage(tu.comp, 0, 0);
+  if (tu.hover){
+    tuCtx.beginPath(); tuCtx.arc(tu.hover.x, tu.hover.y, tu.brush*Math.max(tu.w, tu.h), 0, 6.283);
+    tuCtx.lineWidth = 2/tu.k; tuCtx.strokeStyle = tu.mode === 'erase' ? '#ff6f5c' : '#ffc93c'; tuCtx.stroke();
+  }
+}
+function updateTU(){
+  tuSave.disabled = !tu || tu.saving || !tu.undo.length;
+  document.getElementById('tuUndo').disabled = !tu || tu.saving || !tu.undo.length;
+  document.getElementById('tuUndoN').textContent = tu && tu.undo.length ? tu.undo.length : '';
+  document.getElementById('tuReset').disabled = !tu || tu.saving || !tu.undo.length;
+}
+function setTuMode(m){
+  if (tu) tu.mode = m;
+  for (const [id, v] of [['tuErase', 'erase'], ['tuRestore', 'restore']]){ const b = document.getElementById(id); b.classList.toggle('on', m === v); b.setAttribute('aria-pressed', m === v); }
+}
+function setTuBrush(v){
+  if (tu) tu.brush = v;
+  document.querySelectorAll('#tuBrush button').forEach(b => { const on = +b.dataset.b === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+}
+document.getElementById('tuErase').onclick = () => setTuMode('erase');
+document.getElementById('tuRestore').onclick = () => setTuMode('restore');
+document.querySelectorAll('#tuBrush button').forEach(b => b.onclick = () => setTuBrush(+b.dataset.b));
+// Undo last takes back one stroke at a time (the last 15); Start over can itself be undone
+const TU_STEPS = 15;
+function tuRemember(){ tu.undo.push(tu.mask.getContext('2d').getImageData(0, 0, tu.w, tu.h)); if (tu.undo.length > TU_STEPS) tu.undo.shift(); }
+function tuUndoLast(){
+  if (!tu || tu.saving || tu.stroke || !tu.undo.length) return;
+  tu.mask.getContext('2d').putImageData(tu.undo.pop(), 0, 0); paintTU(); updateTU();
+}
+document.getElementById('tuUndo').onclick = tuUndoLast;
+document.getElementById('tuReset').onclick = () => {
+  if (!tu || tu.saving || !tu.undo.length) return;
+  tuRemember(); tu.mask.getContext('2d').putImageData(tu.start, 0, 0); paintTU(); updateTU();
+};
+window.addEventListener('keydown', e => {
+  if (!tu || tuScrim.hidden || !(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'z' || e.shiftKey) return;
+  e.preventDefault(); tuUndoLast();
+});
+const tuPoint = e => { const r = tuCv.getBoundingClientRect(); return {x: (e.clientX - r.left)/tu.k, y: (e.clientY - r.top)/tu.k}; };
+function tuDab(a, b){
+  const g = tu.mask.getContext('2d');
+  g.save(); g.globalCompositeOperation = tu.mode === 'erase' ? 'destination-out' : 'source-over';
+  g.strokeStyle = '#000'; g.lineWidth = 2*tu.brush*Math.max(tu.w, tu.h); g.lineCap = 'round';
+  g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x + 0.01, b.y); g.stroke(); g.restore();
+}
+tuCv.addEventListener('pointerdown', e => {
+  if (!tu || tu.saving || tu.stroke) return;
+  try { tuCv.setPointerCapture(e.pointerId); } catch {}
+  tuRemember();
+  const pt = tuPoint(e); tu.stroke = {id: e.pointerId, last: pt}; tu.hover = pt; tuDab(pt, pt); paintTU(); updateTU();
+});
+tuCv.addEventListener('pointermove', e => {
+  if (!tu) return; const pt = tuPoint(e); tu.hover = pt;
+  if (tu.stroke && tu.stroke.id === e.pointerId){ tuDab(tu.stroke.last, pt); tu.stroke.last = pt; }
+  paintTU();
+});
+const tuEnd = e => { if (!tu) return; if (tu.stroke && tu.stroke.id === e.pointerId) tu.stroke = null; if (e.pointerType !== 'mouse') tu.hover = null; paintTU(); };
+tuCv.addEventListener('pointerup', tuEnd); tuCv.addEventListener('pointercancel', tuEnd);
+tuCv.addEventListener('pointerleave', () => { if (tu && !tu.stroke){ tu.hover = null; paintTU(); } });
+function closeTU(){ if (tu && tu.saving) return; tuScrim.hidden = true; tu = null; backToStory(); }
+document.getElementById('tuCancel').onclick = closeTU;
+tuScrim.addEventListener('click', e => { if (e.target === tuScrim) closeTU(); });
+tuSave.onclick = async () => {
+  if (!tu || tu.saving) return;
+  tu.saving = true; updateTU(); tuMsg.textContent = 'Saving…';
+  try {
+    paintTU();
+    const full = await encode(scaled(tu.comp, 1400)), thumb = await encode(scaled(tu.comp, 360));
+    await store.setImages(tu.p, {full, thumb});
+    tu.saving = false; closeTU();
+  } catch {
+    tu.saving = false; updateTU(); tuMsg.textContent = "Couldn't save. Check your connection, then tap Save again.";
+  }
+};
+window.addEventListener('resize', () => { if (tu) sizeTU(); });
+
+/* ---------------- recrop from the photo: drag a rough box, it finds the drawing's exact outline inside ---------------- */
+const pcScrim = document.getElementById('pcScrim'), pcCv = document.getElementById('pcCanvas'), pcCtx = pcCv.getContext('2d');
+const pcSave = document.getElementById('pcSave'), pcMsg = document.getElementById('pcMsg');
+let pc = null;   // {p, photo, box, start, cur, result, mode, k, d, saving, token}
+async function openPhotoCrop(p){
+  let photo;
+  try { photo = await tileCanvas(p.photoSrc); }
+  catch { showToast("Couldn't open the original photo. Check your connection."); return; }
+  select(null);
+  const W = photo.width, H = photo.height, b = p.pbox, padX = b.w*W*.12, padY = b.h*H*.12;
+  const x0 = Math.max(0, b.x*W - padX), y0 = Math.max(0, b.y*H - padY);
+  pc = {p, photo, box: {x: x0, y: y0, w: Math.min(W, b.x*W + b.w*W + padX) - x0, h: Math.min(H, b.y*H + b.h*H + padY) - y0}, mode: 'all', result: null, saving: false, token: 0};
+  setPcMode('all'); pcScrim.hidden = false; sizePC(); findInBox();
+}
+function sizePC(){
+  if (!pc) return;
+  const st = document.getElementById('pcStage'), maxW = st.clientWidth - 24, maxH = Math.max(200, Math.min(window.innerHeight*0.58, 640));
+  const k = Math.min(maxW / pc.photo.width, maxH / pc.photo.height), cw = Math.max(1, Math.round(pc.photo.width*k)), ch = Math.max(1, Math.round(pc.photo.height*k)), d = Math.min(window.devicePixelRatio || 1, 2.5);
+  pcCv.style.width = cw + 'px'; pcCv.style.height = ch + 'px'; pcCv.width = Math.round(cw*d); pcCv.height = Math.round(ch*d);
+  pc.k = cw / pc.photo.width; pc.d = d; paintPC();
+}
+function paintPC(){
+  if (!pc) return;
+  const g = pcCtx, {photo, k, d} = pc, W = photo.width, H = photo.height;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, pcCv.width, pcCv.height); g.setTransform(k*d, 0, 0, k*d, 0, 0);
+  g.drawImage(photo, 0, 0);
+  // everything except the found drawing is dimmed
+  g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(0, 0, W, H);
+  if (pc.result){ const r = pc.result; g.drawImage(r.canvas, r.x, r.y, r.w, r.h); }
+  const b = pc.drag ? norm(pc.drag) : pc.box;
+  g.setLineDash([10/k, 7/k]); g.lineWidth = 2.5/k; g.strokeStyle = '#ffc93c'; g.strokeRect(b.x, b.y, b.w, b.h); g.setLineDash([]);
+}
+const norm = r => ({x: Math.min(r.x0, r.x1), y: Math.min(r.y0, r.y1), w: Math.abs(r.x1 - r.x0), h: Math.abs(r.y1 - r.y0)});
+const pcPoint = e => { const r = pcCv.getBoundingClientRect(); return {x: Math.max(0, Math.min(pc.photo.width, (e.clientX - r.left)/pc.k)), y: Math.max(0, Math.min(pc.photo.height, (e.clientY - r.top)/pc.k))}; };
+pcCv.addEventListener('pointerdown', e => { if (!pc || pc.saving) return; try { pcCv.setPointerCapture(e.pointerId); } catch {} const pt = pcPoint(e); pc.drag = {x0: pt.x, y0: pt.y, x1: pt.x, y1: pt.y}; paintPC(); });
+pcCv.addEventListener('pointermove', e => { if (!pc || !pc.drag) return; const pt = pcPoint(e); pc.drag.x1 = pt.x; pc.drag.y1 = pt.y; paintPC(); });
+const pcUp = () => { if (!pc || !pc.drag) return; const b = norm(pc.drag); pc.drag = null;
+  if (b.w*pc.k < 14 || b.h*pc.k < 14){ paintPC(); pcMsg.textContent = 'Drag a box around the drawing.'; return; }
+  pc.box = b; findInBox(); };
+pcCv.addEventListener('pointerup', pcUp); pcCv.addEventListener('pointercancel', pcUp);
+function setPcMode(m){
+  if (pc) pc.mode = m;
+  document.querySelectorAll('#pcMode button').forEach(b => { const on = b.dataset.m === m; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+}
+document.querySelectorAll('#pcMode button').forEach(b => b.onclick = () => { if (!pc || pc.saving) return; setPcMode(b.dataset.m); findInBox(); });
+// the detection runs on just the box, with a margin of the paper's own colour around it, so it can tell paper from drawing
+function findInBox(){
+  if (!pc) return;
+  const token = ++pc.token; pc.result = null; pcSave.disabled = true; pcMsg.textContent = 'Finding the drawing…'; paintPC();
+  setTimeout(() => {
+    if (!pc || token !== pc.token) return;
+    const {photo, box} = pc, bx = Math.round(box.x), by = Math.round(box.y), bw = Math.max(4, Math.round(box.w)), bh = Math.max(4, Math.round(box.h));
+    const region = mkCanvas(bw, bh); region.getContext('2d').drawImage(photo, bx, by, bw, bh, 0, 0, bw, bh);
+    const d = region.getContext('2d').getImageData(0, 0, bw, bh).data, ch = [[], [], []];
+    const take = (x, y) => { const i = (y*bw + x)*4; for (let k=0;k<3;k++) ch[k].push(d[i+k]); };
+    for (let x=0;x<bw;x+=2){ take(x, 0); take(x, bh-1); } for (let y=0;y<bh;y+=2){ take(0, y); take(bw-1, y); }
+    const med = a => a.sort((u, v) => u - v)[a.length >> 1], pad = Math.round(0.12*Math.max(bw, bh));
+    const c = mkCanvas(bw + 2*pad, bh + 2*pad), g = c.getContext('2d');
+    g.fillStyle = `rgb(${med(ch[0])},${med(ch[1])},${med(ch[2])})`; g.fillRect(0, 0, c.width, c.height); g.drawImage(region, pad, pad);
+    let shapes = analyze(c).drawings.filter(s => s.mask);
+    if (pc.mode === 'big' && shapes.length > 1){ const n = s => s.mask.reduce((a, v) => a + v, 0)*(s.w/s.mw)*(s.h/s.mh); shapes = [shapes.reduce((a, s) => n(s) > n(a) ? s : a)]; }
+    // everything found in the box becomes one tile, trimmed to its outline
+    const u = mkCanvas(c.width, c.height), ug = u.getContext('2d');
+    for (const s of shapes) ug.drawImage(crop(c, s, Math.max(s.w, s.h)), s.x, s.y, s.w, s.h);
+    const a = ug.getImageData(0, 0, u.width, u.height).data; let x0 = u.width, y0 = u.height, x1 = -1, y1 = -1;
+    for (let y=0;y<u.height;y++) for (let x=0;x<u.width;x++) if (a[(y*u.width + x)*4 + 3] > 24){ if (x<x0)x0=x; if (x>x1)x1=x; if (y<y0)y0=y; if (y>y1)y1=y; }
+    if (x1 < 0){ pcMsg.textContent = "Couldn't find a drawing in that box. Try a bigger box."; paintPC(); return; }
+    const w = x1 - x0 + 1, h = y1 - y0 + 1, out = mkCanvas(w, h); out.getContext('2d').drawImage(u, -x0, -y0);
+    pc.result = {canvas: out, x: bx - pad + x0, y: by - pad + y0, w, h};
+    pcMsg.textContent = shapes.length > 1 && pc.mode === 'all' ? `Found ${shapes.length} pieces, kept together as one tile.` : 'Found it. Drag a new box to try again.';
+    pcSave.disabled = false; paintPC();
+  }, 30);
+}
+function closePC(){ if (pc && pc.saving) return; pcScrim.hidden = true; pc = null; backToStory(); }
+document.getElementById('pcCancel').onclick = closePC;
+pcScrim.addEventListener('click', e => { if (e.target === pcScrim) closePC(); });
+pcSave.onclick = async () => {
+  if (!pc || !pc.result || pc.saving) return;
+  pc.saving = true; pcSave.disabled = true; pcMsg.textContent = 'Saving…';
+  const {p, photo, result: r} = pc;
+  try {
+    const plain = mkCanvas(r.w, r.h); plain.getContext('2d').drawImage(photo, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+    const full = await encode(scaled(r.canvas, 1400)), thumb = await encode(scaled(r.canvas, 360)), src = await encodeJpeg(scaled(plain, 1400));
+    // the tile keeps its spot, size and turn on the wall; only its picture and shape change
+    pinAll(); const cx = p.x + p.dw/2, cy = p.y + p.dh/2;
+    await store.setImages(p, {full, thumb, src, w: r.w, h: r.h, pbox: {x: r.x/photo.width, y: r.y/photo.height, w: r.w/photo.width, h: r.h/photo.height}});
+    p.w = r.w; p.h = r.h; const [bw, bh] = baseSize(p.w, p.h), k = p.size || 1; p.dw = bw*k; p.dh = bh*k;
+    p.x = p.px = cx - p.dw/2; p.y = p.py = cy - p.dh/2; p.imgFull = p.imgThumb = null; p.hitMap = undefined; savePlace(p);
+    layout(shown()); needs = true;
+    pc.saving = false; closePC(); showToast('Recropped');
+  } catch {
+    pc.saving = false; pcSave.disabled = false; pcMsg.textContent = "Couldn't save. Check your connection, then tap Save again.";
+  }
+};
+window.addEventListener('resize', () => { if (pc) sizePC(); });
+
+/* ---------------- photos: every uploaded photo and the tiles cut from it ---------------- */
+const phScrim = document.getElementById('phScrim'), phBody = document.getElementById('phBody');
+function photoGroups(){
+  const groups = new Map();
+  for (const p of pieces){ if (!p.photoSrc) continue; const k = p.pkey || p.photoId || p.photoSrc; if (!groups.has(k)) groups.set(k, {src: p.photoSrc, added: p.added, tiles: []}); const g = groups.get(k); g.tiles.push(p); g.added = Math.min(g.added, p.added); }
+  return [...groups.values()].sort((a, b) => b.added - a.added);
+}
+function openPhotos(){ select(null); phScrim.hidden = false; showPhotoList(); }
+function closePhotos(){ phScrim.hidden = true; phBody.innerHTML = ''; }
+function showPhotoList(){
+  const list = photoGroups(), older = pieces.filter(p => !p.photoSrc).length;
+  document.getElementById('phTitle').textContent = 'Photos'; document.getElementById('phBack').hidden = true;
+  document.getElementById('phSub').textContent = `${list.length} photo${list.length === 1 ? '' : 's'}`;
+  document.getElementById('phMsg').textContent = older ? `${older} older tile${older === 1 ? '' : 's'} came from photos added before photos were kept.` : '';
+  phBody.innerHTML = '';
+  if (!list.length){ const e = document.createElement('p'); e.style.color = 'var(--muted)'; e.textContent = 'Photos you add from now on will show up here, with the tiles cut from each one.'; phBody.append(e); return; }
+  // grouped by the day they were added: Today, Yesterday, the weekday this past week, then the date
+  const dayOf = t => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }, today = dayOf(Date.now());
+  const dayName = d => { const ago = Math.round((today - d)/864e5);
+    return ago === 0 ? 'Today' : ago === 1 ? 'Yesterday' : ago < 7 ? new Date(d).toLocaleDateString(undefined, {weekday:'long'})
+      : new Date(d).toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric', year: new Date(d).getFullYear() === new Date().getFullYear() ? undefined : 'numeric'}); };
+  const days = new Map(); for (const g of list){ const d = dayOf(g.added); if (!days.has(d)) days.set(d, []); days.get(d).push(g); }
+  for (const [d, gs] of days){
+    const h = document.createElement('h3'); h.className = 'phday'; h.textContent = dayName(d);
+    const n = document.createElement('span'); n.textContent = `${gs.length} photo${gs.length === 1 ? '' : 's'}`; h.append(n);
+    const grid = document.createElement('div'); grid.className = 'phgrid';
+    for (const g of gs){
+      const b = document.createElement('button'); b.className = 'phcard';
+      const im = document.createElement('img'); im.alt = ''; im.loading = 'lazy'; im.src = g.src;
+      const cap = document.createElement('span'), t = document.createElement('b'); t.textContent = `${g.tiles.length} tile${g.tiles.length === 1 ? '' : 's'}`;
+      cap.append(t, document.createTextNode(' · ' + new Date(g.added).toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'})));
+      b.append(im, cap); b.setAttribute('aria-label', `Photo from ${fmtDate(g.added)} with ${g.tiles.length} tiles`);
+      b.onclick = () => showPhoto(g); grid.append(b);
+    }
+    phBody.append(h, grid);
+  }
+}
+// one photo, with a numbered box around each tile cut from it; tap a box (or a name) to go to that tile
+function showPhoto(g){
+  document.getElementById('phTitle').textContent = 'Photo'; document.getElementById('phBack').hidden = false;
+  document.getElementById('phSub').textContent = fmtDate(g.added); document.getElementById('phMsg').textContent = 'Tap a tile to go to it on the wall.';
+  phBody.innerHTML = '';
+  const view = document.createElement('div'); view.className = 'phview'; const im = document.createElement('img'); im.alt = 'The uploaded photo'; im.src = g.src; view.append(im);
+  const go = p => { closePhotos(); goToTile(p); };
+  for (const p of g.tiles.slice().sort((a, b) => (a.ref || 0) - (b.ref || 0))){
+    if (!p.pbox) continue;
+    const bx = document.createElement('button'); bx.className = 'phbox'; bx.setAttribute('aria-label', `Tile ${p.ref || ''} ${p.name || ''}`.trim());
+    Object.assign(bx.style, {left: p.pbox.x*100 + '%', top: p.pbox.y*100 + '%', width: p.pbox.w*100 + '%', height: p.pbox.h*100 + '%'});
+    const tag = document.createElement('i'); tag.textContent = `#${p.ref || '?'}`; bx.append(tag); bx.onclick = () => go(p); view.append(bx);
+  }
+  const chips = document.createElement('div'); chips.className = 'phtiles';
+  for (const p of g.tiles){ const c = document.createElement('button'); c.className = 'pill'; c.textContent = `#${p.ref || '?'} ${p.name || kindName(p.kind) || 'Tile'}`; c.onclick = () => go(p); chips.append(c); }
+  phBody.append(view, chips);
+}
+document.getElementById('photosBtn').onclick = () => { closeMore(); openPhotos(); };
+document.getElementById('phClose').onclick = closePhotos;
+document.getElementById('phBack').onclick = showPhotoList;
+phScrim.addEventListener('click', e => { if (e.target === phScrim) closePhotos(); });
+
+/* ---------------- storage ---------------- */
+function localStore(){
+  let dbh;
+  const open = () => new Promise((res, rej) => {
+    const r = indexedDB.open('drawing-wall', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('pieces', {keyPath:'id'});
+    r.onsuccess = () => res(dbh = r.result); r.onerror = () => rej(r.error);
+  });
+  const tx = (mode, fn) => new Promise((res, rej) => {
+    const t = dbh.transaction('pieces', mode), s = t.objectStore('pieces'); const out = fn(s);
+    t.oncomplete = () => res(out.result); t.onerror = () => rej(t.error);
+  });
+  const toPiece = r => ({id:r.id, name:r.name || '', w:r.w, h:r.h, added:r.added, px:r.px ?? null, py:r.py ?? null, z:r.z || 0, size:r.size || 1, rot:r.rot || 0, fx:!!r.fx, fy:!!r.fy, kind:r.kind || null, ref:r.ref || 0,
+    fullSrc:URL.createObjectURL(r.full), thumbSrc:URL.createObjectURL(r.thumb), srcSrc: r.src ? URL.createObjectURL(r.src) : null,
+    photoSrc: r.photo ? URL.createObjectURL(r.photo) : null, pbox: r.pbox || null, pkey: r.pkey || null});
+  // saved collages live in their own little database next to the tiles
+  const cdb = () => new Promise((res, rej) => { const r = indexedDB.open('drawing-wall-collages', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('collages', {keyPath:'id'}); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+  const ctx2 = async (mode, fn) => { const d = await cdb(); return new Promise((res, rej) => { const t = d.transaction('collages', mode), out = fn(t.objectStore('collages')); t.oncomplete = () => res(out.result); t.onerror = () => rej(t.error); }); };
+  const reloadCollages = async () => { collages = (await ctx2('readonly', s => s.getAll())) || []; renderSaved(); };
+  return {
+    kind:'local',
+    async start(){ await open(); const all = await tx('readonly', s => s.getAll()); setPieces(all.map(toPiece)); reloadCollages().catch(() => {}); },
+    async saveCollage(c){ await ctx2('readwrite', s => s.put({id: 'c' + c.saved + Math.random().toString(36).slice(2, 6), ...c})); await reloadCollages(); },
+    async renameCollage(c, name){ await ctx2('readwrite', s => s.put({...c, name})); },
+    async removeCollage(c){ await ctx2('readwrite', s => s.delete(c.id)); await reloadCollages(); },
+    async add(o){ const r = {id: 'p' + o.added + Math.random().toString(36).slice(2,7), ...o}; await tx('readwrite', s => s.put(r)); setPieces([...pieces, toPiece(r)]); },
+    async remove(p){ await tx('readwrite', s => s.delete(p.id)); setPieces(pieces.filter(q => q !== p)); },
+    async place(p){
+      const r = await tx('readonly', s => s.get(p.id)); if (!r) return;
+      Object.assign(r, {px:p.px, py:p.py, z:p.z || 0, size:p.size || 1, rot:p.rot || 0, fx:!!p.fx, fy:!!p.fy, kind:p.kind || null, ref:p.ref || 0});
+      await tx('readwrite', s => s.put(r));
+    },
+    async rename(p, name){
+      const r = await tx('readonly', s => s.get(p.id)); if (!r) return;
+      r.name = name; await tx('readwrite', s => s.put(r));
+    },
+    async setImages(p, o){
+      const r = await tx('readonly', s => s.get(p.id)); if (!r) return;
+      r.full = o.full; r.thumb = o.thumb;
+      if (o.src){ r.src = o.src; r.w = o.w; r.h = o.h; r.pbox = o.pbox; }
+      await tx('readwrite', s => s.put(r));
+      URL.revokeObjectURL(p.fullSrc); URL.revokeObjectURL(p.thumbSrc);
+      p.fullSrc = URL.createObjectURL(o.full); p.thumbSrc = URL.createObjectURL(o.thumb);
+      if (o.src){ if (p.srcSrc) URL.revokeObjectURL(p.srcSrc); p.srcSrc = URL.createObjectURL(o.src); p.w = o.w; p.h = o.h; p.pbox = o.pbox; }
+      p.imgFull = p.imgThumb = null; p.hitMap = undefined; needs = true;
+    }
+  };
+}
+function cloudStore(db, assets){
+  const col = db.collection('pieces'), cols = db.collection('collages');
+  const cache = new Map(), photoUploads = new Map();
+  return {
+    kind: assets ? 'cloud' : 'view',
+    watchCollages(){ cols.orderBy('saved').limit(200).onSnapshot(snap => { collages = snap.docs.filter(d => d.exists).map(d => ({...d.data(), id: d.id})); renderSaved(); }, () => {}); },
+    async saveCollage(c){ await cols.add(c); },
+    async renameCollage(c, name){ await cols.doc(c.id).update({name}); },
+    async removeCollage(c){ await cols.doc(c.id).delete(); },
+    start(){
+      return new Promise(resolve => {
+        let first = true;
+        col.orderBy('added').limit(1000).onSnapshot(snap => {
+          const list = snap.docs.filter(s => s.exists).map(s => {
+            const v = s.data(); let p = cache.get(s.id);
+            if (!p){ p = {id:s.id}; cache.set(s.id, p); }
+            p.w = v.w; p.h = v.h; p.added = v.added; p.fullId = v.fullId; p.thumbId = v.thumbId; p.name = v.name || ''; p.ref = v.ref || p.ref || 0;
+            // a tile mid-drag (or still saving) keeps where the finger put it
+            if (!(tileDrag && tileDrag.p === p) && !(twist && twist.p === p) && !p.pending){ p.px = v.px ?? null; p.py = v.py ?? null; p.z = v.z || 0; p.size = v.size || 1; p.rot = v.rot || 0; p.fx = !!v.fx; p.fy = !!v.fy; p.kind = v.kind || null; }
+            const fullSrc = v.fullUrl || ('/_blob/' + v.fullId), thumbSrc = v.thumbUrl || ('/_blob/' + v.thumbId);
+            if (p.fullSrc !== fullSrc) p.imgFull = null;
+            if (p.thumbSrc !== thumbSrc){ p.imgThumb = null; p.hitMap = undefined; }
+            p.fullSrc = fullSrc; p.thumbSrc = thumbSrc;
+            p.srcId = v.srcId || null; p.srcSrc = v.srcId ? (v.srcUrl || '/_blob/' + v.srcId) : null;
+            p.photoId = v.photoId || null; p.photoSrc = v.photoId ? (v.photoUrl || '/_blob/' + v.photoId) : null; p.pbox = v.pbox || null; p.pkey = v.pkey || v.photoId || null;
+            return p;
+          });
+          setPieces(list);
+          if (first){ first = false; resolve(); }
+        }, () => { showToast("Lost the connection to the wall. Reload to see new tiles."); if (first){ first = false; resolve(); } });
+      });
+    },
+    async add(o){
+      const f = await assets.upload(o.full), t = await assets.upload(o.thumb), sr = o.src ? await assets.upload(o.src) : null;
+      const doc = {w:o.w, h:o.h, added:o.added, fullId:f.id, fullUrl:f.url, thumbId:t.id, thumbUrl:t.url};
+      if (sr){ doc.srcId = sr.id; doc.srcUrl = sr.url; }
+      // one upload per photo, shared by every tile cut from it
+      if (o.photo){ if (!photoUploads.has(o.photo)) photoUploads.set(o.photo, assets.upload(o.photo)); const ph = await photoUploads.get(o.photo); doc.photoId = ph.id; doc.photoUrl = ph.url; doc.pbox = o.pbox; doc.pkey = o.pkey || ph.id; }
+      for (const k of ['px', 'py', 'size', 'rot', 'z', 'fx', 'fy', 'kind']) if (o[k] != null) doc[k] = o[k];
+      await col.add(doc);
+    },
+    async setImages(p, o){
+      const oldFull = p.fullId, oldThumb = p.thumbId, oldSrc = o.src ? p.srcId : null;
+      const f = await assets.upload(o.full), t = await assets.upload(o.thumb), sr = o.src ? await assets.upload(o.src) : null;
+      const up = {fullId:f.id, fullUrl:f.url, thumbId:t.id, thumbUrl:t.url};
+      if (sr) Object.assign(up, {srcId:sr.id, srcUrl:sr.url, w:o.w, h:o.h, pbox:o.pbox});
+      await col.doc(p.id).update(up);
+      try { if (oldFull) await assets.delete(oldFull); if (oldThumb) await assets.delete(oldThumb); if (oldSrc) await assets.delete(oldSrc); } catch {}
+    },
+    async rename(p, name){ await col.doc(p.id).update({name}); },
+    async place(p){ await col.doc(p.id).update({px:p.px, py:p.py, z:p.z || 0, size:p.size || 1, rot:p.rot || 0, fx:!!p.fx, fy:!!p.fy, kind:p.kind || null, ref:p.ref || 0}); },
+    async remove(p){
+      await col.doc(p.id).delete();
+      cache.delete(p.id);
+      try { if (p.fullId) await assets.delete(p.fullId); if (p.thumbId) await assets.delete(p.thumbId); if (p.srcId) await assets.delete(p.srcId);
+        // the photo goes too once no other tile is cut from it
+        if (p.photoId && !pieces.some(q => q !== p && q.photoId === p.photoId)) await assets.delete(p.photoId); } catch {}
+    }
+  };
+}
+
+/* ---------------- accounts: sign in to Drawing Wall (Supabase), then the wall and Story Book save to the account ----------------
+   On claude.ai the page keeps using the Claude account's storage; in the Android app and any other browser you sign in.
+   The account's storage speaks the same small language as claude.ai's (collections of documents, and pictures),
+   so the wall and the Story Book work the same either way. */
+const ACCOUNTS = true;
+const SB_URL = 'https://ibsfmswjxknalqelztkq.supabase.co', SB_KEY = 'sb_publishable_JEb8KW3Pr0o2UKL8wJPsvg_jRcuUq2S';
+const SB_LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
+// Google sign-in turns on once its client ID is filled in (and the Android app passes it the Google account)
+const GOOGLE_WEB_CLIENT_ID = '';
+let sb = null, sbApi = null;
+async function sbClient(){
+  if (sb) return sb;
+  const m = await import(SB_LIB);
+  sb = m.createClient(SB_URL, SB_KEY, {auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'drawing-wall-auth'}});
+  return sb;
+}
+function sbAdapters(client, user){
+  const uid = user.id, B = client.storage.from('drawings'), signed = new Map(), watchers = new Map(), timers = new Map();
+  const mine = v => typeof v === 'string' && v.startsWith(uid + '/');
+  const idKeys = v => Object.keys(v || {}).filter(k => k.endsWith('Id') && mine(v[k]));
+  // pictures are private: each gets a link that lasts a week, renewed whenever the documents are read
+  async function sign(paths){
+    const need = [...new Set(paths)].filter(p => mine(p) && !((signed.get(p) || {}).until > Date.now() + 864e5));
+    for (let i = 0; i < need.length; i += 100){
+      const {data} = await B.createSignedUrls(need.slice(i, i + 100), 7*86400);
+      for (const d of data || []) if (d.signedUrl) signed.set(d.path, {url: d.signedUrl, until: Date.now() + 7*864e5});
+    }
+  }
+  const fresh = v => { const o = {...v}; for (const k of idKeys(v)){ const s = signed.get(v[k]); if (s) o[k.slice(0, -2) + 'Url'] = s.url; } return o; };
+  const clean = o => JSON.parse(JSON.stringify(o, (k, v) => v === undefined ? null : v));
+  const snap = rows => ({docs: rows.map(r => ({id: r.id, exists: true, data: () => r.data}))});
+  async function fetchCol(name){
+    const {data, error} = await client.from('docs').select('id,data').eq('collection', name).limit(5000);
+    if (error) throw error;
+    await sign(data.flatMap(r => idKeys(r.data).map(k => r.data[k])));
+    return data.map(r => ({id: r.id, data: fresh(r.data)})).sort((a, b) => (a.data.added || 0) - (b.data.added || 0));
+  }
+  function refresh(name){
+    clearTimeout(timers.get(name));
+    timers.set(name, setTimeout(async () => { const ws = watchers.get(name); if (!ws || !ws.size) return;
+      try { const rows = await fetchCol(name); for (const w of ws) w.ok(snap(rows)); } catch (e) { for (const w of ws) w.err && w.err(e); } }, 150));
+  }
+  // changes made on another device arrive here
+  client.channel('docs-' + uid).on('postgres_changes', {event: '*', schema: 'public', table: 'docs', filter: `user_id=eq.${uid}`}, p => {
+    const c = (p.new && p.new.collection) || (p.old && p.old.collection); if (c) refresh(c); else for (const k of watchers.keys()) refresh(k);
+  }).subscribe();
+  const collection = name => {
+    const q = {
+      orderBy: () => q, limit: () => q, where: () => q,
+      onSnapshot(ok, err){ let ws = watchers.get(name); if (!ws){ ws = new Set(); watchers.set(name, ws); } const w = {ok, err}; ws.add(w);
+        fetchCol(name).then(rows => ok(snap(rows)), e => err && err(e)); return () => ws.delete(w); },
+      async get(){ return snap(await fetchCol(name)); },
+      async add(data){ const {data: row, error} = await client.from('docs').insert({collection: name, data: clean(data)}).select('id').single(); if (error) throw error; refresh(name); return {id: row.id}; },
+      doc: id => ({
+        async get(){ const {data: r} = await client.from('docs').select('id,data').eq('id', id).maybeSingle(); return {id, exists: !!r, data: () => r ? r.data : undefined}; },
+        async set(data){ const {error} = await client.from('docs').upsert({id, collection: name, data: clean(data)}); if (error) throw error; refresh(name); },
+        async update(patch){ const {error} = await client.rpc('docs_merge', {doc_id: id, patch: clean(patch)}); if (error) throw error; refresh(name); },
+        async delete(){ const {error} = await client.from('docs').delete().eq('id', id); if (error) throw error; refresh(name); },
+      }),
+    };
+    return q;
+  };
+  const assets = {
+    async upload(blob){
+      const type = blob.type || 'image/png', ext = /jpe?g/.test(type) ? 'jpg' : /webp/.test(type) ? 'webp' : 'png', path = `${uid}/${crypto.randomUUID()}.${ext}`;
+      const {error} = await B.upload(path, blob, {contentType: type, upsert: false}); if (error) throw error;
+      await sign([path]); return {id: path, url: signed.get(path).url};
+    },
+    async delete(id){ if (mine(id)) await B.remove([id]); },
+  };
+  // story writing for the Story Book: the account's own AI (Groq, through the story-ai function), in the shape
+  // the Story Book already uses on claude.ai. Pictures of the characters aren't sent; the story works from names.
+  const sample = {
+    who: 'Groq',
+    limits: async () => ({images: null}),
+    async json(prompt, opts = {}){
+      const {data, error} = await client.functions.invoke('story-ai', {body: {prompt}, signal: opts.signal});
+      if (error){ let why = ''; try { why = (await error.context.json()).error; } catch {} throw {code: why || 'ai_failed', message: why === 'not_configured' ? 'Story writing is not set up yet.' : 'The story writer is busy. Try again.'}; }
+      if (data && data.error) throw {code: data.error, message: 'The story writer is busy. Try again.'};
+      return data;
+    },
+  };
+  return {db: {collection}, assets, sample, uid};
+}
+// ---- the login screen ----
+let authMode = 'in', authDone = null;
+const $a = id => document.getElementById(id);
+function setAuthMode(m){
+  authMode = m; const up = m === 'up';
+  $a('aTitle').textContent = up ? 'Create your account' : 'Sign in';
+  $a('aSub').textContent = up ? 'Every drawing, on one wall' : 'Welcome back to Drawing Wall';
+  $a('aName').hidden = !up; $a('aGoText').textContent = up ? 'Create account' : 'Sign in';
+  $a('aPass').autocomplete = up ? 'new-password' : 'current-password';
+  $a('aSwap').textContent = up ? 'Already have an account? Sign in' : 'New here? Create an account';
+  $a('aErr').hidden = true; $a('aNote').hidden = true;
+}
+function authError(t){ $a('aErr').textContent = t; $a('aErr').hidden = !t; }
+function authBusy(on){ $a('aGo').disabled = on; $a('aGo').classList.toggle('busy', on); }
+const isApple = /iPhone|iPad|iPod/.test(navigator.userAgent);
+function showAuth(){
+  $a('auth').hidden = false; setAuthMode(authMode);
+  const google = !!GOOGLE_WEB_CLIENT_ID && !!window.ReactNativeWebView, apple = isApple && !!window.ReactNativeWebView;
+  $a('aGoogle').hidden = !google; $a('aApple').hidden = !apple; $a('aOr').hidden = !google && !apple;
+  setTimeout(() => $a(authMode === 'up' ? 'aName' : 'aEmail').focus(), 50);
+}
+function authSignedIn(user){ $a('auth').hidden = true; $a('aPass').value = ''; const d = authDone; authDone = null; if (d) d(user); }
+const AUTH_ERRORS = [[/invalid login credentials/i, "That email and password don't match. Try again."], [/email not confirmed/i, 'Confirm your email first: open the link we sent you, then sign in.'],
+  [/already registered|already been registered/i, 'There is already an account with that email. Sign in instead.'], [/rate limit|too many/i, 'Too many tries. Wait a minute, then try again.'],
+  [/password/i, 'Choose a password with at least 8 characters.'], [/network|fetch/i, "Can't reach Drawing Wall. Check the connection."]];
+const friendly = e => { const m = String((e && e.message) || e || ''); for (const [re, t] of AUTH_ERRORS) if (re.test(m)) return t; return m || 'Something went wrong. Try again.'; };
+$a('aSwap').onclick = () => setAuthMode(authMode === 'up' ? 'in' : 'up');
+$a('aEye').onclick = () => { const p = $a('aPass'), show = p.type === 'password'; p.type = show ? 'text' : 'password'; $a('aEye').classList.toggle('on', show); $a('aEye').setAttribute('aria-label', show ? 'Hide password' : 'Show password'); };
+$a('aForm').onsubmit = async e => {
+  e.preventDefault(); authError(''); $a('aNote').hidden = true;
+  const name = $a('aName').value.trim(), email = $a('aEmail').value.trim(), password = $a('aPass').value;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return authError('Enter a valid email.');
+  if (authMode === 'up' && !name) return authError('Enter your name.');
+  if (authMode === 'up' && password.length < 8) return authError('Choose a password with at least 8 characters.');
+  if (!password) return authError('Enter your password.');
+  authBusy(true);
+  try {
+    const c = await sbClient();
+    if (authMode === 'up'){
+      const {data, error} = await c.auth.signUp({email, password, options: {data: {full_name: name}}}); if (error) throw error;
+      if (data.session) authSignedIn(data.user);
+      else { setAuthMode('in'); $a('aEmail').value = email; $a('aNote').textContent = `Almost there: we sent a link to ${email}. Open it to confirm your account, then sign in here.`; $a('aNote').hidden = false; }
+    } else {
+      const {data, error} = await c.auth.signInWithPassword({email, password}); if (error) throw error;
+      authSignedIn(data.user);
+    }
+  } catch (err) { authError(friendly(err)); }
+  finally { authBusy(false); }
+};
+// Google and Apple sign-in come from the phone (the Android app hands over a token from the Google account)
+$a('aGoogle').onclick = () => { authError(''); window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({type: 'google-signin', webClientId: GOOGLE_WEB_CLIENT_ID})); };
+$a('aApple').onclick = () => { authError(''); window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({type: 'apple-signin'})); };
+window.__signInWithToken = async (provider, token, nonce) => {
+  if (!token){ authError(provider === 'google' ? "Google sign-in didn't finish." : "Apple sign-in didn't finish."); return; }
+  authBusy(true);
+  try { const c = await sbClient(); const {data, error} = await c.auth.signInWithIdToken({provider, token, nonce}); if (error) throw error; authSignedIn(data.user); }
+  catch (err) { authError(friendly(err)); } finally { authBusy(false); }
+};
+// signed in already, or show the login screen and wait
+// on claude.ai the page uses the Claude account unless someone signed in to Drawing Wall there
+const USE_KEY = 'drawing-wall-use-account';
+function wantsAccount(){ try { return localStorage.getItem(USE_KEY) === '1'; } catch { return false; } }
+function setWantsAccount(on){ try { on ? localStorage.setItem(USE_KEY, '1') : localStorage.removeItem(USE_KEY); } catch {} }
+async function accountReady(cancellable){
+  $a('aCancel').hidden = !cancellable;
+  let c; try { c = await sbClient(); } catch {
+    // no connection to load the account: say so on the login screen and keep trying
+    showAuth(); authError(cancellable ? "This page can't reach Drawing Wall's sign-in from here. Use Not now to keep using your Claude account." : "Can't reach Drawing Wall. Check the connection, then try again.");
+    return new Promise(res => { authDone = res; });
+  }
+  let session = null; try { ({data: {session}} = await c.auth.getSession()); } catch {}
+  if (session && session.user) return session.user;
+  showAuth(); return new Promise(res => { authDone = res; });
+}
+$a('aCancel').onclick = () => { setWantsAccount(false); location.reload(); };
+$a('acctIn').onclick = () => { closeMore(); setWantsAccount(true); location.reload(); };
+// ---- the account in the ⋯ menu ----
+function showAccount(user){
+  const nm = (user.user_metadata && user.user_metadata.full_name) || '';
+  $a('acctWho').textContent = `Signed in as ${nm ? nm + ' · ' : ''}${user.email || ''}`; $a('acctWho').hidden = false;
+  $a('acctOut').hidden = false; $a('acctDel').hidden = false; syncMore();
+}
+$a('acctOut').onclick = async () => { closeMore(); setWantsAccount(false); try { await sb.auth.signOut(); } catch {} location.reload(); };
+$a('acctDel').onclick = async () => {
+  const b = $a('acctDel');
+  if (!b.dataset.sure){ b.dataset.sure = 1; b.textContent = 'Tap again: delete the account and everything in it'; return; }
+  b.disabled = true; b.textContent = 'Deleting…';
+  try {
+    const B = sb.storage.from('drawings'); let files;
+    do { const {data} = await B.list(sbApi.uid, {limit: 1000}); files = (data || []).map(f => `${sbApi.uid}/${f.name}`); if (files.length) await B.remove(files); } while (files.length === 1000);
+    const {error} = await sb.rpc('delete_my_account'); if (error) throw error;
+    setWantsAccount(false); await sb.auth.signOut(); location.reload();
+  } catch { b.disabled = false; delete b.dataset.sure; b.textContent = 'Delete account'; showToast("Couldn't delete the account. Check the connection."); }
+};
+// ---- drawings saved on this device before accounts: offer once to move them in ----
+function readLocal(dbName, stores){
+  return new Promise(res => { let r; try { r = indexedDB.open(dbName); } catch { return res(null); }
+    r.onupgradeneeded = () => { r.transaction.abort(); };   // nothing saved here
+    r.onerror = () => res(null);
+    r.onsuccess = () => { const d = r.result, have = stores.filter(s => d.objectStoreNames.contains(s)); if (!have.length){ d.close(); return res(null); }
+      const t = d.transaction(have, 'readonly'), out = {}; for (const s of have){ const q = t.objectStore(s).getAll(); q.onsuccess = () => { out[s] = q.result; }; }
+      t.oncomplete = () => { d.close(); res(out); }; t.onerror = () => { d.close(); res(null); }; }; });
+}
+const MOVED_KEY = 'drawing-wall-moved-to-';
+// what can be moved in: drawings saved on this device, or on claude.ai the ones in the Claude account
+let moveSource = null;
+async function claudeSource(){
+  if (!(window.claude && window.claude.use)) return null;
+  let cdb, cas; try { [cdb, cas] = await Promise.all([window.claude.use('db'), window.claude.use('assets')]); } catch { return null; }
+  if (!cdb) return null;
+  const all = name => new Promise(res => { let off = null; try { off = cdb.collection(name).orderBy(name === 'collages' ? 'saved' : 'added').limit(1000).onSnapshot(sn => { res(sn.docs.filter(d => d.exists).map(d => ({id: d.id, ...d.data()}))); try { off && off(); } catch {} }, () => res([])); } catch { res([]); } });
+  const [pcs, cols, chs, bks] = await Promise.all(['pieces', 'collages', 'characters', 'books'].map(all));
+  const blob = (url, id) => fetch(url || ('/_blob/' + id)).then(r => { if (!r.ok) throw new Error('picture'); return r.blob(); });
+  return {where: 'your Claude account', tiles: pcs.map(v => ({id: v.id, w: v.w, h: v.h, added: v.added, name: v.name || '', ref: v.ref || 0, px: v.px, py: v.py, size: v.size, rot: v.rot, z: v.z, fx: v.fx, fy: v.fy, kind: v.kind, pbox: v.pbox, pkey: v.pkey,
+      get: async () => ({full: await blob(v.fullUrl, v.fullId), thumb: await blob(v.thumbUrl, v.thumbId), src: v.srcId ? await blob(v.srcUrl, v.srcId) : null, photo: v.photoId ? await blob(v.photoUrl, v.photoId) : null})})),
+    collages: cols, chars: chs.map(c => ({...c, getBlob: () => blob(c.imgUrl, c.imgId)})), books: bks};
+}
+async function deviceSource(){
+  const local = await readLocal('drawing-wall', ['pieces']), lc = await readLocal('drawing-wall-collages', ['collages']), sbk = await readLocal('story-book', ['chars', 'books']);
+  return {where: window.ReactNativeWebView ? 'this phone' : 'this device', tiles: ((local && local.pieces) || []).map(r => ({...r, get: async () => ({full: r.full, thumb: r.thumb, src: r.src || null, photo: r.photo || null})})),
+    collages: (lc && lc.collages) || [], chars: ((sbk && sbk.chars) || []).map(c => ({...c, getBlob: async () => c.blob})), books: (sbk && sbk.books) || []};
+}
+async function offerMove(asked){
+  moveSource = window.claude && window.claude.use ? await claudeSource() : await deviceSource();
+  const tiles = (moveSource && moveSource.tiles) || [];
+  let done = false; try { done = localStorage.getItem(MOVED_KEY + sbApi.uid) === 'yes'; } catch {}
+  $a('acctMove').hidden = !tiles.length; moveLabel(); syncMore();
+  if (!tiles.length || (done && !asked)) { if (asked) showToast('No drawings saved on this device.'); return; }
+  try { if (!asked && localStorage.getItem(MOVED_KEY + sbApi.uid) === 'later') return; } catch {}
+  const claudeSide = moveSource.where === 'your Claude account';
+  $a('migTitle').textContent = claudeSide ? 'Copy your drawings over?' : 'Bring your drawings along?';
+  $a('migGo').textContent = claudeSide ? 'Copy them' : 'Move them';
+  $a('migText').textContent = claudeSide
+    ? `Your Claude account has ${tiles.length} drawing${tiles.length === 1 ? '' : 's'}. Copy ${tiles.length === 1 ? 'it' : 'them'} into your Drawing Wall account so ${tiles.length === 1 ? "it's" : "they're"} on your phone too? Collages and story books come along. Nothing is removed from the Claude account.`
+    : `${moveSource.where[0].toUpperCase() + moveSource.where.slice(1)} has ${tiles.length} drawing${tiles.length === 1 ? '' : 's'} from before you signed in. Move ${tiles.length === 1 ? 'it' : 'them'} into your account so ${tiles.length === 1 ? "it's" : "they're"} on all your devices? Collages and story books come too. Nothing is deleted from ${moveSource.where}.`;
+  $a('migMsg').hidden = true; $a('migGo').disabled = false; $a('migNo').disabled = false; $a('migScrim').hidden = false;
+}
+$a('acctMove').onclick = () => { closeMore(); offerMove(true); };
+// the menu item says where the drawings come from
+const moveLabel = () => { $a('acctMove').textContent = window.claude && window.claude.use ? 'Copy drawings from my Claude account' : "Move this device's drawings into my account"; };
+$a('migNo').onclick = () => { $a('migScrim').hidden = true; try { localStorage.setItem(MOVED_KEY + sbApi.uid, 'later'); } catch {} showToast('You can move them any time from the ⋯ menu'); };
+$a('migGo').onclick = async () => {
+  $a('migGo').disabled = $a('migNo').disabled = true; const msg = $a('migMsg'); msg.hidden = false;
+  const {db, assets} = sbApi, col = db.collection('pieces');
+  try {
+    const src = moveSource || await deviceSource(), tiles = src.tiles.slice().sort((a, b) => a.added - b.added);
+    // what's already been moved (if an earlier try stopped partway) isn't moved twice
+    const MAPKEY = 'drawing-wall-moved-map-' + sbApi.uid; let prev = {}; try { prev = JSON.parse(localStorage.getItem(MAPKEY) || '{}'); } catch {}
+    const tileMap = new Map(Object.entries(prev)), imgOf = new Map(), photos = new Map(); let n = 0;
+    const base = Math.max(0, ...pieces.map(p => p.ref || 0));
+    for (const r of tiles){
+      msg.textContent = `Moving drawing ${++n} of ${tiles.length}…`;
+      if (tileMap.has(r.id)) continue;
+      const pic = await r.get(); const f = await assets.upload(pic.full), t = await assets.upload(pic.thumb), sr = pic.src ? await assets.upload(pic.src) : null;
+      const doc = {w: r.w, h: r.h, added: r.added, fullId: f.id, fullUrl: f.url, thumbId: t.id, thumbUrl: t.url, name: r.name || '', ref: r.ref ? base + r.ref : 0};
+      if (sr){ doc.srcId = sr.id; doc.srcUrl = sr.url; }
+      if (pic.photo){ const key = r.pkey || r.added; if (!photos.has(key)) photos.set(key, assets.upload(pic.photo)); const ph = await photos.get(key); doc.photoId = ph.id; doc.photoUrl = ph.url; doc.pbox = r.pbox || null; doc.pkey = ph.id; }
+      for (const k of ['px', 'py', 'size', 'rot', 'z', 'fx', 'fy', 'kind']) if (r[k] != null) doc[k] = r[k];
+      const ref = await col.add(doc); tileMap.set(r.id, ref.id); imgOf.set(r.id, f);
+      try { localStorage.setItem(MAPKEY, JSON.stringify(Object.fromEntries(tileMap))); } catch {}
+    }
+    // saved collages, pointed at the moved tiles
+    for (const c of src.collages || []){ const tl = {}; for (const [id, v] of Object.entries(c.tiles || {})) if (tileMap.has(id)) tl[tileMap.get(id)] = v; await db.collection('collages').add({name: c.name, saved: c.saved, tiles: tl}); }
+    // story book characters and books, with their ids swapped for the new ones
+    const charMap = new Map();
+    for (const ch of src.chars || []){
+      msg.textContent = 'Moving story books…';
+      const newTile = ch.wallId && tileMap.get(ch.wallId);
+      let img = newTile ? imgOf.get(ch.wallId) : null; if (!img){ try { const b = await ch.getBlob(); if (b) img = await assets.upload(b); } catch {} } if (!img) continue;
+      const ref = await db.collection('characters').add({name: ch.name, about: ch.about || '', kind: ch.kind || 'character', w: ch.w, h: ch.h, added: ch.added, imgId: img.id, imgUrl: img.url, wallId: newTile || null, linked: true});
+      charMap.set(ch.id, ref.id);
+    }
+    for (const bk of src.books || []){
+      let js = JSON.stringify({title: bk.title, theme: bk.theme, cast: bk.cast, pages: bk.pages, cover: bk.cover, end: bk.end, background: bk.background || null, by: bk.by || '', added: bk.added, writer: bk.writer || ''});
+      for (const [o, nw] of charMap) js = js.split(JSON.stringify(o).slice(1, -1)).join(nw);
+      await db.collection('books').add(JSON.parse(js));
+    }
+    try { localStorage.setItem(MOVED_KEY + sbApi.uid, 'yes'); } catch {}
+    $a('migScrim').hidden = true; showToast(`${tiles.length} drawing${tiles.length === 1 ? '' : 's'} ${src.where === 'your Claude account' ? 'copied' : 'moved'} into your account`); $a('acctMove').hidden = true; syncMore();
+  } catch (e) { msg.textContent = "Couldn't finish moving them. Check the connection and tap Move them again (anything already moved stays)."; $a('migGo').disabled = $a('migNo').disabled = false; }
+};
+
+/* ---------------- story book ---------------- */
+// storybook.html (published alongside this page, or inlined by the Android build) opens over the wall
+// in a frame of this same page, so it can read the tiles and keep its books in the wall's own saved data
+let storyFrame = null, wallLoaded = false, storyReturn = false;
+const toolOpen = () => !scrim.hidden || !tuScrim.hidden || !pcScrim.hidden;
+function backToStory(){ if (storyReturn && !toolOpen()){ storyReturn = false; openStory(); } }
+const storyWatchers = new Set();
+// the story book redraws from the wall whenever a tile, name, type or the selector changes
+function notifyStory(){ if (storyFrame && !storyFrame.hidden) for (const fn of storyWatchers){ try { fn(); } catch {} } }
+// whatever the book hands the platform (data, pictures, a stop signal) was made inside its frame, and the
+// platform only takes things made here, on the wall's page: rebuild each argument here before passing it on,
+// and wrap what comes back the same way (db.collection(...).doc(...) and so on)
+const tag = v => Object.prototype.toString.call(v);
+function here(v){
+  if (v == null || typeof v !== 'object') return v;   // functions (callbacks) and plain values pass as they are
+  if (tag(v) === '[object Blob]' || tag(v) === '[object File]') return new Blob([v], {type: v.type});
+  if (tag(v) === '[object AbortSignal]'){ const c = new AbortController(); if (v.aborted) c.abort(); else v.addEventListener('abort', () => c.abort()); return c.signal; }
+  if (Array.isArray(v)) return v.map(here);
+  return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, here(x)]));
+}
+function lend(obj){
+  if (obj == null || (typeof obj !== 'object' && typeof obj !== 'function')) return obj;
+  if (typeof obj.then === 'function') return obj.then(lend);
+  if (Array.isArray(obj)) return obj;
+  if (Object.getPrototypeOf(obj) === Object.prototype && !Object.values(obj).some(v => typeof v === 'function')) return obj;   // plain data
+  return new Proxy(typeof obj === 'function' ? function(){} : {}, {
+    get: (_, k) => { const v = obj[k]; return typeof v === 'function' ? (...a) => lend(v.apply(obj, a.map(here))) : v; },
+    apply: (_, __, a) => lend(obj(...a.map(here))),
+  });
+}
+// In the Android app the WebView has no voices, so read aloud goes to the phone's own text-to-speech.
+// This looks like the browser's speechSynthesis (getVoices, speak, cancel, voiceschanged) so the story book can use either.
+if (window.ReactNativeWebView){
+  const pending = new Map(), listeners = new Set(); let seq = 0, list = [];
+  const post = o => window.ReactNativeWebView.postMessage(JSON.stringify(o));
+  class Utterance { constructor(text){ Object.assign(this, {text, voice: null, lang: '', rate: 1, pitch: 1, volume: 1, onend: null, onerror: null}); } }
+  window.__nativeSpeech = {
+    Utterance,
+    getVoices: () => list,
+    speak(u){ const id = ++seq; pending.set(id, u); post({type: 'tts', op: 'speak', id, text: u.text, voice: u.voice && u.voice.voiceURI, lang: u.lang || (u.voice && u.voice.lang) || 'en-US', rate: u.rate, pitch: u.pitch}); },
+    cancel(){ const was = [...pending.values()]; pending.clear(); post({type: 'tts', op: 'stop'}); for (const u of was) try { u.onerror && u.onerror({error: 'canceled'}); } catch {} },
+    addEventListener(ev, fn){ if (ev === 'voiceschanged') listeners.add(fn); },
+  };
+  window.__ttsDone = (id, err) => { const u = pending.get(id); if (!u) return; pending.delete(id); try { err ? u.onerror && u.onerror({error: err}) : u.onend && u.onend({}); } catch {} };
+  window.__ttsVoices = vs => { list = Array.isArray(vs) ? vs : []; for (const fn of listeners) try { fn(); } catch {} };
+  post({type: 'tts', op: 'voices'});
+}
+window.__drawingWall = {
+  use: async name => sbApi ? (name === 'db' ? sbApi.db : name === 'assets' ? sbApi.assets : name === 'sample' ? sbApi.sample : null) : window.claude && window.claude.use ? lend(await window.claude.use(name)) : null,
+  tiles: () => pieces.map(p => ({id:p.id, ref:p.ref || 0, name:p.name || '', kind:p.kind || null, w:p.w, h:p.h, added:p.added, src:p.fullSrc, assetId:p.fullId || null, rot:p.rot || 0, fx:!!p.fx, fy:!!p.fy})),
+  loaded: () => wallLoaded,
+  setTile(id, o){
+    const p = pieces.find(q => q.id === id); if (!p) return;
+    if (o.name !== undefined && o.name !== (p.name || '')){ p.name = o.name; store.rename(p, o.name).catch(() => showToast("Couldn't save the name. Check your connection.")); }
+    if (o.kind !== undefined && (o.kind || null) !== (p.kind || null)){ p.kind = o.kind || null; savePlace(p); }
+    // turned or mirrored in the story book: exactly what the wall's own buttons would do
+    const rot = o.rot !== undefined ? snapRot(o.rot) : (p.rot || 0), fx = o.fx !== undefined ? !!o.fx : !!p.fx, fy = o.fy !== undefined ? !!o.fy : !!p.fy;
+    if (Math.abs(rot - (p.rot || 0)) > 1e-6 || fx !== !!p.fx || fy !== !!p.fy){ pinAll(); p.rot = rot; p.fx = fx; p.fy = fy; bringToFront(p); savePlace(p); notifyStory(); }
+    if (selected === p) select(p);
+    refreshCount(); needs = true;
+  },
+  // the tool opens over the wall; finishing or cancelling comes back to the story book
+  async recrop(id){ const p = pieces.find(q => q.id === id); if (!p) return; storyReturn = true; closeStory(); await recropTile(p); if (!toolOpen()) backToStory(); },
+  async touchUp(id){ const p = pieces.find(q => q.id === id); if (!p) return; storyReturn = true; closeStory(); await openTouchUp(p); if (!toolOpen()) backToStory(); },
+  removeTile(id){ const p = pieces.find(q => q.id === id); return p ? store.remove(p) : Promise.resolve(); },
+  addFiles(files){ closeStory(); return handleFiles(files); },
+  show: () => showKind,
+  setShow: v => setShowKind(v),
+  watch(fn){ storyWatchers.add(fn); },
+  close: () => closeStory(),
+};
+async function openStory(){
+  select(null);
+  if (!storyFrame){
+    let html = window.__STORYBOOK_HTML;
+    if (!html){
+      try { const r = await fetch('storybook.html'); if (!r.ok) throw 0; html = await r.text(); }
+      catch { showToast("Couldn't open the story book. Check your connection."); return; }
+    }
+    storyFrame = document.createElement('iframe'); storyFrame.className = 'story'; storyFrame.title = 'Story Book';
+    storyFrame.srcdoc = html; document.body.append(storyFrame);
+  }
+  storyFrame.hidden = false; storyFrame.focus();
+  notifyStory();
+}
+function closeStory(){ if (storyFrame){ storyFrame.hidden = true; document.getElementById('storyBtn').focus(); } }
+document.getElementById('storyBtn').onclick = openStory;
+
+/* ---------------- packaged app ---------------- */
+window.__drawingWallBack = () => {
+  if (storyFrame && !storyFrame.hidden){ let done = false; try { done = storyFrame.contentWindow.__storyBack(); } catch {} if (!done) closeStory(); return; }
+  if (!phScrim.hidden){ closePhotos(); return; }
+  if (!pcScrim.hidden){ closePC(); return; }
+  if (!tuScrim.hidden){ closeTU(); return; }
+  if (!orgScrim.hidden){ closeOrg(); return; }
+  if (!scrim.hidden){ closeSheet(); return; }
+  if (!pickHelp.hidden){ pickHelp.hidden = true; return; }
+  if (selected){ select(null); return; }
+  window.ReactNativeWebView && window.ReactNativeWebView.postMessage('exit');
+};
+
+/* ---------------- boot ---------------- */
+samples = makeSamples();
+resize(); layout(shown());
+Object.assign(cam, newestView()); clampCam();
+requestAnimationFrame(frame);
+new ResizeObserver(() => { resize(); layout(shown()); clampCam(); }).observe(cv);
+refreshCount();
+document.getElementById('sampleNote').hidden = false;
+
+(async () => {
+  let db = null, assets = null, account = null;
+  try {
+    if (window.claude && window.claude.use){
+      [db, assets] = await Promise.all([window.claude.use('db'), window.claude.use('assets')]);
+    }
+  } catch {}
+  const mode = document.getElementById('mode');
+  const onClaude = !!db;
+  if (ACCOUNTS && (!onClaude || wantsAccount())){
+    account = await accountReady(onClaude);
+    if (account){ sbApi = sbAdapters(sb, account); db = sbApi.db; assets = sbApi.assets; }
+  }
+  if (account){
+    store = cloudStore(db, assets); mode.textContent = 'Saved to your Drawing Wall account'; mode.hidden = false; showAccount(account);
+  } else if (db){
+    store = cloudStore(db, assets); if (assets){ mode.textContent = 'Saved to your Claude account'; mode.hidden = false; }
+    if (ACCOUNTS && assets){ $a('acctIn').hidden = false; syncMore(); }
+    if (!assets){ mode.textContent = 'View only'; mode.hidden = false; document.getElementById('addBtn').hidden = true; }
+  } else {
+    store = localStore();
+    mode.textContent = 'Saved on this device'; mode.hidden = !!window.ReactNativeWebView; // in the app everything is on the device anyway
+  }
+  try { await store.start(); wallLoaded = true; ensureRefs(); refreshCount(); notifyStory(); if (store.watchCollages) store.watchCollages(); }
+  catch {
+    showToast("Couldn't open saved drawings. You can still add new ones.");
+  }
+  layout(shown());
+  Object.assign(cam, pieces.length ? tilesView() : newestView()); clampCam(); needs = true;
+  refreshCount(); updateSave();
+  if (account) offerMove(false);
+})();
+})();
+</script>
+
+</body></html>
