@@ -2331,7 +2331,7 @@ let sb = null, sbApi = null;
 async function sbClient(){
   if (sb) return sb;
   const m = await import(SB_LIB);
-  sb = m.createClient(SB_URL, SB_KEY, {auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'drawing-wall-auth'}});
+  sb = m.createClient(SB_URL, SB_KEY, {auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, flowType: 'pkce', storageKey: 'drawing-wall-auth'}});
   return sb;
 }
 function sbAdapters(client, user){
@@ -2421,7 +2421,24 @@ function showAuth(){
   $a('auth').hidden = false; setAuthMode(authMode);
   const google = !!GOOGLE_WEB_CLIENT_ID && !!window.ReactNativeWebView, apple = isApple && !!window.ReactNativeWebView;
   $a('aGoogle').hidden = !google; $a('aApple').hidden = !apple; $a('aOr').hidden = !google && !apple;
+  // in a normal browser (drawingwall.com/wall), Google sign-in shows once it's switched on in Supabase
+  if (!window.ReactNativeWebView && window.top === window.self) webGoogleOn().then(on => { if (on){ $a('aGoogle').hidden = false; $a('aOr').hidden = false; } });
+  if (googleErr){ authError(googleErr); googleErr = ''; }
   setTimeout(() => $a(authMode === 'up' ? 'aName' : 'aEmail').focus(), 50);
+}
+let webGoogle = null, googleErr = '';
+function webGoogleOn(){
+  return webGoogle || (webGoogle = fetch(SB_URL + '/auth/v1/settings', {headers: {apikey: SB_KEY}})
+    .then(r => r.json()).then(s => !!(s.external && s.external.google)).catch(() => false));
+}
+// coming back from Google: swap the code in the address for a session, then tidy the address
+async function finishWebGoogle(c){
+  const q = new URLSearchParams(location.search), code = q.get('code'), err = q.get('error_description');
+  if (!code && !err) return;
+  history.replaceState(null, '', location.pathname + location.hash);
+  if (err) { googleErr = "Google sign-in didn't finish. Try again."; return; }
+  // a failed swap (say, an email-confirm link opened in another browser) just leaves the sign-in screen up
+  try { await c.auth.exchangeCodeForSession(code); } catch {}
 }
 function authSignedIn(user){ $a('auth').hidden = true; $a('aPass').value = ''; const d = authDone; authDone = null; if (d) d(user); }
 const AUTH_ERRORS = [[/invalid login credentials/i, "That email and password don't match. Try again."], [/email not confirmed/i, 'Confirm your email first: open the link we sent you, then sign in.'],
@@ -2452,7 +2469,14 @@ $a('aForm').onsubmit = async e => {
   finally { authBusy(false); }
 };
 // Google and Apple sign-in come from the phone (the Android app hands over a token from the Google account)
-$a('aGoogle').onclick = () => { authError(''); window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({type: 'google-signin', webClientId: GOOGLE_WEB_CLIENT_ID})); };
+$a('aGoogle').onclick = async () => {
+  authError('');
+  if (window.ReactNativeWebView) return window.ReactNativeWebView.postMessage(JSON.stringify({type: 'google-signin', webClientId: GOOGLE_WEB_CLIENT_ID}));
+  // in a browser: go to Google, which sends you back to this page signed in
+  authBusy(true);
+  try { const c = await sbClient(); const {error} = await c.auth.signInWithOAuth({provider: 'google', options: {redirectTo: location.origin + location.pathname}}); if (error) throw error; }
+  catch (err) { authError(friendly(err)); authBusy(false); }
+};
 $a('aApple').onclick = () => { authError(''); window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({type: 'apple-signin'})); };
 window.__signInWithToken = async (provider, token, nonce) => {
   if (!token){ authError(provider === 'google' ? "Google sign-in didn't finish." : "Apple sign-in didn't finish."); return; }
@@ -2472,6 +2496,7 @@ async function accountReady(cancellable){
     showAuth(); authError(cancellable ? "This page can't reach Drawing Wall's sign-in from here. Use Not now to keep using your Claude account." : "Can't reach Drawing Wall. Check the connection, then try again.");
     return new Promise(res => { authDone = res; });
   }
+  await finishWebGoogle(c);
   let session = null; try { ({data: {session}} = await c.auth.getSession()); } catch {}
   if (session && session.user) return session.user;
   showAuth(); return new Promise(res => { authDone = res; });
