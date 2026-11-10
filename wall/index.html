@@ -285,6 +285,8 @@ body.selopen .dock{display:none}
         <div class="minfo" id="acctWho" hidden></div>
         <button class="mitem" id="acctIn" role="menuitem" hidden>Sign in to Drawing Wall</button>
         <button class="mitem" id="acctMove" role="menuitem" hidden>Move this device's drawings into my account</button>
+        <button class="mitem" id="wallExport" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>Export my wall</button>
+        <label class="mitem" id="wallImport" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9M7 14l5-5 5 5M4 5h16"/></svg>Import a wall export<input type="file" id="wallImportFile" accept=".json,application/json" hidden></label>
         <button class="mitem" id="acctOut" role="menuitem" hidden>Sign out</button>
         <button class="mitem danger" id="acctDel" role="menuitem" hidden>Delete account</button>
       </div>
@@ -1295,7 +1297,10 @@ function setShowKind(v){
 document.getElementById('kindSel').onchange = e => setShowKind(e.target.value);
 // the ⋯ menu: Photos and where the wall is saved; the button shows only when there's something in it
 function syncMore(){
-  const has = !document.getElementById('photosBtn').hidden || !document.getElementById('mode').hidden || !document.getElementById('acctOut').hidden || !document.getElementById('acctIn').hidden;
+  const ex = document.getElementById('wallExport'); if (ex) ex.hidden = !pieces.length;
+  let acct = false; try { acct = !!sbApi; } catch {}   // (the account code may not have loaded yet)
+  const im = document.getElementById('wallImport'); if (im) im.hidden = !acct;
+  const has = !document.getElementById('photosBtn').hidden || !document.getElementById('mode').hidden || !document.getElementById('acctOut').hidden || !document.getElementById('acctIn').hidden || !ex.hidden || !im.hidden;
   document.getElementById('moreBtn').hidden = !has; if (!has) closeMore();
 }
 function closeMore(){ document.getElementById('moreMenu').hidden = true; document.getElementById('moreBtn').setAttribute('aria-expanded', 'false'); }
@@ -2544,6 +2549,15 @@ async function claudeSource(){
       get: async () => ({full: await blob(v.fullUrl, v.fullId), thumb: await blob(v.thumbUrl, v.thumbId), src: v.srcId ? await blob(v.srcUrl, v.srcId) : null, photo: v.photoId ? await blob(v.photoUrl, v.photoId) : null})})),
     collages: cols, chars: chs.map(c => ({...c, getBlob: () => blob(c.imgUrl, c.imgId)})), books: bks};
 }
+async function accountSource(){
+  if (!sbApi) return null;
+  const all = async name => { try { return (await sbApi.db.collection(name).get()).docs.map(d => ({id: d.id, ...d.data()})); } catch { return []; } };
+  const [pcs, cols, chs, bks] = await Promise.all(['pieces', 'collages', 'characters', 'books'].map(all));
+  const blob = url => fetch(url).then(r => { if (!r.ok) throw new Error('picture'); return r.blob(); });
+  return {where: 'your Drawing Wall account', tiles: pcs.map(v => ({id: v.id, w: v.w, h: v.h, added: v.added, name: v.name || '', ref: v.ref || 0, px: v.px, py: v.py, size: v.size, rot: v.rot, z: v.z, fx: v.fx, fy: v.fy, kind: v.kind, pbox: v.pbox, pkey: v.pkey,
+      get: async () => ({full: await blob(v.fullUrl), thumb: await blob(v.thumbUrl), src: v.srcUrl ? await blob(v.srcUrl) : null, photo: v.photoUrl ? await blob(v.photoUrl) : null})})),
+    collages: cols, chars: chs.map(c => ({...c, getBlob: () => blob(c.imgUrl)})), books: bks};
+}
 async function deviceSource(){
   const local = await readLocal('drawing-wall', ['pieces']), lc = await readLocal('drawing-wall-collages', ['collages']), sbk = await readLocal('story-book', ['chars', 'books']);
   return {where: window.ReactNativeWebView ? 'this phone' : 'this device', tiles: ((local && local.pieces) || []).map(r => ({...r, get: async () => ({full: r.full, thumb: r.thumb, src: r.src || null, photo: r.photo || null})})),
@@ -2567,14 +2581,14 @@ async function offerMove(asked){
 $a('acctMove').onclick = () => { closeMore(); offerMove(true); };
 // the menu item says where the drawings come from
 const moveLabel = () => { $a('acctMove').textContent = window.claude && window.claude.use ? 'Copy drawings from my Claude account' : "Move this device's drawings into my account"; };
-$a('migNo').onclick = () => { $a('migScrim').hidden = true; try { localStorage.setItem(MOVED_KEY + sbApi.uid, 'later'); } catch {} showToast('You can move them any time from the ⋯ menu'); };
+$a('migNo').onclick = () => { $a('migScrim').hidden = true; if (moveSource && moveSource.tag){ moveSource = null; return; } try { localStorage.setItem(MOVED_KEY + sbApi.uid, 'later'); } catch {} showToast('You can move them any time from the ⋯ menu'); };
 $a('migGo').onclick = async () => {
   $a('migGo').disabled = $a('migNo').disabled = true; const msg = $a('migMsg'); msg.hidden = false;
   const {db, assets} = sbApi, col = db.collection('pieces');
   try {
     const src = moveSource || await deviceSource(), tiles = src.tiles.slice().sort((a, b) => a.added - b.added);
     // what's already been moved (if an earlier try stopped partway) isn't moved twice
-    const MAPKEY = 'drawing-wall-moved-map-' + sbApi.uid; let prev = {}; try { prev = JSON.parse(localStorage.getItem(MAPKEY) || '{}'); } catch {}
+    const MAPKEY = 'drawing-wall-moved-map-' + sbApi.uid + (src.tag ? '-' + src.tag : ''); let prev = {}; try { prev = JSON.parse(localStorage.getItem(MAPKEY) || '{}'); } catch {}
     const tileMap = new Map(Object.entries(prev)), imgOf = new Map(), photos = new Map(); let n = 0;
     const base = Math.max(0, ...pieces.map(p => p.ref || 0));
     for (const r of tiles){
@@ -2604,9 +2618,54 @@ $a('migGo').onclick = async () => {
       for (const [o, nw] of charMap) js = js.split(JSON.stringify(o).slice(1, -1)).join(nw);
       await db.collection('books').add(JSON.parse(js));
     }
-    try { localStorage.setItem(MOVED_KEY + sbApi.uid, 'yes'); } catch {}
-    $a('migScrim').hidden = true; showToast(`${tiles.length} drawing${tiles.length === 1 ? '' : 's'} ${src.where === 'your Claude account' ? 'copied' : 'moved'} into your account`); $a('acctMove').hidden = true; syncMore();
+    if (!src.tag) try { localStorage.setItem(MOVED_KEY + sbApi.uid, 'yes'); } catch {}
+    $a('migScrim').hidden = true; showToast(`${tiles.length} drawing${tiles.length === 1 ? '' : 's'} ${src.tag ? 'added from the export' : src.where === 'your Claude account' ? 'copied' : 'moved'} into your account`);
+    if (!src.tag) $a('acctMove').hidden = true; moveSource = null; syncMore();
   } catch (e) { msg.textContent = "Couldn't finish moving them. Check the connection and tap Move them again (anything already moved stays)."; $a('migGo').disabled = $a('migNo').disabled = false; }
+};
+
+/* ---------------- export and import: the whole wall as one file ----------------
+   Export packs every drawing (pictures, names, types, positions, original photos), saved collages, and the
+   Story Book's characters and books into one .json file. Import adds such a file to a Drawing Wall account. */
+const toDataURL = b => new Promise((res, rej) => { if (!b) return res(null); const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(b); });
+const fromDataURL = u => u ? fetch(u).then(r => r.blob()) : Promise.resolve(null);
+async function wallSource(){ return sbApi ? accountSource() : (window.claude && window.claude.use && store && store.kind !== 'local') ? claudeSource() : deviceSource(); }
+document.getElementById('wallExport').onclick = async () => {
+  closeMore(); const btn = document.getElementById('wallExport'); if (btn.disabled) return; btn.disabled = true;
+  try {
+    const src = await wallSource(); if (!src || !src.tiles.length){ showToast('No drawings to export yet.'); return; }
+    const tiles = [], photos = {}; let n = 0;
+    for (const t of src.tiles){
+      showToast(`Packing drawing ${++n} of ${src.tiles.length}…`);
+      const pic = await t.get(), key = t.pkey || (pic.photo ? 'p' + t.added : null);
+      if (pic.photo && key && !photos[key]) photos[key] = await toDataURL(pic.photo);
+      const {get, ...meta} = t; tiles.push({...meta, pkey: key, full: await toDataURL(pic.full), thumb: await toDataURL(pic.thumb), src: await toDataURL(pic.src)});
+    }
+    const tileIds = new Set(src.tiles.map(t => t.id)), chars = [];
+    for (const c of src.chars || []){ const {getBlob, ...meta} = c; chars.push({...meta, img: c.wallId && tileIds.has(c.wallId) ? null : await toDataURL(await getBlob().catch(() => null))}); }
+    const out = {app: 'drawing-wall', version: 1, exported: Date.now(), from: src.where, tiles, photos,
+      collages: (src.collages || []).map(c => ({name: c.name, saved: c.saved, tiles: c.tiles})), characters: chars, books: src.books || []};
+    const blob = new Blob([JSON.stringify(out)], {type: 'application/json'}), d = new Date();
+    const name = `drawing-wall-export-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}.json`;
+    let dl = null; try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch {}
+    if (dl) await dl.save({filename: name, data: blob});
+    else { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); }
+    showToast(`Exported ${tiles.length} drawing${tiles.length === 1 ? '' : 's'} to ${name}`);
+  } catch (e) { if (!(e && /declin|cancel/i.test(e.code || ''))) showToast("Couldn't export the wall. Check the connection and try again."); }
+  finally { btn.disabled = false; }
+};
+document.getElementById('wallImportFile').onchange = async e => {
+  const file = e.target.files && e.target.files[0]; e.target.value = ''; closeMore(); if (!file || !sbApi) return;
+  let data; try { data = JSON.parse(await file.text()); } catch { showToast("That file isn't a Drawing Wall export."); return; }
+  if (!data || data.app !== 'drawing-wall' || !Array.isArray(data.tiles)){ showToast("That file isn't a Drawing Wall export."); return; }
+  const photos = data.photos || {};
+  moveSource = {where: 'this export file', tag: 'file-' + (data.exported || file.name),
+    tiles: data.tiles.map(t => ({...t, get: async () => ({full: await fromDataURL(t.full), thumb: await fromDataURL(t.thumb), src: await fromDataURL(t.src), photo: await fromDataURL(t.pkey && photos[t.pkey])})})),
+    collages: data.collages || [], chars: (data.characters || []).map(c => ({...c, getBlob: () => fromDataURL(c.img)})), books: data.books || []};
+  const n = moveSource.tiles.length;
+  $a('migTitle').textContent = 'Add this export to your account?'; $a('migGo').textContent = 'Add them';
+  $a('migText').textContent = `This file has ${n} drawing${n === 1 ? '' : 's'}${data.books && data.books.length ? ` and ${data.books.length} book${data.books.length === 1 ? '' : 's'}` : ''}${data.from ? ' from ' + data.from : ''}. Add ${n === 1 ? 'it' : 'them'} to your Drawing Wall account? Nothing already on your wall is changed.`;
+  $a('migMsg').hidden = true; $a('migGo').disabled = false; $a('migNo').disabled = false; $a('migScrim').hidden = false;
 };
 
 /* ---------------- story book ---------------- */
