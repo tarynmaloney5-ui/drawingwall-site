@@ -34,7 +34,7 @@
   },
   {
    "id": "78710d43",
-   "title": "Back button",
+   "title": "Back button (Android)",
    "steps": "Open the review sheet and press Android's back button. It should close the sheet, not the app.",
    "status": "test"
   }
