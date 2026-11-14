@@ -141,7 +141,7 @@
 .artist p { margin: 0; color: var(--muted); font-size: 15px; }
 
 /* Header: her tree drawing once, her grass line continued to the right edge, headline in the sky */
-.art-header { --h: 270px; position: relative; display: flex; height: var(--h); }
+.art-header { --h: 216px; position: relative; display: flex; height: var(--h); }
 .art-header .ah-tree { height: 100%; width: auto; flex: none; }
 .art-header .ah-grass { flex: 1; min-width: 0; background: url("art/header-grass.webp") repeat-x left bottom / auto 100%; }
 /* the sky: from the top of the header down to just above the grass (grass is the bottom ~20%) */
@@ -160,13 +160,13 @@
 @media (prefers-color-scheme: dark) { .art-header h1 .hl::after { opacity: .45; } }
 .hero { padding-top: 40px; }
 /* narrower screens: a shorter header, headline still beside the tree */
-@media (max-width: 900px) { .art-header { --h: 200px; } }
+@media (max-width: 900px) { .art-header { --h: 160px; } }
 /* phones: headline on top, the tree and grass strip underneath it */
 @media (max-width: 540px) {
   .art-header { flex-wrap: wrap; height: auto; }
   .art-header .ah-text { position: static; order: -1; width: 100%; padding: 28px 16px 8px; }
-  .art-header .ah-tree { height: 96px; }
-  .art-header .ah-grass { height: 96px; }
+  .art-header .ah-tree { height: 77px; }
+  .art-header .ah-grass { height: 77px; }
 }
 </style>
 </head>
