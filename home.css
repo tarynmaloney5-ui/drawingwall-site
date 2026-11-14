@@ -34,6 +34,16 @@
 @media (max-width: 860px) { .nav nav a:not(.button):not(.login) { display: none; } }
 .nav nav a.login { color: var(--text); font-weight: 600; }
 @media (max-width: 380px) { .home header a { font-size: 18px; } .nav nav .button { padding: 7px 13px; font-size: 14px; } }
+/* phones: tighter top bar so "Become a tester" and "Log in" both fit without sideways scrolling */
+@media (max-width: 480px) {
+  .nav .wrap { gap: 10px; }
+  .nav nav { gap: 12px; font-size: 14px; }
+  .nav header img { width: 26px; height: 26px; }
+  .home header a { font-size: 17px; }
+  .nav nav .button { padding: 7px 12px; font-size: 13.5px; }
+}
+/* very small phones: keep the icon, drop the "Drawing Wall" word so the buttons still fit */
+@media (max-width: 360px) { .home .nav header a { display: none; } }
 
 /* Hero */
 .hero { padding: 72px 0 64px; overflow: hidden; position: relative; }
