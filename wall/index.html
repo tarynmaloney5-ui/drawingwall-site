@@ -28,17 +28,24 @@ body{background:var(--wall);color:var(--ink);font-family:var(--ui);font-size:15p
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-offset:2px}
 
-.top{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:10px;align-items:flex-start;pointer-events:none}
-.badge{pointer-events:auto;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:8px 14px 9px;display:flex;flex-direction:column;gap:1px;min-width:0}
-.badge h1{margin:0;font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em;line-height:1.1}
-.badge p{margin:0;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
-.left{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:min(250px,48vw);pointer-events:none;min-width:0}
-.hist{display:flex;gap:6px;pointer-events:auto}
+/* home header: title row, then a row of controls; a solid band so nothing on the wall shows through it */
+.top{position:fixed;top:0;left:0;right:0;z-index:10;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 10px) max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--wall);display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.trow{display:flex;align-items:center;gap:8px;min-width:0}
+.trow > *{pointer-events:auto}
+.trow[hidden]{display:none}
+.badge{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.badge h1{margin:0;font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.01em;line-height:1.1;white-space:nowrap}
+.badge p{margin:0;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tspace{flex:1;min-width:0;pointer-events:none!important}
+.ibtn{width:40px;height:40px;flex:none;border-radius:999px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink)}
+.ibtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ibtn:disabled{opacity:.35;cursor:default}
+.ibtn.on{color:var(--crayon);border-color:rgba(255,201,60,.55)}
+.ibtn[hidden]{display:none}
+.hist{display:flex;gap:8px}
 .hist[hidden]{display:none}
-.hbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px}
-.hbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.hbtn:disabled{opacity:.38;cursor:default}
 .search{pointer-events:auto;width:100%;display:flex;flex-direction:column;gap:6px}
+.search[hidden]{display:none}
 .search input{width:100%;box-sizing:border-box;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);font:inherit;font-size:14px}
 .search input::placeholder{color:var(--muted)}
 .sresults{background:var(--panel-solid);border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:min(46vh,340px);display:flex;flex-direction:column}
@@ -48,14 +55,51 @@ button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-
 .sresults .rn{color:var(--crayon);font-weight:700;font-variant-numeric:tabular-nums}
 .sresults .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
 .sresults .none{padding:10px 12px;color:var(--muted);font-size:13px}
-.right{margin-left:auto;display:flex;gap:8px;align-items:center;pointer-events:none}
-.badge{flex:0 0 auto}
-@media (max-width:520px){.right{align-items:flex-start;gap:6px}.right .chip.pick{max-width:118px;padding:9px 10px}.badge h1{white-space:nowrap}.left{min-width:0;flex:1}}
-.morewrap{position:relative;pointer-events:auto}
-.chip.more{padding:7px 10px;display:grid;place-items:center}
+.chip.pick{height:40px;padding:0 12px;font-size:14px;font-weight:700;color:var(--ink);max-width:56vw;min-width:0;text-overflow:ellipsis}
+.morewrap{position:relative;pointer-events:auto;flex:none}
+.chip.more{width:40px;height:40px;padding:0;display:grid;place-items:center}
 .chip.more svg{width:20px;height:20px;fill:currentColor}
 .moremenu{position:absolute;right:0;top:calc(100% + 6px);min-width:210px;background:var(--panel-solid);border:1px solid var(--line);border-radius:14px;padding:6px;display:flex;flex-direction:column;gap:2px;box-shadow:0 12px 32px rgba(0,0,0,.45);z-index:20}
 .moremenu[hidden]{display:none}
+.moremenu{min-width:300px;max-width:340px;padding:8px 10px 10px;gap:10px;max-height:calc(100dvh - 90px);overflow:auto}
+.mgrab{display:none}
+.msec{display:flex;flex-direction:column;gap:6px}
+.msec h4{margin:4px 4px 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.msec[hidden]{display:none}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mtile{flex-direction:column;align-items:flex-start;gap:8px;padding:12px;border-radius:12px;background:rgba(255,255,255,.045);border:1px solid var(--line);font-size:13.5px;line-height:1.2;min-height:76px}
+.mtile svg{width:22px;height:22px;color:var(--crayon)}
+.mtile:hover{background:rgba(255,201,60,.09);border-color:rgba(255,201,60,.35)}
+.mlist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03)}
+.mlist .mitem{border-radius:0;padding:11px 12px}
+.mlist .mitem + .mitem{border-top:1px solid var(--line)}
+.mlist .mitem svg{color:var(--crayon)}
+.macct{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"av who" "acts acts" "del del";gap:6px 10px;align-items:center;padding:12px;border-radius:12px;background:#0b0b0a;border:1px solid var(--line)}
+.mav{grid-area:av;width:38px;height:38px;border-radius:50%;background:var(--crayon);color:var(--crayon-ink);display:grid;place-items:center;font-weight:800;font-size:16px;font-family:var(--display)}
+.mwho{grid-area:who;min-width:0}
+.mwho .minfo{border:0;margin:0;padding:0;font-size:12.5px;line-height:1.35;overflow:hidden;text-overflow:ellipsis}
+.mwho #acctWho{color:var(--ink);font-weight:700;font-size:13.5px}
+.macts{grid-area:acts;display:flex;gap:6px;flex-wrap:wrap}
+.macts:empty{display:none}
+.mpill{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.mpill:hover{background:rgba(255,255,255,.07)}
+.mdel{grid-area:del;justify-self:start;font-size:12.5px;font-weight:600;padding:4px 2px;background:none}
+.mdel:hover{background:none;text-decoration:underline}
+.mscrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:19}
+.mscrim[hidden]{display:none}
+@media (max-width:600px){body.menuopen .dock,body.menuopen .zoom{display:none}}
+@media (min-width:601px){.mscrim{display:none}}
+@media (max-width:600px){
+  .moremenu{position:fixed;left:0;right:0;top:auto;bottom:0;min-width:0;max-width:none;border-radius:20px 20px 0 0;border-bottom:0;padding:6px 16px calc(env(safe-area-inset-bottom,0px) + 16px);max-height:82dvh;box-shadow:0 -12px 40px rgba(0,0,0,.6)}
+  .mgrab{display:block;width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.22);margin:4px auto 2px}
+  .mtile{min-height:84px;font-size:14.5px}
+  .mlist .mitem{padding:14px 12px;font-size:15px}
+}
+/* the second row: filter and search together, undo and redo joined */
+#hist{display:inline-flex;border:1px solid var(--line);border-radius:999px;background:var(--panel);overflow:hidden}
+#hist .ibtn{border:0;border-radius:0;background:none}
+#hist .ibtn + .ibtn{border-left:1px solid var(--line)}
+#hist .ibtn:disabled{opacity:.32}
 /* the login screen: CanvassFlow's layout in Drawing Wall's colours */
 .auth{position:fixed;inset:0;z-index:60;background:#0d0d0c;overflow:auto;-webkit-overflow-scrolling:touch}
 .auth[hidden]{display:none}
@@ -111,29 +155,35 @@ button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-
 .minfo[hidden]{display:none}
 .chip{pointer-events:auto;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted);white-space:nowrap}
 
-.sample-note{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 96px);background:var(--panel);border:1px dashed rgba(255,201,60,.55);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--ink);max-width:min(92vw,420px);text-align:center;pointer-events:none}
+.sample-note{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 160px);background:var(--panel);border:1px dashed rgba(255,201,60,.55);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--ink);max-width:min(92vw,420px);text-align:center;pointer-events:none}
 .sample-note b{color:var(--crayon)}
 
-.zoom{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 92px);display:flex;flex-direction:column;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.zoom button{width:46px;height:44px;display:grid;place-items:center;font-size:20px;line-height:1}
-.zoom button+button{border-top:1px solid var(--line)}
-.zoom button:hover{background:rgba(255,255,255,.06)}
-.zoom svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-
-.add{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);background:var(--crayon);color:var(--crayon-ink);font-weight:700;font-size:16px;border-radius:999px;padding:0 22px;height:56px;display:flex;align-items:center;gap:9px;box-shadow:0 6px 24px rgba(255,201,60,.25);cursor:pointer}
-.add svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.add{overflow:hidden}
-.dock{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;gap:10px;align-items:flex-end}
-.dock .add{position:relative;right:auto;bottom:auto}
-.addround{width:56px;padding:0;justify-content:center}
-.dkicon{display:flex;flex-direction:column;align-items:center;gap:3px;flex:0 0 auto;padding:0;color:var(--ink)}
-.dkicon .dk{width:46px;height:46px;border-radius:999px;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);display:grid;place-items:center}
-.dkicon:hover .dk{background:rgba(40,38,34,.95)}
-.dkicon svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linejoin:round}
-.dkicon small{font-size:11px;line-height:1;color:var(--ink);text-shadow:0 1px 3px #000}
-.dkicon[hidden]{display:none}
-.addround svg{width:26px;height:26px;stroke-width:2.6}
-.addchip{position:relative;overflow:hidden;cursor:pointer}
+/* the ⋯ menu is a plain three-dot button at the far right */
+#moreBtn{background:rgba(255,255,255,.12);border:0;box-shadow:none;width:40px;height:40px;padding:0;border-radius:999px;color:#fff}
+#moreBtn svg{width:20px;height:20px}
+#moreBtn:hover,#moreBtn[aria-expanded="true"]{background:rgba(255,255,255,.2);color:#fff}
+.tacts{gap:10px}
+/* the round yellow + sits in the bottom right corner; the Storybook button is a small pill in the header's top right */
+.add{position:relative;flex:none;width:44px;height:44px;border-radius:999px;background:var(--crayon);color:var(--crayon-ink);display:grid;place-items:center;box-shadow:0 0 0 4px rgba(255,201,60,.14),0 4px 16px rgba(255,201,60,.22);overflow:hidden;cursor:pointer;transition:transform .12s}
+.add[hidden]{display:none}
+.add svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
+.tacts{display:flex;align-items:center;gap:12px;flex:none}
+/* bottom row: the wide Storybook button (Organize and Collage are in the ⋯ menu), inside the screen edges and above the phone's own buttons */
+.dock{position:fixed;right:max(18px,calc(env(safe-area-inset-right,0px) + 18px));bottom:calc(env(safe-area-inset-bottom,0px) + 20px);z-index:10;display:flex}
+/* home screen: + and ⋯ top right, a find bar with undo/redo, and a wide Storybook button along the bottom */
+.tacts .add{width:44px;height:44px;box-shadow:0 0 0 5px rgba(255,201,60,.18),0 4px 16px rgba(255,201,60,.22)}
+.tacts .add svg{width:24px;height:24px}
+.dock{left:max(12px,calc(env(safe-area-inset-left,0px) + 12px))}
+.storybtn{flex:1;min-width:0;height:auto;padding:15px 18px;border-radius:999px;background:var(--crayon);color:var(--crayon-ink);font-family:var(--display);font-weight:900;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;box-shadow:0 6px 22px rgba(255,201,60,.25);pointer-events:auto}
+.storybtn svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.storybtn:active{transform:scale(.98)}
+.trow .search{flex:1;min-width:0;width:auto;position:relative}
+.trow .search input{height:40px;border-radius:999px;padding:0 16px;font-size:14px}
+.trow .search .sresults{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:12}
+.trow .search:not([hidden]) ~ .tspace{display:none}
+.trow .search{order:-1}
+#trow2 #kindSel{flex:none;max-width:92px;height:40px;padding:0 10px;font-size:13px}
+.addchip{overflow:hidden;cursor:pointer}
 .addchip input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:200px;z-index:2}
 .add:active{transform:scale(.97)}
 .dropping #wall{outline:4px dashed var(--crayon);outline-offset:-12px}
@@ -154,6 +204,8 @@ button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-
 .stools button+button{border-left:1px solid var(--line)}
 .stools button:hover{background:rgba(255,255,255,.06)}
 .stools.three{grid-template-columns:repeat(3,1fr)}
+.stools button:disabled{opacity:.35;cursor:default}
+.stools button:disabled:hover{background:none}
 .stools svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .stools button.on{color:var(--crayon);background:rgba(255,201,60,.12)}
 .srm{flex:1 0 100%;display:flex;justify-content:flex-start;border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
@@ -169,7 +221,7 @@ body.selopen .dock{display:none}
 .pill:hover{background:rgba(255,255,255,.06)}
 .pill.danger{color:var(--danger);border-color:rgba(255,111,92,.4)}
 .pill.solid-danger{background:var(--danger);color:#2b0700;border-color:transparent;font-weight:700}
-@media (max-width:520px){.sel{right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);max-width:none} .sel:not([hidden]) ~ .zoom{display:none}}
+@media (max-width:520px){.sel{right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);max-width:none}}
 
 /* review sheet */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
@@ -264,37 +316,61 @@ body.selopen .dock{display:none}
 <canvas id="wall" aria-label="Collage of drawing tiles. Drag a tile to move it, put two fingers on a tile to turn or resize it, drag the wall to look around, pinch or scroll to zoom."></canvas>
 
 <div class="top">
-  <div class="left">
+  <div class="trow">
     <div class="badge"><h1>Drawing Wall</h1><p id="count">Loading the wall…</p></div>
+    <div class="tacts">
+    <label class="add addchip" id="addBtn" title="Add drawings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      <input type="file" id="file" accept="image/*" multiple aria-label="Add drawings">
+    </label>
+    <div class="morewrap">
+      <button class="chip act more" id="moreBtn" aria-label="More" aria-haspopup="true" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
+      <div class="mscrim" id="moreScrim" hidden></div>
+      <div class="moremenu" id="moreMenu" role="menu" hidden>
+        <div class="mgrab" aria-hidden="true"></div>
+        <section class="msec" aria-label="Arrange the wall"><h4>Arrange</h4><div class="mgrid">
+          <button class="mitem mtile" role="menuitem" id="orgBtn" hidden title="Auto-organize"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>Organize the wall</button>
+          <button class="mitem mtile" role="menuitem" id="collageBtn" hidden title="Auto collage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10.5a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.5 9.2 4.5 4.5 0 0 0 7 18z"/></svg>Make a collage</button>
+        </div></section>
+        <section class="msec" aria-label="Move around"><h4>View</h4><div class="mgrid">
+          <button class="mitem mtile" id="zFit" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Fit all drawings</button>
+          <button class="mitem mtile" id="zHome" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>Center on the newest</button>
+        </div></section>
+        <section class="msec" aria-label="Your drawings"><h4>Your drawings</h4><div class="mlist">
+          <button class="mitem" id="photosBtn" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Photos</button>
+          <button class="mitem" id="wallExport" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>Export my wall</button>
+          <label class="mitem" id="wallImport" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9M7 14l5-5 5 5M4 5h16"/></svg>Import a wall export<input type="file" id="wallImportFile" accept=".json,application/json" hidden></label>
+          <button class="mitem" id="acctMove" role="menuitem" hidden>Move this device's drawings into my account</button>
+        </div></section>
+        <section class="macct" id="macct" aria-label="Account">
+          <div class="mav" id="acctAv" aria-hidden="true"></div>
+          <div class="mwho"><div class="minfo" id="acctWho" hidden></div><div class="minfo" id="mode" hidden></div></div>
+          <div class="macts">
+            <button class="mitem mpill" id="acctIn" role="menuitem" hidden>Sign in to Drawing Wall</button>
+            <button class="mitem mpill" id="acctOut" role="menuitem" hidden>Sign out</button>
+          </div>
+          <button class="mitem danger mdel" id="acctDel" role="menuitem" hidden>Delete account</button>
+        </section>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="trow" id="trow2">
+    <select class="chip act pick" id="kindSel" aria-label="Which tiles to show" hidden></select>
+    <button class="ibtn" id="searchBtn" aria-label="Find a tile by number or name" aria-expanded="false" aria-controls="search" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
     <div class="search" id="search" hidden role="search">
       <input type="text" id="searchIn" placeholder="Find by number or name" aria-label="Find a tile by number or name" autocomplete="off" enterkeyhint="search">
       <div class="sresults" id="searchOut" hidden></div>
     </div>
+    <span class="tspace"></span>
     <div class="hist" id="hist" hidden role="group" aria-label="Undo and redo">
-      <button class="chip act hbtn" id="histUndo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Undo</button>
-      <button class="chip act hbtn" id="histRedo" aria-label="Redo" title="Redo (Ctrl+Y)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>Redo</button>
-    </div>
-  </div>
-  <div class="right">
-    <select class="chip act pick" id="kindSel" aria-label="Which tiles to show" hidden></select>
-    <div class="morewrap">
-      <button class="chip act more" id="moreBtn" aria-label="More" aria-haspopup="true" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
-      <div class="moremenu" id="moreMenu" role="menu" hidden>
-        <button class="mitem" id="photosBtn" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Photos</button>
-        <div class="minfo" id="mode" hidden></div>
-        <div class="minfo" id="acctWho" hidden></div>
-        <button class="mitem" id="acctIn" role="menuitem" hidden>Sign in to Drawing Wall</button>
-        <button class="mitem" id="acctMove" role="menuitem" hidden>Move this device's drawings into my account</button>
-        <button class="mitem" id="wallExport" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>Export my wall</button>
-        <label class="mitem" id="wallImport" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9M7 14l5-5 5 5M4 5h16"/></svg>Import a wall export<input type="file" id="wallImportFile" accept=".json,application/json" hidden></label>
-        <button class="mitem" id="acctOut" role="menuitem" hidden>Sign out</button>
-        <button class="mitem danger" id="acctDel" role="menuitem" hidden>Delete account</button>
-      </div>
+      <button class="ibtn" id="histUndo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+      <button class="ibtn" id="histRedo" aria-label="Redo" title="Redo (Ctrl+Y)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
     </div>
   </div>
 </div>
 
-<div class="sample-note" id="sampleNote" hidden><b>Example drawings.</b> Try them in the Story book to make a story right away. Add a photo of real artwork and these disappear.</div>
+<div class="sample-note" id="sampleNote" hidden><b>Example drawings.</b> Try them in the Storybook to make a story right away. Add a photo of real artwork and these disappear.</div>
 
 <div class="auth" id="auth" hidden>
   <div class="authin">
@@ -332,24 +408,9 @@ body.selopen .dock{display:none}
   <div class="row" id="selRow"></div>
 </div>
 
-<div class="zoom" id="zoom">
-  <button id="zIn" aria-label="Zoom in">+</button>
-  <button id="zOut" aria-label="Zoom out">−</button>
-  <button id="zFit" aria-label="Show all the drawings" title="Show all the drawings"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
-  <button id="zHome" aria-label="Go to the newest tiles"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
-</div>
-
 <div class="dock">
-<button class="dkicon" id="orgBtn" hidden title="Auto-organize"><span class="dk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span><small>Organize</small></button>
-<button class="dkicon" id="collageBtn" hidden title="Auto collage"><span class="dk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10.5a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.5 9.2 4.5 4.5 0 0 0 7 18z"/></svg></span><small>Collage</small></button>
-<label class="add addchip addround" id="addBtn" title="Add drawings">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-  <input type="file" id="file" accept="image/*" multiple aria-label="Add drawings">
-</label>
-<button class="add" id="storyBtn">
-  <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>
-  Story book
-</button>
+<button class="storybtn" id="storyBtn" title="Storybook">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h11"/></svg>Storybook</button>
 </div>
 
 <div class="help" id="pickHelp" role="alertdialog" aria-labelledby="pickHelpTitle" hidden>
@@ -538,12 +599,15 @@ function animateTo(t){
 function fitView(){
   return clampView({s: sMin(), tx: 0, ty: 0});
 }
+// the wall's open space runs from under the header to above the bottom row
+function barTop(){ const t = document.querySelector('.top'); return t ? t.getBoundingClientRect().bottom : 0; }
+function barBottom(){ const d = document.querySelector('.dock'), r = d && d.getBoundingClientRect(); return r && r.height ? r.top : vh; }
 // the drawings themselves filling the screen, clear of the buttons along the top and bottom
 function tilesView(){
   const list = shown().filter(p => p.x != null); if (!list.length) return fitView();
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
   for (const p of list){ x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x + p.dw); y1 = Math.max(y1, p.y + p.dh); }
-  const top = vw < 600 ? 150 : 90, bottom = 110, side = 24, w = Math.max(1, x1 - x0), h = Math.max(1, y1 - y0);
+  const top = barTop() + 12, bottom = vh - barBottom() + 12, side = 24, w = Math.max(1, x1 - x0), h = Math.max(1, y1 - y0);
   const s = Math.min(S_MAX, Math.max(sMin(), Math.min((vw - 2*side)/w, (vh - top - bottom)/h)));
   return clampView({s, tx: vw/2 - (x0 + w/2)*s, ty: top + (vh - top - bottom)/2 - (y0 + h/2)*s});
 }
@@ -876,10 +940,9 @@ window.addEventListener('keydown', e => {
   else if (e.key === 'ArrowDown') { cam.ty -= step; clampCam(); needs = true; }
   else if (e.key === 'Escape') select(null);
 });
-document.getElementById('zIn').onclick = () => { const ns=Math.min(S_MAX,cam.s*1.8),k=ns/cam.s; animateTo({s:ns,tx:vw/2-(vw/2-cam.tx)*k,ty:vh/2-(vh/2-cam.ty)*k}); };
-document.getElementById('zOut').onclick = () => { const ns=Math.max(sMin(),cam.s/1.8),k=ns/cam.s; animateTo({s:ns,tx:vw/2-(vw/2-cam.tx)*k,ty:vh/2-(vh/2-cam.ty)*k}); };
-document.getElementById('zFit').onclick = () => animateTo(tilesView());
-document.getElementById('zHome').onclick = () => animateTo(newestView());
+// Fit and Center live in the ⋯ menu; zooming is pinch, scroll or the + and - keys
+document.getElementById('zFit').onclick = () => { closeMore(); animateTo(tilesView()); };
+document.getElementById('zHome').onclick = () => { closeMore(); animateTo(newestView()); };
 
 /* ---------------- selection card ---------------- */
 const fmtDate = t => new Date(t).toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric', year:'numeric'});
@@ -971,12 +1034,15 @@ const ICONS = {
   left: '<path d="M3 4v6h6"/><path d="M3.5 10a9 9 0 1 1 2.1 8.4"/>', right: '<path d="M21 4v6h-6"/><path d="M20.5 10a9 9 0 1 0-2.1 8.4"/>',
   mirror: '<path d="M12 3v18"/><path d="M8 7L3 12l5 5z"/><path d="M16 7l5 5-5 5z"/>', flip: '<path d="M3 12h18"/><path d="M7 8l5-5 5 5z"/><path d="M7 16l5 5 5-5z"/>',
   touch: '<path d="M18.4 2.6a2 2 0 0 1 3 3L12 15l-4 1 1-4z"/><path d="M7 18c-1.5 0-3 1-3 3h4c1.7 0 3-1.3 3-3"/>', crop: '<path d="M6 2v14a2 2 0 0 0 2 2h14M18 22V8a2 2 0 0 0-2-2H2"/>',
-  zoom: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
+  zoom: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/>',
+  photo: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>',
+  split: '<rect x="3" y="5" width="7" height="14" rx="1.5"/><rect x="14" y="5" width="7" height="14" rx="1.5"/>',
+  back: '<path d="M15 18l-6-6 6-6"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
 function toolRow(label, items, cls){
   const g = document.createElement('div'); g.className = 'sgroup'; const t = document.createElement('span'); t.textContent = label;
   const bar = document.createElement('div'); bar.className = 'stools ' + (cls || ''); bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', label);
   for (const it of items){ const b = document.createElement('button'); b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[it.icon]}</svg>`; b.append(it.text);
-    if (it.aria) b.setAttribute('aria-label', it.aria); if (it.on !== undefined){ b.classList.toggle('on', it.on); b.setAttribute('aria-pressed', String(it.on)); } b.onclick = it.fn; bar.append(b); }
+    if (it.aria) b.setAttribute('aria-label', it.aria); if (it.disabled) b.disabled = true; if (it.on !== undefined){ b.classList.toggle('on', it.on); b.setAttribute('aria-pressed', String(it.on)); } b.onclick = it.fn; bar.append(b); }
   g.append(t, bar); return g;
 }
 document.getElementById('selClose').onclick = () => select(null);
@@ -988,14 +1054,22 @@ function renderSelButtons(confirming){
   if (!confirming){
     if (!canEdit()){ row.append(toolRow('Picture', [{icon:'zoom', text:'Zoom in', fn: zoomIn}], 'three')); return; }
     const again = () => renderSelButtons(false);
+    // Recrop asks where from: the whole original photo, or the last crop; Back returns to the picture tools
+    const hasPhoto = !!(p.photoSrc && p.pbox);
+    const recropFrom = toolRow('Recrop from', [
+      {icon:'photo', text:'Original photo', aria: hasPhoto ? 'Recrop from the original photo' : 'No original photo saved for this tile', disabled: !hasPhoto, fn: () => recropTile(p, 'photo')},
+      {icon:'crop', text:'Last crop', aria:'Recrop from the last crop', fn: () => recropTile(p, 'last')},
+      {icon:'back', text:'Back', aria:'Back to the picture tools', fn: () => recropFrom.replaceWith(picture)}], 'three');
+    const picture = toolRow('Picture', [
+      {icon:'touch', text:'Touch up', fn: () => openTouchUp(p)}, {icon:'crop', text:'Recrop', fn: () => picture.replaceWith(recropFrom)},
+      {icon:'split', text:'Split in two', aria:'Split this tile into two tiles, one for each character', fn: () => splitTile(p)}, {icon:'zoom', text:'Zoom in', fn: zoomIn}]);
     row.append(nameField(p), kindPicker(p), sizeSlider(p),
       toolRow('Turn and mirror', [
         {icon:'left', text:'Turn left', aria:'Turn left 15 degrees', fn: () => turnTile(p, -Math.PI/12)},
         {icon:'right', text:'Turn right', aria:'Turn right 15 degrees', fn: () => turnTile(p, Math.PI/12)},
         {icon:'mirror', text:'Mirror', aria:'Mirror the tile left to right', on: !!p.fx, fn: () => { flipTile(p, 'fx'); again(); }},
         {icon:'flip', text:'Flip', aria:'Flip the tile upside down', on: !!p.fy, fn: () => { flipTile(p, 'fy'); again(); }}]),
-      toolRow('Picture', [
-        {icon:'touch', text:'Touch up', fn: () => openTouchUp(p)}, {icon:'crop', text:'Recrop', fn: () => recropTile(p)}, {icon:'zoom', text:'Zoom in', fn: zoomIn}], 'three'));
+      picture);
     const rm = document.createElement('div'); rm.className = 'srm'; const rb = document.createElement('button');
     rb.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.trash}</svg>Remove tile`; rb.onclick = () => renderSelButtons(true); rm.append(rb); row.append(rm);
   } else {
@@ -1022,11 +1096,16 @@ function findTiles(q){
   return pieces.map(p => [score(p), p]).filter(e => e[0] < 9).sort((a, b) => a[0] - b[0] || (a[1].ref || 0) - (b[1].ref || 0)).map(e => e[1]);
 }
 function closeSearch(){ searchOut.hidden = true; }
+// the "Find by number or name" bar sits in the header's second row whenever there are tiles; this focuses or clears it
+function setSearch(on){
+  if (on) searchIn.focus(); else { searchIn.value = ''; closeSearch(); searchIn.blur(); }
+}
+document.getElementById('searchBtn').onclick = () => setSearch(document.getElementById('search').hidden);
 // fly to a tile and select it, framed in the space its card leaves free
 function goToTile(p){
   if (!shows({kind: p.kind})) setShowKind('all');
-  closeSearch(); searchIn.blur(); select(p);
-  const top = Math.max(document.querySelector('.left').getBoundingClientRect().bottom, document.querySelector('.right').getBoundingClientRect().bottom) + 8, bottom = Math.max(top + 140, vw <= 520 ? document.getElementById('sel').getBoundingClientRect().top - 8 : vh - 8);
+  setSearch(false); select(p);
+  const top = barTop() + 8, bottom = Math.max(top + 140, vw <= 520 ? document.getElementById('sel').getBoundingClientRect().top - 8 : vh - 8);
   const s = Math.min(S_MAX, (vw - 40)/p.dw, (bottom - top - 16)/p.dh);
   animateTo({s, tx: vw/2 - (p.x + p.dw/2)*s, ty: (top + bottom)/2 - (p.y + p.dh/2)*s});
 }
@@ -1047,14 +1126,14 @@ searchIn.oninput = renderSearch;
 searchIn.onfocus = renderSearch;
 searchIn.onkeydown = e => {
   if (e.key === 'Enter'){ const hit = findTiles(searchIn.value)[0]; if (hit) goToTile(hit); else renderSearch(); }
-  else if (e.key === 'Escape'){ searchIn.value = ''; closeSearch(); searchIn.blur(); }
+  else if (e.key === 'Escape') setSearch(false);
   e.stopPropagation();
 };
 cv.addEventListener('pointerdown', closeSearch);
 
 /* ---------------- auto-organize (asks first: it undoes everyone's arranging) ---------------- */
 const orgScrim = document.getElementById('orgScrim');
-function closeOrg(){ orgScrim.hidden = true; document.getElementById('orgBtn').focus(); }
+function closeOrg(){ orgScrim.hidden = true; document.getElementById('moreBtn').focus(); }
 let orgMode = 'time';
 function setOrgMode(m){
   orgMode = m;
@@ -1069,7 +1148,7 @@ function setOrgMode(m){
     ? 'Tiles go into neat rows grouped by type: characters, then objects, then backgrounds, with backgrounds sent behind everything. Tiles with no type go last.'
     : 'Every tile goes back into neat rows, oldest first.') + " They'll be straight and at their normal size, and where you've dragged, turned or resized tiles will change. You can take it back with Undo.";
 }
-document.getElementById('collageBtn').onclick = () => { select(null); setOrgMode('collage'); orgScrim.hidden = false; document.getElementById('orgCancel').focus(); };
+document.getElementById('collageBtn').onclick = () => { closeMore(); select(null); setOrgMode('collage'); orgScrim.hidden = false; document.getElementById('orgCancel').focus(); };
 function loadThumb(p){
   return new Promise(res => { const im = p.imgThumb || (getImg(p, 'thumb'), p.imgThumb);
     if (!im || (im.complete && im.naturalWidth)) return res();
@@ -1233,7 +1312,7 @@ function useCollage(c){
 }
 document.getElementById('orgTime').onclick = () => setOrgMode('time');
 document.getElementById('orgType').onclick = () => setOrgMode('type');
-document.getElementById('orgBtn').onclick = () => { select(null); setOrgMode(orgMode === 'collage' ? 'time' : orgMode); orgScrim.hidden = false; document.getElementById('orgCancel').focus(); };
+document.getElementById('orgBtn').onclick = () => { closeMore(); select(null); setOrgMode(orgMode === 'collage' ? 'time' : orgMode); orgScrim.hidden = false; document.getElementById('orgCancel').focus(); };
 // rows for each type in turn, with extra space between the groups; every tile is pinned where it lands
 function organizeByType(){
   const groups = ['character', 'object', 'background', null], zOf = {character: 3, object: 2, background: 1};
@@ -1282,7 +1361,7 @@ function showToast(msg){
 /* ---------------- counts ---------------- */
 function refreshKindSel(){
   const sel = document.getElementById('kindSel'), n = k => pieces.filter(p => (p.kind || 'none') === k).length;
-  const opts = [['all', `All tiles (${pieces.length})`], ['character', `Characters (${n('character')})`], ['object', `Objects (${n('object')})`],
+  const opts = [['all', `Tiles (${pieces.length})`], ['character', `Characters (${n('character')})`], ['object', `Objects (${n('object')})`],
     ['background', `Backgrounds (${n('background')})`], ['none', `No type (${n('none')})`]];
   sel.hidden = !pieces.length;
   sel.innerHTML = '';
@@ -1300,11 +1379,20 @@ function syncMore(){
   const ex = document.getElementById('wallExport'); if (ex) ex.hidden = !pieces.length;
   let acct = false; try { acct = !!sbApi; } catch {}   // (the account code may not have loaded yet)
   const im = document.getElementById('wallImport'); if (im) im.hidden = !acct;
-  const has = !document.getElementById('photosBtn').hidden || !document.getElementById('mode').hidden || !document.getElementById('acctOut').hidden || !document.getElementById('acctIn').hidden || !ex.hidden || !im.hidden;
+  const has = !document.getElementById('orgBtn').hidden || !document.getElementById('zFit').hidden || !document.getElementById('photosBtn').hidden || !document.getElementById('mode').hidden || !document.getElementById('acctOut').hidden || !document.getElementById('acctIn').hidden || !ex.hidden || !im.hidden;
   document.getElementById('moreBtn').hidden = !has; if (!has) closeMore();
 }
-function closeMore(){ document.getElementById('moreMenu').hidden = true; document.getElementById('moreBtn').setAttribute('aria-expanded', 'false'); }
-document.getElementById('moreBtn').onclick = e => { e.stopPropagation(); const m = document.getElementById('moreMenu'); m.hidden = !m.hidden; document.getElementById('moreBtn').setAttribute('aria-expanded', String(!m.hidden)); };
+function closeMore(){ document.getElementById('moreMenu').hidden = true; document.getElementById('moreScrim').hidden = true; document.body.classList.remove('menuopen'); document.getElementById('moreBtn').setAttribute('aria-expanded', 'false'); }
+document.getElementById('moreScrim').onclick = closeMore;
+function paintMenu(){
+  for (const sec of document.querySelectorAll('#moreMenu .msec')) sec.hidden = ![...sec.querySelectorAll('.mitem')].some(b => !b.hidden);
+  const who = document.getElementById('acctWho'), mode = document.getElementById('mode');
+  const name = !who.hidden ? who.textContent.replace(/^Signed in as /, '') : '';
+  document.getElementById('acctAv').textContent = (name.trim()[0] || (/Claude/.test(mode.textContent) ? 'C' : 'D')).toUpperCase();
+  document.getElementById('macct').hidden = who.hidden && mode.hidden && document.getElementById('acctIn').hidden && document.getElementById('acctOut').hidden;
+}
+document.getElementById('moreBtn').onclick = e => { e.stopPropagation(); const m = document.getElementById('moreMenu'); m.hidden = !m.hidden; paintMenu();
+  document.getElementById('moreScrim').hidden = m.hidden; document.body.classList.toggle('menuopen', !m.hidden); document.getElementById('moreBtn').setAttribute('aria-expanded', String(!m.hidden)); };
 document.addEventListener('pointerdown', e => { if (!e.target.closest('.morewrap')) closeMore(); });
 function refreshCount(){
   const c = document.getElementById('count');
@@ -1318,9 +1406,13 @@ function refreshCount(){
   }
   if (c.dataset.base !== undefined) c.dataset.base = txt; else c.textContent = txt;
   document.getElementById('orgBtn').hidden = document.getElementById('collageBtn').hidden = !canEdit() || pieces.length < 2;
-  document.getElementById('photosBtn').hidden = !pieces.length; syncMore(); paintHist();
+  document.getElementById('photosBtn').hidden = document.getElementById('zFit').hidden = document.getElementById('zHome').hidden = !pieces.length;
+  syncMore(); paintHist();
   refreshKindSel();
+  document.getElementById('searchBtn').hidden = true;
+  if (!pieces.length && !document.getElementById('search').hidden) setSearch(false);
   document.getElementById('search').hidden = !pieces.length;
+  document.getElementById('trow2').hidden = !pieces.length && !canEdit();
   notifyStory();
   document.getElementById('sampleNote').hidden = pieces.length > 0 || (store && store.kind === 'view');
 }
@@ -1398,7 +1490,7 @@ function components(mask, w, h, weight){
 // characters drawn touching (a paw on an ear) meet at a narrow neck, and each body is much thicker
 // than that neck. Shrink the filled shape until it falls apart into thick cores, then give every
 // pixel to the core it reaches first. Returns the separate tiles, or null when it's one character.
-const SPLIT_AUTO = {ratio:2.4, minPart:0.12}, SPLIT_HARD = {ratio:1.5, minPart:0.04};
+const SPLIT_AUTO = {ratio:2.4, minPart:0.12, joined:true}, SPLIT_HARD = {ratio:1.5, minPart:0.04};
 function splitShape(s, o){
   if (!s.mask) return null;
   const {mw, mh, mask} = s, M = mw*mh;
@@ -1426,6 +1518,13 @@ function splitShape(s, o){
     const areas = new Array(seeds.length).fill(0); for (let k=0;k<M;k++) if (own[k]) areas[own[k]-1]++;
     return areas;
   };
+  // which separate piece of the shape each pixel is in: on its own, only characters that actually touch
+  // are split; strokes that merely sit together (hatching, a face's eyes) stay one drawing
+  const piece = new Int32Array(M);
+  if (o.joined){ let pid = 0;
+    for (let i=0;i<M;i++){ if (!mask[i] || piece[i]) continue; pid++; let sp = 0; stack[sp++] = i; piece[i] = pid;
+      while (sp){ const j = stack[--sp], x = j % mw;
+        for (const k of [x>0?j-1:-1, x<mw-1?j+1:-1, j-mw, j+mw]) if (k>=0 && k<M && mask[k] && !piece[k]){ piece[k] = pid; stack[sp++] = k; } } } }
   const step = Math.max(3, Math.round(maxD/48));
   for (let t = 6; t < maxD*0.75; t += step){
     lab.fill(0); const cores = []; let id = 0;
@@ -1433,8 +1532,10 @@ function splitShape(s, o){
       id++; let sp = 0, n = 0, peak = 0; stack[sp++] = i; lab[i] = id;
       while (sp){ const j = stack[--sp], x = j % mw; n++; if (D[j] > peak) peak = D[j];
         for (const k of [x>0?j-1:-1, x<mw-1?j+1:-1, j-mw, j+mw]) if (k>=0 && k<M && D[k] > t && !lab[k]){ lab[k] = id; stack[sp++] = k; } }
-      cores.push({id, n, peak}); }
-    let big = cores.filter(c => c.peak >= o.ratio*t).map(c => c.id);
+      cores.push({id, n, peak, piece: piece[i]}); }
+    const bigC = cores.filter(c => c.peak >= o.ratio*t);
+    if (o.joined && !bigC.some((c, k) => bigC.some((c2, k2) => k2 !== k && c2.piece === c.piece))) continue;
+    let big = bigC.map(c => c.id);
     if (big.length < 2) continue;
     let areas = grow(big);
     const keep = big.filter((c, i) => areas[i] >= total*o.minPart);
@@ -1610,6 +1711,40 @@ function analyze(src){
     const i = (y+py0)*w + x+px0, bl = sample(bL,x,y);
     ink[y*pw+x] = (bl - Ls[i] > Math.max(13, bl*0.08)) || chromaDist(i, sample(bR,x,y), sample(bG,x,y)) > 0.08 ? 1 : 0;
   }
+  // faint pencil: a thin line only a little darker than the paper. It is darker than the brightest
+  // paper a few pixels away (a top-hat); smooth shade and shadows aren't, so they don't trip it.
+  const RT = Math.max(3, Math.round(0.004*Math.max(pw,ph))), Lmx = new Float32Array(PN), rmx = new Float32Array(PN);
+  for (let y=0;y<ph;y++) for (let x=0;x<pw;x++){ let m = 0; const row = (y+py0)*w + px0;
+    for (let xx=Math.max(0,x-RT); xx<=Math.min(pw-1,x+RT); xx++) m = Math.max(m, Ls[row+xx]);
+    rmx[y*pw+x] = m; }
+  for (let y=0;y<ph;y++) for (let x=0;x<pw;x++){ let m = 0;
+    for (let yy=Math.max(0,y-RT); yy<=Math.min(ph-1,y+RT); yy++) m = Math.max(m, rmx[yy*pw+x]);
+    Lmx[y*pw+x] = m - Ls[(y+py0)*w + x+px0]; }
+  // how much plain paper wobbles (grain, texture) decides how faint a line can be
+  const th = new Uint32Array(256); let thn = 0;
+  for (let y=0;y<ph;y++) for (let x=0;x<pw;x++){ const i = (y+py0)*w + x+px0; if (!paperLike[i] || !page[i]) continue; th[Math.min(255, Lmx[y*pw+x]|0)]++; thn++; }
+  let thMed = 2; for (let k=0, acc=0; k<256; k++){ acc += th[k]; if (acc >= thn*0.5){ thMed = k; break; } }
+  const tF = Math.max(6, thMed*3);
+  const faint = new Uint8Array(PN);
+  for (let y=1;y<ph-1;y++) for (let x=1;x<pw-1;x++){ const k = y*pw+x;
+    if (!ink[k] && Lmx[k] > tF && inPage(x+px0, y+py0)) faint[k] = 1; }
+  // keep only real strokes: grain makes dots, a pencil line runs on
+  { const f2 = new Uint8Array(PN);
+    for (let y=1;y<ph-1;y++) for (let x=1;x<pw-1;x++){ const k = y*pw+x; if (!faint[k]) continue;
+      if (faint[k-1]+faint[k+1]+faint[k-pw]+faint[k+pw]+faint[k-pw-1]+faint[k-pw+1]+faint[k+pw-1]+faint[k+pw+1] >= 2) f2[k] = 1; }
+    const fc = components(f2, pw, ph), minLen = Math.max(10, 0.012*Math.max(pw,ph));
+    const good = fc.map(b => b.n >= Math.max(18, 0.00002*PN) && Math.max(b.x1-b.x0, b.y1-b.y0) >= minLen);
+    for (let k=0;k<PN;k++) if (f2[k] && good[fc.lab[k]-1]){ ink[k] = 1; faint[k] = 2; } }
+  // a dark strip along the photo's edge (the table, a shadow) is not a drawing, even when one touches it
+  const rim = e + 1, edgeRun = (n, len) => n > 0.4*len;
+  { let n = 0; for (let x=0;x<pw;x++){ for (let y=0;y<ph && y+py0<rim;y++) if (ink[y*pw+x]){ n++; break; } }
+    if (edgeRun(n, pw)) for (let y=0;y<ph && y+py0<rim;y++) for (let x=0;x<pw;x++) ink[y*pw+x] = 0; }
+  { let n = 0; for (let x=0;x<pw;x++){ for (let y=ph-1;y>=0 && y+py0>=h-rim;y--) if (ink[y*pw+x]){ n++; break; } }
+    if (edgeRun(n, pw)) for (let y=ph-1;y>=0 && y+py0>=h-rim;y--) for (let x=0;x<pw;x++) ink[y*pw+x] = 0; }
+  { let n = 0; for (let y=0;y<ph;y++){ for (let x=0;x<pw && x+px0<rim;x++) if (ink[y*pw+x]){ n++; break; } }
+    if (edgeRun(n, ph)) for (let y=0;y<ph;y++) for (let x=0;x<pw && x+px0<rim;x++) ink[y*pw+x] = 0; }
+  { let n = 0; for (let y=0;y<ph;y++){ for (let x=pw-1;x>=0 && x+px0>=w-rim;x--) if (ink[y*pw+x]){ n++; break; } }
+    if (edgeRun(n, ph)) for (let y=0;y<ph;y++) for (let x=pw-1;x>=0 && x+px0>=w-rim;x--) ink[y*pw+x] = 0; }
   // drop lone specks
   const clean = new Uint8Array(PN);
   for (let y=1;y<ph-1;y++) for (let x=1;x<pw-1;x++){
@@ -1618,27 +1753,36 @@ function analyze(src){
     if (n >= 2) clean[i] = 1;
   }
   /* 4. grow strokes so one drawing becomes one blob */
-  const r = Math.max(3, Math.round(0.004*Math.max(pw,ph)));
+  // marker/crayon and faint pencil grow separately, so a pencil drawing next to a marker one stays its own
+  // tile; pencil lines skip more, so they grow further
+  const r = Math.max(3, Math.round(0.004*Math.max(pw,ph))), rF = Math.round(r*1.8);
   const W1 = pw+1, I = new Int32Array(W1*(ph+1));
-  for (let y=0;y<ph;y++){ let row=0; for (let x=0;x<pw;x++){ row += clean[y*pw+x]; I[(y+1)*W1+x+1] = I[y*W1+x+1] + row; } }
-  const dil = new Uint8Array(PN);
-  for (let y=0;y<ph;y++){ const ya=Math.max(0,y-r), yb=Math.min(ph,y+r+1);
-    for (let x=0;x<pw;x++){ const xa=Math.max(0,x-r), xb=Math.min(pw,x+r+1);
-      const s = I[yb*W1+xb] - I[ya*W1+xb] - I[yb*W1+xa] + I[ya*W1+xa];
-      dil[y*pw+x] = s >= 3 ? 1 : 0; } }
-  const comps = components(dil, pw, ph, clean), lab = comps.lab;
+  const grow = (m, rad, out) => {
+    for (let y=0;y<ph;y++){ let row=0; for (let x=0;x<pw;x++){ row += m[y*pw+x]; I[(y+1)*W1+x+1] = I[y*W1+x+1] + row; } }
+    for (let y=0;y<ph;y++){ const ya=Math.max(0,y-rad), yb=Math.min(ph,y+rad+1);
+      for (let x=0;x<pw;x++){ const xa=Math.max(0,x-rad), xb=Math.min(pw,x+rad+1);
+        const s = I[yb*W1+xb] - I[ya*W1+xb] - I[yb*W1+xa] + I[ya*W1+xa];
+        out[y*pw+x] = s >= 3 ? 1 : 0; } }
+    return out; };
+  const strong = new Uint8Array(PN), pencil = new Uint8Array(PN);
+  for (let k=0;k<PN;k++) if (clean[k]){ if (faint[k] === 2) pencil[k] = 1; else strong[k] = 1; }
+  const dil = grow(strong, r, new Uint8Array(PN)), dilF = grow(pencil, rF, new Uint8Array(PN));
+  for (let k=0;k<PN;k++) if (dil[k]) dilF[k] = 0;
+  const compS = components(dil, pw, ph, clean), compF = components(dilF, pw, ph, clean), nS = compS.length;
+  const comps = compS.map(b => Object.assign(b, {rr: r})).concat(compF.map(b => Object.assign(b, {rr: rF}))), lab = compS.lab;
+  for (let k=0;k<PN;k++) if (compF.lab[k]) lab[k] = compF.lab[k] + nS;
   let boxes = comps.map((b, k) => ({
-    x0: Math.max(0, b.x0 + r*0.8), y0: Math.max(0, b.y0 + r*0.8),
-    x1: Math.min(pw-1, b.x1 - r*0.8), y1: Math.min(ph-1, b.y1 - r*0.8), ink: b.wt,
+    x0: Math.max(0, b.x0 + b.rr*0.8), y0: Math.max(0, b.y0 + b.rr*0.8),
+    x1: Math.min(pw-1, b.x1 - b.rr*0.8), y1: Math.min(ph-1, b.y1 - b.rr*0.8), ink: b.wt, rr: b.rr,
     ids: [k+1], ox0: b.x0, oy0: b.y0, ox1: b.x1, oy1: b.y1
   })).filter(b => b.x1 > b.x0 && b.y1 > b.y0);
   /* 5. throw away specks and paper-edge shadows */
   // a shadow or a curled corner is a smooth patch of shade; a drawing is full of crisp strokes
-  const gsum = new Float64Array(comps.length+1), gn = new Uint32Array(comps.length+1);
+  const gsum = new Float64Array(comps.length+1), gn = new Uint32Array(comps.length+1), fn = new Uint32Array(comps.length+1), tn = new Uint32Array(comps.length+1);
   for (let y=1;y<ph-1;y++) for (let x=1;x<pw-1;x++){ const li = y*pw+x; if (!clean[li]) continue;
     const i = (y+py0)*w + x+px0, gx = Ls[i+1]-Ls[i-1], gy = Ls[i+w]-Ls[i-w], L = lab[li];
-    gsum[L] += Math.hypot(gx, gy) + 600*Math.abs(chromaDist(i, sample(bR,x,y), sample(bG,x,y))); gn[L]++; }
-  boxes.forEach(b => { let s=0, n=0; for (const id of b.ids){ s += gsum[id]; n += gn[id]; } b.crisp = n ? s/n : 0; });
+    gsum[L] += Math.hypot(gx, gy) + 600*Math.abs(chromaDist(i, sample(bR,x,y), sample(bG,x,y))); gn[L]++; if (faint[li] === 2) fn[L]++; if (Lmx[li] > tF) tn[L]++; }
+  boxes.forEach(b => { let s=0, n=0, f=0, t=0; for (const id of b.ids){ s += gsum[id]; n += gn[id]; f += fn[id]; t += tn[id]; } b.crisp = n ? s/n : 0; b.faint = n ? f/n : 0; b.line = n ? t/n : 0; });
   boxes = boxes.filter(b => {
     const bw = b.x1-b.x0, bh2 = b.y1-b.y0;
     if (b.ink < 0.00012*PN) return false;
@@ -1648,26 +1792,19 @@ function analyze(src){
     if (thin) return false;
     // smooth shade: at the sheet's edge it's a curl or shadow; anywhere it's too soft to be a drawing
     const edge = b.ox0 < 0.04*pw || b.oy0 < 0.04*ph || b.ox1 > 0.96*pw || b.oy1 > 0.96*ph;
-    return b.crisp >= (edge ? 45 : 18);
+    // faint pencil passed the thin-line test already, so it only needs to be a little crisp
+    if (b.faint > 0.6) return b.crisp >= (edge ? 9 : 3);
+    // thin lines (pencil near the edge) are drawing, even when soft; a shadow is broad
+    return b.crisp >= (edge ? 45 : 18) || (b.line > 0.5 && b.crisp >= 9);
   });
   /* 6. merge pieces that sit close together */
   // a piece mostly inside another drawing's box (eyes in a face, a sun's rays) joins that drawing;
   // neighbours whose boxes merely overlap stay separate
   const area = b => (b.x1-b.x0+1)*(b.y1-b.y0+1);
   const inside = (a, b) => Math.max(0, Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0)+1) * Math.max(0, Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0)+1) / area(a);
-  let merged = true;
-  while (merged){
-    merged = false;
-    outer: for (let i=0;i<boxes.length;i++) for (let j=i+1;j<boxes.length;j++){
-      const a = boxes[i], b = boxes[j], small = area(a) < area(b) ? a : b, large = small === a ? b : a;
-      if (inside(small, large) > 0.6){
-        boxes[i] = {x0:Math.min(a.x0,b.x0), y0:Math.min(a.y0,b.y0), x1:Math.max(a.x1,b.x1), y1:Math.max(a.y1,b.y1), ink:a.ink+b.ink,
-                    ids:a.ids.concat(b.ids), ox0:Math.min(a.ox0,b.ox0), oy0:Math.min(a.oy0,b.oy0), ox1:Math.max(a.ox1,b.ox1), oy1:Math.max(a.oy1,b.oy1)};
-        boxes.splice(j,1); merged = true; break outer;
-      }
-    }
-  }
-  const toShape = b => {
+  // the drawing's filled outline (paper it encloses included), over its grown box
+  const fillOf = b => {
+    if (b.fill) return b.fill;
     const mw = b.ox1-b.ox0+3, mh = b.oy1-b.oy0+3, m = new Uint8Array(mw*mh), ids = new Set(b.ids);
     for (let y=b.oy0; y<=b.oy1; y++) for (let x=b.ox0; x<=b.ox1; x++)
       if (ids.has(lab[y*pw+x])) m[(y-b.oy0+1)*mw + x-b.ox0+1] = 1;
@@ -1676,13 +1813,63 @@ function analyze(src){
     while (st.length){ const j = st.pop(), x = j % mw;
       for (const k of [x>0?j-1:-1, x<mw-1?j+1:-1, j-mw, j+mw]) if (k>=0 && k<mw*mh && !out[k] && !m[k]){ out[k] = 1; st.push(k); } }
     for (let k=0;k<mw*mh;k++) m[k] = out[k] ? 0 : 1;
+    return b.fill = {m, mw, mh};
+  };
+  // a pencil piece joins a marker drawing only when it sits inside that drawing's outline (a sketch
+  // under the colouring), not just inside its box (a pencil drawing beside a big marker one)
+  const within = (sm, lg) => {
+    const F = fillOf(lg), ids = new Set(sm.ids); let n = 0, k2 = 0;
+    for (let y=sm.oy0; y<=sm.oy1; y++) for (let x=sm.ox0; x<=sm.ox1; x++){ const li = y*pw+x;
+      if (!clean[li] || !ids.has(lab[li])) continue; n++;
+      const fx = x-lg.ox0+1, fy = y-lg.oy0+1;
+      if (fx>=0 && fy>=0 && fx<F.mw && fy<F.mh && F.m[fy*F.mw+fx]) k2++; }
+    return n ? k2/n : 0; };
+  // a lone stroke (a line of hatching, a whisker, a blade of grass) lying alongside a drawing, closer
+  // than a quarter of its length, belongs to it; two whole drawings side by side stay apart
+  const stroke = (a, b) => {
+    const thin = q => { const qw = q.x1-q.x0+1, qh = q.y1-q.y0+1; return Math.min(qw,qh) < 0.25*Math.max(qw,qh) ? Math.max(qw,qh) : 0; };
+    const len = Math.max(thin(a), thin(b)); if (!len) return false;
+    const gx = Math.max(a.x0,b.x0) - Math.min(a.x1,b.x1), gy = Math.max(a.y0,b.y0) - Math.min(a.y1,b.y1);
+    const ox = -gx / Math.min(a.x1-a.x0+1, b.x1-b.x0+1), oy = -gy / Math.min(a.y1-a.y0+1, b.y1-b.y0+1);
+    return (gy < 0.25*len && ox > 0.5) || (gx < 0.25*len && oy > 0.5);
+  };
+  // pencil lines skip, so pieces of one pencil drawing that (nearly) touch belong together
+  const sketch = (a, b) => a.faint > 0.6 && b.faint > 0.6 &&
+    Math.max(a.x0,b.x0) - Math.min(a.x1,b.x1) <= rF && Math.max(a.y0,b.y0) - Math.min(a.y1,b.y1) <= rF;
+  let merged = true;
+  while (merged){
+    merged = false;
+    outer: for (let i=0;i<boxes.length;i++) for (let j=i+1;j<boxes.length;j++){
+      const a = boxes[i], b = boxes[j], small = area(a) < area(b) ? a : b, large = small === a ? b : a;
+      if ((inside(small, large) > 0.6 || stroke(a, b) || sketch(a, b)) && (small.faint <= 0.6 || large.faint > 0.6 || within(small, large) > 0.6)){
+        boxes[i] = {x0:Math.min(a.x0,b.x0), y0:Math.min(a.y0,b.y0), x1:Math.max(a.x1,b.x1), y1:Math.max(a.y1,b.y1), ink:a.ink+b.ink,
+                    ids:a.ids.concat(b.ids), rr:Math.min(a.rr,b.rr), faint:(a.faint*a.ink+b.faint*b.ink)/(a.ink+b.ink||1), ox0:Math.min(a.ox0,b.ox0), oy0:Math.min(a.oy0,b.oy0), ox1:Math.max(a.ox1,b.ox1), oy1:Math.max(a.oy1,b.oy1)};
+        boxes.splice(j,1); merged = true; break outer;
+      }
+    }
+  }
+  // pencil on its own must add up to a real drawing's worth of lines, not a stray mark
+  boxes = boxes.filter(b => b.faint <= 0.6 || b.ink >= 0.001*PN);
+  const toShape = b => {
+    const F = fillOf(b), mw = F.mw, mh = F.mh, m = F.m.slice(), ids = new Set(b.ids);
+    // growing the strokes left a band of bare paper round the drawing: shave it back to a thin edge
+    const sh = Math.max(0, b.rr - 2);
+    if (sh){ const M1 = mw+1, S = new Int32Array(M1*(mh+1)), m2 = new Uint8Array(mw*mh);
+      for (let y=0;y<mh;y++){ let row=0; for (let x=0;x<mw;x++){ row += m[y*mw+x]; S[(y+1)*M1+x+1] = S[y*M1+x+1] + row; } }
+      for (let y=0;y<mh;y++) for (let x=0;x<mw;x++){ if (!m[y*mw+x]) continue;
+        const xa=Math.max(0,x-sh), xb=Math.min(mw,x+sh+1), ya=Math.max(0,y-sh), yb=Math.min(mh,y+sh+1);
+        if (S[yb*M1+xb] - S[ya*M1+xb] - S[yb*M1+xa] + S[ya*M1+xa] === (xb-xa)*(yb-ya)) m2[y*mw+x] = 1; }
+      // never shave off ink itself
+      for (let y=b.oy0; y<=b.oy1; y++) for (let x=b.ox0; x<=b.ox1; x++) if (clean[y*pw+x] && ids.has(lab[y*pw+x])) m2[(y-b.oy0+1)*mw + x-b.ox0+1] = 1;
+      m.set(m2); }
     return {x:(px0+b.ox0-1)/A, y:(py0+b.oy0-1)/A, w:mw/A, h:mh/A, mask:m, mw, mh};
   };
   const paperBox = {x:px0/A, y:py0/A, w:pw/A, h:ph/A};
   // reading order: top to bottom, then left to right
   const band = 0.12*ph;
   boxes.sort((a,b) => Math.abs(a.y0-b.y0) < band ? a.x0-b.x0 : a.y0-b.y0);
-  let found = boxes.map(toShape).flatMap(sh => splitShape(sh, SPLIT_AUTO) || [sh]);
+  // a pencil outline's dips (a heart's top) look like necks, so pencil drawings are only split by hand
+  let found = boxes.flatMap(b => { const sh = toShape(b); return (b.faint <= 0.6 && splitShape(sh, SPLIT_AUTO)) || [sh]; });
   if (!found.length) found = [paperBox];
   return {paper: paperBox, drawings: found};
 }
@@ -1758,19 +1945,19 @@ async function runReview(loaders, opts){
   select(null);
   const list = review = []; review.replace = opts.replace || null; saving = false;
   scrim.hidden = false; body.innerHTML = '';
-  document.getElementById('sheetTitle').textContent = opts.replace ? 'Recrop this tile' : 'New drawings';
+  document.getElementById('sheetTitle').textContent = opts.title || (opts.replace ? 'Recrop this tile' : 'New drawings');
   document.getElementById('sheetSub').textContent = opts.replace ? '' : `${loaders.length} photo${loaders.length===1?'':'s'}`;
   msg.textContent = ''; saveBtn.disabled = true; saveBtn.textContent = opts.replace ? 'Replace' : 'Add to wall';
   const work = document.createElement('div'); work.className = 'working';
   work.innerHTML = '<span class="spin"></span><span></span>'; body.append(work);
   for (let i=0;i<loaders.length;i++){
-    work.lastChild.textContent = opts.replace ? 'Looking for a better cut-out…' : `Finding each drawing and character in photo ${i+1} of ${loaders.length}…`;
+    work.lastChild.textContent = opts.find ? 'Looking for the two characters…' : opts.replace ? 'Looking for a better cut-out…' : `Finding each drawing and character in photo ${i+1} of ${loaders.length}…`;
     await new Promise(r => setTimeout(r, 30));
     if (run !== reviewRun) return;
     try {
       const src = await loaders[i]();
       if (run !== reviewRun) return;
-      const res = analyze(src);
+      const res = opts.find ? opts.find(src) : analyze(src);
       const item = {src, mode:'pieces', crops: res.drawings.map(b => ({box:b, on:true})), paper:res.paper, label:opts.label};
       list.push(item); renderPhoto(item, i, loaders.length, work);
     } catch(err){
@@ -1881,17 +2068,23 @@ saveBtn.onclick = async () => {
       // the same rectangle without the cut-out, so touch up can bring parts back and recrop can look again
       const src = item.box.mask ? await encodeJpeg(crop(item.src, {x:item.box.x, y:item.box.y, w:item.box.w, h:item.box.h}, 1400)) : null;
       // the whole photo it came from (once per photo), and where on it this tile sits, for Recrop from the photo
-      let photo = null, pbox = null;
+      let photo = null, pbox = null, keepPhoto = null;
+      // a tile redone from an old one (split, recrop) keeps the old one's original photo, and where on it it sits
+      const t = item.src.tile, o = rp && rp.pbox;
+      if (rp && rp.photoSrc && o && t){
+        const f = {x: (item.box.x - t.x)/t.w, y: (item.box.y - t.y)/t.h, w: item.box.w/t.w, h: item.box.h/t.h};
+        pbox = {x: o.x + f.x*o.w, y: o.y + f.y*o.h, w: f.w*o.w, h: f.h*o.h}; keepPhoto = rp;
+      }
       if (!rp){
         if (!photos.has(item.src)) photos.set(item.src, encodeJpeg(scaled(item.src, 2200)));
         photo = await photos.get(item.src); const W = item.src.width, H = item.src.height;
         pbox = {x: item.box.x/W, y: item.box.y/H, w: item.box.w/W, h: item.box.h/H};
       }
-      const pkey = photo ? 'ph' + base + '-' + review.indexOf(review.find(it => it.src === item.src)) : null;
-      await store.add({full, thumb, src, photo, pbox, pkey, w: item.box.w, h: item.box.h, added: rp ? rp.added + done*0.001 : base + done, ...(rp ? placeLike(rp, item) : {})});
+      const pkey = photo ? 'ph' + base + '-' + review.indexOf(review.find(it => it.src === item.src)) : keepPhoto ? keepPhoto.pkey : null;
+      await store.add({full, thumb, src, photo, pbox, pkey, keepPhoto, w: item.box.w, h: item.box.h, added: rp ? rp.added + done*0.001 : base + done, ...(rp ? placeLike(rp, item) : {})});
       done++;
     }
-    if (rp) await store.remove(rp);
+    if (rp) await store.remove(rp, {keepPhoto: list.length > 0 && !!rp.photoSrc && !!rp.pbox});
     saving = false; closeSheet();
     layout(shown());
     if (!rp) setTimeout(() => animateTo(newestView()), 60);
@@ -1919,16 +2112,24 @@ function scaled(c, maxSide){
   g.imageSmoothingQuality = 'high'; g.drawImage(c, 0, 0, o.width, o.height); return o;
 }
 let recropping = false;
-async function recropTile(p){
+async function recropTile(p, from){
   if (recropping) return; recropping = true;
-  try { await recropTileNow(p); } finally { recropping = false; }
+  try { await recropTileNow(p, from); } finally { recropping = false; }
 }
-async function recropTileNow(p){
-  if (p.photoSrc && p.pbox) return openPhotoCrop(p);
+// Recrop asks where to look again: the whole original photo, or just the last crop (the tile's own rectangle)
+async function recropTileNow(p, from){
+  if (from !== 'last' && p.photoSrc && p.pbox) return openPhotoCrop(p);
+  if (from === 'last' && p.srcSrc) return openPhotoCrop(p, true);
+  const c = await tileSource(p); if (!c) return;
+  await runReview([async () => c], {replace:p, label:'This tile'});
+}
+// the tile's picture on a margin of its own paper, ready for the detection (null if it can't be opened)
+// whole: keep everything in the tile's rectangle (Recrop from the last crop), not just what's near its outline
+async function tileSource(p, whole){
   let base;
   // tiles added before recrop existed only have their cut-out: look again at that, on plain paper
   try { base = p.srcSrc ? await tileCanvas(p.srcSrc) : await tileCanvas(p.fullSrc, '#fbfaf6'); }
-  catch { showToast("Couldn't open that tile's picture. Check your connection."); return; }
+  catch { showToast("Couldn't open that tile's picture. Check your connection."); return null; }
   // the tile is cropped tight, so give it a margin of its own paper colour: the detection needs to see paper around a drawing
   const d = base.getContext('2d').getImageData(0, 0, base.width, base.height).data, W = base.width, H = base.height, ch = [[], [], []];
   const take = (x, y) => { const i = (y*W + x)*4; for (let k=0;k<3;k++) ch[k].push(d[i+k]); };
@@ -1936,7 +2137,7 @@ async function recropTileNow(p){
   const med = a => a.sort((u, v) => u - v)[a.length >> 1];
   // only look near the tile's current outline, so bits of neighbouring drawings in the same rectangle stay out
   let look = base;
-  if (p.srcSrc){
+  if (p.srcSrc && !whole){
     try {
       const full = await tileCanvas(p.fullSrc), m = mkCanvas(W, H), mg = m.getContext('2d'), r = Math.max(2, Math.round(0.02*Math.max(W, H)));
       for (let a=0;a<16;a++) mg.drawImage(full, Math.cos(a/16*6.283)*r, Math.sin(a/16*6.283)*r, W, H);
@@ -1948,7 +2149,71 @@ async function recropTileNow(p){
   const pad = Math.round(0.12*Math.max(W, H)), c = mkCanvas(W + 2*pad, H + 2*pad), g = c.getContext('2d');
   g.fillStyle = `rgb(${med(ch[0])},${med(ch[1])},${med(ch[2])})`; g.fillRect(0, 0, c.width, c.height); g.drawImage(look, pad, pad);
   c.tile = {x: pad, y: pad, w: W, h: H};
-  await runReview([async () => c], {replace:p, label:'This tile'});
+  return c;
+}
+/* ---------------- split in two: a tile that caught two characters becomes two tiles ---------------- */
+// one shape made of several (they all come from the same detection, so share one grid)
+function joinShapes(list){
+  if (list.length === 1) return list[0];
+  const sx = list[0].w/list[0].mw, sy = list[0].h/list[0].mh;
+  const X = Math.min(...list.map(s => s.x)), Y = Math.min(...list.map(s => s.y));
+  const mw = Math.ceil((Math.max(...list.map(s => s.x + s.w)) - X)/sx) + 2, mh = Math.ceil((Math.max(...list.map(s => s.y + s.h)) - Y)/sy) + 2, m = new Uint8Array(mw*mh);
+  for (const s of list){ const ox = Math.round((s.x - X)/sx), oy = Math.round((s.y - Y)/sy);
+    for (let y=0;y<s.mh;y++) for (let x=0;x<s.mw;x++) if (s.mask[y*s.mw+x]){ const tx = x+ox, ty = y+oy; if (tx<mw && ty<mh) m[ty*mw+tx] = 1; } }
+  return {x: X, y: Y, w: mw*sx, h: mh*sy, mask: m, mw, mh};
+}
+// the part of a shape's mask where keep(x, y) is true, trimmed to its outline
+function partOf(s, keep){
+  const {mw, mh, mask} = s; let x0=mw, y0=mh, x1=-1, y1=-1;
+  for (let y=0;y<mh;y++) for (let x=0;x<mw;x++) if (mask[y*mw+x] && keep(x, y)){ if (x<x0)x0=x; if (x>x1)x1=x; if (y<y0)y0=y; if (y>y1)y1=y; }
+  if (x1 < 0) return null;
+  const nw = x1-x0+3, nh = y1-y0+3, m = new Uint8Array(nw*nh), sx = s.w/mw, sy = s.h/mh;
+  for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++) if (mask[y*mw+x] && keep(x, y)) m[(y-y0+1)*nw + x-x0+1] = 1;
+  return {x: s.x + (x0-1)*sx, y: s.y + (y0-1)*sy, w: nw*sx, h: nh*sy, mask: m, mw: nw, mh: nh};
+}
+// two groups from many pieces: start from the two farthest-apart pieces and give each other piece to the nearer group
+function twoGroups(list){
+  const ctr = s => [s.x + s.w/2, s.y + s.h/2], area = s => s.mask.reduce((a, v) => a + v, 0);
+  let A = 0, B = 1, far = -1;
+  for (let i=0;i<list.length;i++) for (let j=i+1;j<list.length;j++){ const [ax, ay] = ctr(list[i]), [bx, by] = ctr(list[j]), d = (ax-bx)**2 + (ay-by)**2; if (d > far){ far = d; A = i; B = j; } }
+  const g = [[list[A]], [list[B]]];
+  list.filter((s, i) => i !== A && i !== B).sort((a, b) => area(b) - area(a)).forEach(s => {
+    const [x, y] = ctr(s), d = k => { const j = joinShapes(g[k]), [cx, cy] = ctr(j); return (x-cx)**2 + (y-cy)**2; };
+    g[d(0) <= d(1) ? 0 : 1].push(s); });
+  return g.map(joinShapes).sort((a, b) => Math.abs(a.y-b.y) < 0.15*Math.max(a.h, b.h) ? a.x-b.x : a.y-b.y);
+}
+// no neck to split at: cut straight across the longer side, where the least drawing is
+function cutAcross(s){
+  const {mw, mh, mask} = s, across = s.w >= s.h, n = across ? mw : mh, count = new Array(n).fill(0);
+  for (let y=0;y<mh;y++) for (let x=0;x<mw;x++) if (mask[y*mw+x]) count[across ? x : y]++;
+  let at = n >> 1;
+  for (let i = Math.round(n*0.3); i <= Math.round(n*0.7); i++) if (count[i] < count[at] || (count[i] === count[at] && Math.abs(i - n/2) < Math.abs(at - n/2))) at = i;
+  const a = partOf(s, (x, y) => (across ? x : y) < at), b = partOf(s, (x, y) => (across ? x : y) >= at);
+  return a && b ? [a, b] : null;
+}
+// split the tile's own cut-out (not a fresh look, so nothing new creeps in): at the neck between the
+// two characters if there is one, else straight across where there's least drawing
+function splitInTwo(s){
+  const parts = splitShape(s, SPLIT_HARD) || splitShape(s, {ratio:1.2, minPart:0.04}) || cutAcross(s);
+  return parts && parts.length >= 2 ? twoGroups(parts) : null;
+}
+let splitting = false;
+async function splitTile(p){
+  if (splitting) return; splitting = true;
+  try {
+    let base, cut;
+    try { cut = await tileCanvas(p.fullSrc); base = p.srcSrc ? await tileCanvas(p.srcSrc) : cut; }
+    catch { showToast("Couldn't open that tile's picture. Check your connection."); return; }
+    const W = base.width, H = base.height, k = Math.min(1, 500/Math.max(W, H)), iw = Math.max(4, Math.round(W*k)), ih = Math.max(4, Math.round(H*k));
+    const m = mkCanvas(iw, ih), mg = m.getContext('2d'); mg.drawImage(cut, 0, 0, iw, ih);
+    const a = mg.getImageData(0, 0, iw, ih).data, mw = iw + 2, mh = ih + 2, mask = new Uint8Array(mw*mh);
+    for (let y=0;y<ih;y++) for (let x=0;x<iw;x++) if (a[(y*iw + x)*4 + 3] > 128) mask[(y+1)*mw + x+1] = 1;
+    const sx = W/iw, sy = H/ih, shape = {x: -sx, y: -sy, w: mw*sx, h: mh*sy, mask, mw, mh};
+    const parts = splitInTwo(shape);
+    if (!parts){ showToast("Couldn't find two characters in that tile."); return; }
+    base.tile = {x: 0, y: 0, w: W, h: H};
+    await runReview([async () => base], {replace:p, label:'This tile', title:'Split in two', find: () => ({paper: {x: 0, y: 0, w: W, h: H}, drawings: parts})});
+  } finally { splitting = false; }
 }
 const tuScrim = document.getElementById('tuScrim'), tuCv = document.getElementById('tuCanvas'), tuCtx = tuCv.getContext('2d');
 const tuSave = document.getElementById('tuSave'), tuMsg = document.getElementById('tuMsg');
@@ -2062,14 +2327,21 @@ window.addEventListener('resize', () => { if (tu) sizeTU(); });
 const pcScrim = document.getElementById('pcScrim'), pcCv = document.getElementById('pcCanvas'), pcCtx = pcCv.getContext('2d');
 const pcSave = document.getElementById('pcSave'), pcMsg = document.getElementById('pcMsg');
 let pc = null;   // {p, photo, box, start, cur, result, mode, k, d, saving, token}
-async function openPhotoCrop(p){
+// fromLast: work on the last crop (the tile's own rectangle) instead of the whole original photo
+async function openPhotoCrop(p, fromLast){
   let photo;
-  try { photo = await tileCanvas(p.photoSrc); }
-  catch { showToast("Couldn't open the original photo. Check your connection."); return; }
+  // the last crop gets a margin of its own paper colour, so its cut edges don't look like drawing
+  if (fromLast){ photo = await tileSource(p, true); if (!photo) return; }
+  else { try { photo = await tileCanvas(p.photoSrc); }
+    catch { showToast("Couldn't open the original photo. Check your connection."); return; } }
   select(null);
-  const W = photo.width, H = photo.height, b = p.pbox, padX = b.w*W*.12, padY = b.h*H*.12;
-  const x0 = Math.max(0, b.x*W - padX), y0 = Math.max(0, b.y*H - padY);
-  pc = {p, photo, box: {x: x0, y: y0, w: Math.min(W, b.x*W + b.w*W + padX) - x0, h: Math.min(H, b.y*H + b.h*H + padY) - y0}, mode: 'all', result: null, saving: false, token: 0};
+  document.getElementById('pcTitle').textContent = fromLast ? 'Recrop from the last crop' : 'Recrop from the photo';
+  const W = photo.width, H = photo.height;
+  let box;
+  if (fromLast){ const t = photo.tile, m = Math.round(0.04*Math.max(t.w, t.h)); box = {x: t.x - m, y: t.y - m, w: t.w + 2*m, h: t.h + 2*m}; }
+  else { const b = p.pbox, padX = b.w*W*.12, padY = b.h*H*.12, x0 = Math.max(0, b.x*W - padX), y0 = Math.max(0, b.y*H - padY);
+    box = {x: x0, y: y0, w: Math.min(W, b.x*W + b.w*W + padX) - x0, h: Math.min(H, b.y*H + b.h*H + padY) - y0}; }
+  pc = {p, photo, fromLast: !!fromLast, box, mode: 'all', result: null, saving: false, token: 0};
   setPcMode('all'); pcScrim.hidden = false; sizePC(); findInBox();
 }
 function sizePC(){
@@ -2143,7 +2415,11 @@ pcSave.onclick = async () => {
     const full = await encode(scaled(r.canvas, 1400)), thumb = await encode(scaled(r.canvas, 360)), src = await encodeJpeg(scaled(plain, 1400));
     // the tile keeps its spot, size and turn on the wall; only its picture and shape change
     pinAll(); const cx = p.x + p.dw/2, cy = p.y + p.dh/2;
-    await store.setImages(p, {full, thumb, src, w: r.w, h: r.h, pbox: {x: r.x/photo.width, y: r.y/photo.height, w: r.w/photo.width, h: r.h/photo.height}});
+    // where the new tile sits on the original photo (the last crop is that photo's old rectangle)
+    const t = photo.tile || {x: 0, y: 0, w: photo.width, h: photo.height}, o = p.pbox;
+    const f = {x: (r.x - t.x)/t.w, y: (r.y - t.y)/t.h, w: r.w/t.w, h: r.h/t.h};
+    const pbox = !pc.fromLast ? f : o ? {x: o.x + f.x*o.w, y: o.y + f.y*o.h, w: f.w*o.w, h: f.h*o.h} : null;
+    await store.setImages(p, {full, thumb, src, w: r.w, h: r.h, pbox});
     p.w = r.w; p.h = r.h; const [bw, bh] = baseSize(p.w, p.h), k = p.size || 1; p.dw = bw*k; p.dh = bh*k;
     p.x = p.px = cx - p.dw/2; p.y = p.py = cy - p.dh/2; p.imgFull = p.imgThumb = null; p.hitMap = undefined; savePlace(p);
     layout(shown()); needs = true;
@@ -2239,7 +2515,9 @@ function localStore(){
     async saveCollage(c){ await ctx2('readwrite', s => s.put({id: 'c' + c.saved + Math.random().toString(36).slice(2, 6), ...c})); await reloadCollages(); },
     async renameCollage(c, name){ await ctx2('readwrite', s => s.put({...c, name})); },
     async removeCollage(c){ await ctx2('readwrite', s => s.delete(c.id)); await reloadCollages(); },
-    async add(o){ const r = {id: 'p' + o.added + Math.random().toString(36).slice(2,7), ...o}; await tx('readwrite', s => s.put(r)); setPieces([...pieces, toPiece(r)]); },
+    async add(o){ const {keepPhoto, ...rest} = o, r = {id: 'p' + o.added + Math.random().toString(36).slice(2,7), ...rest};
+      if (keepPhoto && !r.photo){ const old = await tx('readonly', s => s.get(keepPhoto.id)); if (old && old.photo) r.photo = old.photo; }
+      await tx('readwrite', s => s.put(r)); setPieces([...pieces, toPiece(r)]); },
     async remove(p){ await tx('readwrite', s => s.delete(p.id)); setPieces(pieces.filter(q => q !== p)); },
     async place(p){
       const r = await tx('readonly', s => s.get(p.id)); if (!r) return;
@@ -2300,6 +2578,8 @@ function cloudStore(db, assets){
       if (sr){ doc.srcId = sr.id; doc.srcUrl = sr.url; }
       // one upload per photo, shared by every tile cut from it
       if (o.photo){ if (!photoUploads.has(o.photo)) photoUploads.set(o.photo, assets.upload(o.photo)); const ph = await photoUploads.get(o.photo); doc.photoId = ph.id; doc.photoUrl = ph.url; doc.pbox = o.pbox; doc.pkey = o.pkey || ph.id; }
+      // a tile redone from an old one points at the same uploaded photo
+      else if (o.keepPhoto && o.keepPhoto.photoId){ const k = o.keepPhoto; doc.photoId = k.photoId; if (!k.photoSrc.startsWith('/_blob/')) doc.photoUrl = k.photoSrc; doc.pbox = o.pbox; doc.pkey = k.pkey || k.photoId; }
       for (const k of ['px', 'py', 'size', 'rot', 'z', 'fx', 'fy', 'kind']) if (o[k] != null) doc[k] = o[k];
       await col.add(doc);
     },
@@ -2313,12 +2593,12 @@ function cloudStore(db, assets){
     },
     async rename(p, name){ await col.doc(p.id).update({name}); },
     async place(p){ await col.doc(p.id).update({px:p.px, py:p.py, z:p.z || 0, size:p.size || 1, rot:p.rot || 0, fx:!!p.fx, fy:!!p.fy, kind:p.kind || null, ref:p.ref || 0}); },
-    async remove(p){
+    async remove(p, opt){
       await col.doc(p.id).delete();
       cache.delete(p.id);
       try { if (p.fullId) await assets.delete(p.fullId); if (p.thumbId) await assets.delete(p.thumbId); if (p.srcId) await assets.delete(p.srcId);
-        // the photo goes too once no other tile is cut from it
-        if (p.photoId && !pieces.some(q => q !== p && q.photoId === p.photoId)) await assets.delete(p.photoId); } catch {}
+        // the photo goes too once no other tile is cut from it (tiles redone from this one keep it)
+        if (p.photoId && !(opt && opt.keepPhoto) && !pieces.some(q => q !== p && q.photoId === p.photoId)) await assets.delete(p.photoId); } catch {}
     }
   };
 }
@@ -2424,10 +2704,11 @@ function authBusy(on){ $a('aGo').disabled = on; $a('aGo').classList.toggle('busy
 const isApple = /iPhone|iPad|iPod/.test(navigator.userAgent);
 function showAuth(){
   $a('auth').hidden = false; setAuthMode(authMode);
-  const google = !!GOOGLE_WEB_CLIENT_ID && !!window.ReactNativeWebView, apple = isApple && !!window.ReactNativeWebView;
+  // the iPhone app signs in with email for now: Google there would also need Sign in with Apple (App Store rule 4.8)
+  const google = !!GOOGLE_WEB_CLIENT_ID && !!window.ReactNativeWebView && !isApple, apple = false;
   $a('aGoogle').hidden = !google; $a('aApple').hidden = !apple; $a('aOr').hidden = !google && !apple;
-  // in a normal browser (drawingwall.com/wall), Google sign-in shows once it's switched on in Supabase
-  if (!window.ReactNativeWebView && window.top === window.self) webGoogleOn().then(on => { if (on){ $a('aGoogle').hidden = false; $a('aOr').hidden = false; } });
+  // in a browser (drawingwall.com/wall, or shown inside another page), Google sign-in shows once it's switched on in Supabase
+  if (!window.ReactNativeWebView) webGoogleOn().then(on => { if (on){ $a('aGoogle').hidden = false; $a('aOr').hidden = false; } });
   if (googleErr){ authError(googleErr); googleErr = ''; }
   setTimeout(() => $a(authMode === 'up' ? 'aName' : 'aEmail').focus(), 50);
 }
@@ -2479,7 +2760,18 @@ $a('aGoogle').onclick = async () => {
   if (window.ReactNativeWebView) return window.ReactNativeWebView.postMessage(JSON.stringify({type: 'google-signin', webClientId: GOOGLE_WEB_CLIENT_ID}));
   // in a browser: go to Google, which sends you back to this page signed in
   authBusy(true);
-  try { const c = await sbClient(); const {error} = await c.auth.signInWithOAuth({provider: 'google', options: {redirectTo: location.origin + location.pathname}}); if (error) throw error; }
+  // shown inside another page (a frame), Google won't open in place: it opens in a new tab, and this page
+  // picks up the sign-in once that tab comes back signed in
+  const framed = window.top !== window.self;
+  try { const c = await sbClient();
+    const {data, error} = await c.auth.signInWithOAuth({provider: 'google', options: {redirectTo: location.origin + location.pathname, skipBrowserRedirect: framed}});
+    if (error) throw error;
+    if (framed){
+      if (!window.open(data.url, '_blank')) throw new Error("Couldn't open Google here. Open the wall in its own tab to sign in with Google.");
+      authBusy(false); authError('Finish signing in with Google in the new tab.');
+      for (let k = 0; k < 150; k++){ await new Promise(r => setTimeout(r, 2000));
+        const {data: sd} = await c.auth.getSession(); if (sd && sd.session){ authError(''); authSignedIn(sd.session.user); return; } }
+    } }
   catch (err) { authError(friendly(err)); authBusy(false); }
 };
 $a('aApple').onclick = () => { authError(''); window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({type: 'apple-signin'})); };
