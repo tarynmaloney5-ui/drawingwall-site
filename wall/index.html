@@ -182,7 +182,22 @@ button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-
 .trow .search .sresults{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:12}
 .trow .search:not([hidden]) ~ .tspace{display:none}
 .trow .search{order:-1}
-#trow2 #kindSel{flex:none;max-width:92px;height:40px;padding:0 10px;font-size:13px}
+/* the exact look of the website demo */
+.top{background:linear-gradient(var(--wall) 72%,rgba(12,12,12,0));padding-bottom:18px}
+.badge h1{font-weight:900;font-size:22px}
+.tacts{gap:8px}
+#moreBtn{width:36px;height:36px}
+#trow2{gap:6px}
+.trow .search input{height:36px;background:rgba(255,255,255,.12);border:0;font-size:13px;padding:0 14px;backdrop-filter:none;-webkit-backdrop-filter:none}
+.trow .search input::placeholder{color:rgba(255,255,255,.55)}
+#hist{gap:6px}
+#hist .ibtn{width:36px;height:36px;background:rgba(255,255,255,.12);border:0}
+#hist .ibtn svg{width:16px;height:16px}
+.storybtn{font-size:17px;padding:14px 18px}
+/* the "which tiles to show" filter now lives in the ⋯ menu, under View */
+.mfilter{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:14px;color:var(--muted)}
+.mfilter:has(select[hidden]){display:none}
+.mfilter select{flex:1;max-width:none}
 .addchip{overflow:hidden;cursor:pointer}
 .addchip input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:200px;z-index:2}
 .add:active{transform:scale(.97)}
@@ -222,6 +237,31 @@ body.selopen .dock{display:none}
 .pill.danger{color:var(--danger);border-color:rgba(255,111,92,.4)}
 .pill.solid-danger{background:var(--danger);color:#2b0700;border-color:transparent;font-weight:700}
 @media (max-width:520px){.sel{right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);max-width:none}}
+/* the tile card, exactly like the website demo: a dark card along the bottom, a top line, then a row of icon buttons */
+#sel.sel{left:max(10px,calc(env(safe-area-inset-left,0px) + 10px));right:max(10px,calc(env(safe-area-inset-right,0px) + 10px));width:auto;max-width:460px;margin:0 auto;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);background:#1d1b18;border:0;border-radius:18px;padding:10px;gap:8px;box-shadow:0 -6px 30px rgba(0,0,0,.6);backdrop-filter:none;-webkit-backdrop-filter:none}
+#sel .selhead{align-items:center;gap:6px}
+#sel .selhead .when{display:flex;align-items:center;gap:6px;padding-top:0;color:var(--ink)}
+#sel .dno{flex:none;background:var(--crayon);color:var(--crayon-ink);font-weight:800;font-size:11px;border-radius:999px;padding:3px 8px;font-variant-numeric:tabular-nums}
+#sel .dname{flex:1;min-width:0;font-family:var(--display);font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sel .size.name{flex:1;min-width:0;padding:0}
+#sel .size.name > span{display:none}
+#sel .size.name input{background:rgba(255,255,255,.1);border:0;border-radius:8px;padding:6px 8px;font-family:var(--display);font-weight:800;font-size:14px}
+#sel .dkind{flex:none;font-size:11px;background:rgba(255,255,255,.1);border-radius:999px;padding:5px 9px;color:var(--ink)}
+#sel .dkind:disabled{opacity:.7;cursor:default}
+#sel .selx{width:28px;height:28px;border:0;background:rgba(255,255,255,.1)}
+#sel .selx svg{width:13px;height:13px}
+#sel .row{display:block}
+.dgrid{display:grid;gap:4px}
+.dbtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0 6px;border-radius:10px;font-size:10px;color:rgba(255,255,255,.75);min-width:0}
+.dbtn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.dbtn svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dbtn:hover{background:rgba(255,255,255,.08)}
+.dbtn.on{color:var(--crayon)}
+.dbtn.on svg{stroke:var(--crayon)}
+.dbtn:disabled{opacity:.35;cursor:default}
+.dmore{display:flex;flex-direction:column;gap:4px}
+.dmore .size{padding:0 4px}
+#sel .row .pill{margin:4px 6px 0 0}
 
 /* review sheet */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
@@ -335,7 +375,9 @@ body.selopen .dock{display:none}
         <section class="msec" aria-label="Move around"><h4>View</h4><div class="mgrid">
           <button class="mitem mtile" id="zFit" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Fit all drawings</button>
           <button class="mitem mtile" id="zHome" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>Center on the newest</button>
-        </div></section>
+        </div>
+        <label class="mfilter"><span>Show</span><select class="chip act pick" id="kindSel" aria-label="Which tiles to show" hidden></select></label>
+        </section>
         <section class="msec" aria-label="Your drawings"><h4>Your drawings</h4><div class="mlist">
           <button class="mitem" id="photosBtn" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Photos</button>
           <button class="mitem" id="wallExport" role="menuitem" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>Export my wall</button>
@@ -356,7 +398,6 @@ body.selopen .dock{display:none}
     </div>
   </div>
   <div class="trow" id="trow2">
-    <select class="chip act pick" id="kindSel" aria-label="Which tiles to show" hidden></select>
     <button class="ibtn" id="searchBtn" aria-label="Find a tile by number or name" aria-expanded="false" aria-controls="search" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
     <div class="search" id="search" hidden role="search">
       <input type="text" id="searchIn" placeholder="Find by number or name" aria-label="Find a tile by number or name" autocomplete="off" enterkeyhint="search">
@@ -955,10 +996,28 @@ function select(p){
   showSelWhen(p);
   renderSelButtons(false);
 }
+// the card's top line, like the website demo: a yellow "No. 3" chip, the name (type to rename) and the type (tap to change)
 function showSelWhen(p){
-  const w = document.getElementById('selWhen'); w.innerHTML = '';
-  const b = document.createElement('b'); b.textContent = (p.ref ? `#${p.ref} ` : '') + (p.name || 'Tile');
-  w.append(b, document.createTextNode(`${p.kind ? ' · ' + kindName(p.kind) : ''} · added ${fmtDate(p.added)}`));
+  const w = document.getElementById('selWhen');
+  if (w._p !== p || !w.querySelector('.dno')){
+    w._p = p; w.innerHTML = '';
+    const no = document.createElement('span'); no.className = 'dno';
+    let nm;
+    if (canEdit()) nm = nameField(p);
+    else { nm = document.createElement('b'); nm.className = 'dname'; }
+    const kd = document.createElement('button'); kd.className = 'dkind'; kd.title = 'Change the type';
+    kd.onclick = () => {
+      if (!canEdit()) return;
+      const ks = [null, 'character', 'object', 'background'];
+      p.kind = ks[(ks.indexOf(p.kind || null) + 1) % ks.length];
+      showSelWhen(p); refreshCount(); savePlace(p);
+    };
+    w.append(no, nm, kd);
+  }
+  w.querySelector('.dno').textContent = p.ref ? `No. ${p.ref}` : 'New';
+  const nb = w.querySelector('.dname'); if (nb) nb.textContent = p.name || 'Tile';
+  const kd = w.querySelector('.dkind'); kd.textContent = kindName(p.kind) || 'Type'; kd.disabled = !canEdit();
+  kd.setAttribute('aria-label', `Type: ${kindName(p.kind) || 'none'}. Tap to change`);
 }
 // a tile's name (the character's name, say); saved a moment after typing stops
 function nameField(p){
@@ -1037,7 +1096,22 @@ const ICONS = {
   zoom: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/>',
   photo: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>',
   split: '<rect x="3" y="5" width="7" height="14" rx="1.5"/><rect x="14" y="5" width="7" height="14" rx="1.5"/>',
-  back: '<path d="M15 18l-6-6 6-6"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
+  back: '<path d="M15 18l-6-6 6-6"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  smaller: '<path d="M5 12h14"/>', bigger: '<path d="M12 5v14M5 12h14"/>', front: '<path d="M12 20V5M5 11l7-7 7 7"/>',
+  more: '<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>'};
+// a row of icon-and-word buttons, like the website demo's tile card
+function dgrid(items, cols){
+  const g = document.createElement('div'); g.className = 'dgrid'; g.style.gridTemplateColumns = `repeat(${cols || items.length},1fr)`;
+  for (const it of items){
+    const b = document.createElement('button'); b.className = 'dbtn' + (it.cls ? ' ' + it.cls : '');
+    b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[it.icon]}</svg>`;
+    const s = document.createElement('span'); s.textContent = it.text; b.append(s);
+    if (it.aria) b.setAttribute('aria-label', it.aria); if (it.disabled) b.disabled = true;
+    if (it.on !== undefined){ b.classList.toggle('on', it.on); b.setAttribute('aria-pressed', String(it.on)); }
+    b.onclick = it.fn; g.append(b);
+  }
+  return g;
+}
 function toolRow(label, items, cls){
   const g = document.createElement('div'); g.className = 'sgroup'; const t = document.createElement('span'); t.textContent = label;
   const bar = document.createElement('div'); bar.className = 'stools ' + (cls || ''); bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', label);
@@ -1046,32 +1120,41 @@ function toolRow(label, items, cls){
   g.append(t, bar); return g;
 }
 document.getElementById('selClose').onclick = () => select(null);
-function renderSelButtons(confirming){
+function renderSelButtons(confirming, view){
   const row = document.getElementById('selRow'); row.innerHTML = '';
   const mk = (txt, cls, fn) => { const b = document.createElement('button'); b.className = 'pill ' + (cls||''); b.textContent = txt; b.onclick = fn; row.append(b); return b; };
   const p = selected;
   const zoomIn = () => { const s=Math.min(S_MAX,Math.min((vw-40)/p.dw,(vh-240)/p.dh)); animateTo({s,tx:vw/2-(p.x+p.dw/2)*s,ty:(vh-120)/2-(p.y+p.dh/2)*s}); };
   if (!confirming){
-    if (!canEdit()){ row.append(toolRow('Picture', [{icon:'zoom', text:'Zoom in', fn: zoomIn}], 'three')); return; }
+    if (!canEdit()){ row.append(dgrid([{icon:'zoom', text:'Zoom in', fn: zoomIn}], 3)); return; }
     const again = () => renderSelButtons(false);
-    // Recrop asks where from: the whole original photo, or the last crop; Back returns to the picture tools
+    const resize = k => { beginEdit(); setTileSize(p, (p.size || 1) * k); savePlace(p); commitEdit('resizing a tile'); };
+    const front = () => { beginEdit(); pinAll(); bringToFront(p); needs = true; savePlace(p); commitEdit('bringing a tile to the front'); };
+    // the demo's six buttons, plus More for the rest of the tools
+    const main = dgrid([
+      {icon:'right', text:'Turn', aria:'Turn right 15 degrees', fn: () => turnTile(p, Math.PI/12)},
+      {icon:'smaller', text:'Smaller', fn: () => resize(0.85)},
+      {icon:'bigger', text:'Bigger', fn: () => resize(1.18)},
+      {icon:'mirror', text:'Mirror', aria:'Mirror the tile left to right', on: !!p.fx, fn: () => { flipTile(p, 'fx'); again(); }},
+      {icon:'front', text:'To front', fn: front},
+      {icon:'trash', text:'Remove', aria:'Remove this tile', fn: () => renderSelButtons(true)},
+      {icon:'more', text:'More', aria:'More tools', fn: () => main.replaceWith(more)}]);
+    // Recrop asks where from: the whole original photo, or the last crop; Back returns to the other tools
     const hasPhoto = !!(p.photoSrc && p.pbox);
-    const recropFrom = toolRow('Recrop from', [
+    const recropFrom = dgrid([
       {icon:'photo', text:'Original photo', aria: hasPhoto ? 'Recrop from the original photo' : 'No original photo saved for this tile', disabled: !hasPhoto, fn: () => recropTile(p, 'photo')},
       {icon:'crop', text:'Last crop', aria:'Recrop from the last crop', fn: () => recropTile(p, 'last')},
-      {icon:'back', text:'Back', aria:'Back to the picture tools', fn: () => recropFrom.replaceWith(picture)}], 'three');
-    const picture = toolRow('Picture', [
-      {icon:'touch', text:'Touch up', fn: () => openTouchUp(p)}, {icon:'crop', text:'Recrop', fn: () => picture.replaceWith(recropFrom)},
-      {icon:'split', text:'Split in two', aria:'Split this tile into two tiles, one for each character', fn: () => splitTile(p)}, {icon:'zoom', text:'Zoom in', fn: zoomIn}]);
-    row.append(nameField(p), kindPicker(p), sizeSlider(p),
-      toolRow('Turn and mirror', [
-        {icon:'left', text:'Turn left', aria:'Turn left 15 degrees', fn: () => turnTile(p, -Math.PI/12)},
-        {icon:'right', text:'Turn right', aria:'Turn right 15 degrees', fn: () => turnTile(p, Math.PI/12)},
-        {icon:'mirror', text:'Mirror', aria:'Mirror the tile left to right', on: !!p.fx, fn: () => { flipTile(p, 'fx'); again(); }},
-        {icon:'flip', text:'Flip', aria:'Flip the tile upside down', on: !!p.fy, fn: () => { flipTile(p, 'fy'); again(); }}]),
-      picture);
-    const rm = document.createElement('div'); rm.className = 'srm'; const rb = document.createElement('button');
-    rb.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.trash}</svg>Remove tile`; rb.onclick = () => renderSelButtons(true); rm.append(rb); row.append(rm);
+      {icon:'back', text:'Back', aria:'Back to more tools', fn: () => recropFrom.replaceWith(more)}], 3);
+    const more = document.createElement('div'); more.className = 'dmore';
+    more.append(sizeSlider(p), dgrid([
+      {icon:'left', text:'Turn left', aria:'Turn left 15 degrees', fn: () => turnTile(p, -Math.PI/12)},
+      {icon:'flip', text:'Flip', aria:'Flip the tile upside down', on: !!p.fy, fn: () => { flipTile(p, 'fy'); renderSelButtons(false, 'more'); }},
+      {icon:'touch', text:'Touch up', fn: () => openTouchUp(p)},
+      {icon:'crop', text:'Recrop', fn: () => more.replaceWith(recropFrom)},
+      {icon:'split', text:'Split', aria:'Split this tile into two tiles, one for each character', fn: () => splitTile(p)},
+      {icon:'zoom', text:'Zoom in', fn: zoomIn},
+      {icon:'back', text:'Back', aria:'Back to the main buttons', fn: () => more.replaceWith(main)}]));
+    row.append(view === 'more' ? more : main);
   } else {
     mk('Remove this tile', 'solid-danger', async () => {
       const target = p; select(null);
