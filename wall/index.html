@@ -171,12 +171,13 @@ button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-
 /* bottom row: the wide Storybook button (Organize and Collage are in the ⋯ menu), inside the screen edges and above the phone's own buttons */
 .dock{position:fixed;right:max(18px,calc(env(safe-area-inset-right,0px) + 18px));bottom:calc(env(safe-area-inset-bottom,0px) + 20px);z-index:10;display:flex}
 /* home screen: + and ⋯ top right, a find bar with undo/redo, and a wide Storybook button along the bottom */
-.tacts .add{width:44px;height:44px;box-shadow:0 0 0 5px rgba(255,201,60,.18),0 4px 16px rgba(255,201,60,.22)}
-.tacts .add svg{width:24px;height:24px}
+.tacts .add{width:38px;height:38px;box-shadow:0 0 0 4px rgba(255,201,60,.16),0 4px 14px rgba(255,201,60,.2)}
+.tacts .add svg{width:20px;height:20px}
 .dock{left:max(12px,calc(env(safe-area-inset-left,0px) + 12px))}
-.storybtn{flex:1;min-width:0;height:auto;padding:15px 18px;border-radius:999px;background:var(--crayon);color:var(--crayon-ink);font-family:var(--display);font-weight:900;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;box-shadow:0 6px 22px rgba(255,201,60,.25);pointer-events:auto}
-.storybtn svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.storybtn:active{transform:scale(.98)}
+/* the Storybook button: a round yellow book button beside the +, the same size */
+.storybtn{flex:none;width:38px;height:38px;padding:0;border:0;border-radius:999px;background:var(--crayon);color:var(--crayon-ink);display:grid;place-items:center;box-shadow:0 0 0 4px rgba(255,201,60,.16),0 4px 14px rgba(255,201,60,.2);pointer-events:auto;cursor:pointer;transition:transform .12s}
+.storybtn svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.storybtn:active{transform:scale(.97)}
 .trow .search{flex:1;min-width:0;width:auto;position:relative}
 .trow .search input{height:40px;border-radius:999px;padding:0 16px;font-size:14px}
 .trow .search .sresults{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:12}
@@ -193,7 +194,9 @@ button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-
 #hist{gap:6px}
 #hist .ibtn{width:36px;height:36px;background:rgba(255,255,255,.12);border:0}
 #hist .ibtn svg{width:16px;height:16px}
-.storybtn{font-size:17px;padding:14px 18px}
+#multiBtn,#cloudBtn{width:36px;height:36px;background:rgba(255,255,255,.12);border:0}
+#multiBtn svg,#cloudBtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#multiBtn.on,#cloudBtn.on{background:var(--crayon);color:var(--crayon-ink)}
 /* the "which tiles to show" filter now lives in the ⋯ menu, under View */
 .mfilter{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:14px;color:var(--muted)}
 .mfilter:has(select[hidden]){display:none}
@@ -242,6 +245,8 @@ body.selopen .dock{display:none}
 #sel .selhead{align-items:center;gap:6px}
 #sel .selhead .when{display:flex;align-items:center;gap:6px;padding-top:0;color:var(--ink)}
 #sel .dno{flex:none;background:var(--crayon);color:var(--crayon-ink);font-weight:800;font-size:11px;border-radius:999px;padding:3px 8px;font-variant-numeric:tabular-nums}
+#sel .dnamebtn{background:none;border:0;padding:4px 2px;text-align:left;color:var(--ink);cursor:text}
+#sel .dnamebtn.unnamed{color:rgba(255,255,255,.45);font-weight:600}
 #sel .dname{flex:1;min-width:0;font-family:var(--display);font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #sel .size.name{flex:1;min-width:0;padding:0}
 #sel .size.name > span{display:none}
@@ -261,10 +266,37 @@ body.selopen .dock{display:none}
 .dbtn:disabled{opacity:.35;cursor:default}
 .dmore{display:flex;flex-direction:column;gap:4px}
 .dmore .size{padding:0 4px}
+.dbtn.danger{color:#ff8a7a}
+.dbtn.danger svg{stroke:#ff8a7a}
+.dscroll{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;touch-action:pan-x;
+  -webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent)}
+.dscroll.end{-webkit-mask-image:none;mask-image:none}
+.dscroll::-webkit-scrollbar{display:none}
+.dscroll .dbtn{flex:0 0 66px;scroll-snap-align:start}
 #sel .row .pill{margin:4px 6px 0 0}
+/* the slim tile bar: a thin Scale slider, then one row of icons that shows six at a time and slides sideways (Remove is last) */
+#sel.sel.slim{max-width:400px;padding:7px 8px 4px;gap:2px;border-radius:20px}
+#sel.slim .selhead{padding:0 2px}
+#sel.slim .dno{font-size:10px;padding:2px 7px}
+#sel.slim .dname,#sel.slim .size.name input{font-size:13px}
+#sel.slim .size.name input{padding:4px 7px}
+#sel.slim .dkind{font-size:10px;padding:4px 8px}
+#sel.slim .selx{width:24px;height:24px}
+.dslim{gap:0}
+.dslim .size{padding:0 4px;gap:8px;font-size:12px}
+.dslim .size input{height:24px}
+.dslim .size .sico{display:flex}
+.dslim .size .sico svg{width:13px;height:13px;stroke:rgba(255,255,255,.6);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dslim .size .pct{min-width:38px;font-size:11px}
+.dscroll.ddock{gap:0;-webkit-mask-image:linear-gradient(90deg,#000 93%,transparent);mask-image:linear-gradient(90deg,#000 93%,transparent)}
+.dscroll.ddock.end{-webkit-mask-image:none;mask-image:none}
+.dscroll.ddock .dbtn{flex:0 0 calc(100% / 6);border-radius:12px}
+.dscroll.ddock .dbtn{padding:7px 0 5px;gap:3px}
+.ddock .dbtn span{font-size:10px;line-height:1.1;padding:0 2px}
+.ddock .dbtn svg{width:20px;height:20px}
 
 /* review sheet */
-.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
+.scrim{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
 .sheet{background:var(--panel-solid);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;width:100%;max-width:760px;max-height:min(88vh,100%);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
 .sheet header{padding:16px max(18px,env(safe-area-inset-right,0px)) 10px max(18px,env(safe-area-inset-left,0px));display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line)}
 .sheet h2{margin:0;font-family:var(--display);font-weight:800;font-size:22px;text-wrap:balance}
@@ -305,6 +337,9 @@ body.selopen .dock{display:none}
 .cell{position:relative;min-width:0}
 .cell .crop{width:100%}
 .pill.mini{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.72);border-color:rgba(255,248,230,.25);padding:4px 10px;font-size:12px;font-weight:700}
+.pill.mini.tu-pill{left:auto;right:8px;display:inline-flex;align-items:center;gap:4px}
+.pill.mini.tu-pill svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pill.mini.tu-pill.done{background:rgba(255,201,60,.9);color:#1a1408;border-color:transparent}
 .scrim.center{align-items:center;padding:16px}
 .confirm{background:var(--panel-solid);border:1px solid var(--line);border-radius:18px;max-width:380px;width:100%;padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px}
 .confirm h2{margin:0;font-family:var(--display);font-weight:800;font-size:21px}
@@ -348,17 +383,26 @@ body.selopen .dock{display:none}
 .seg .pill+.pill{border-left:1px solid var(--line)}
 .seg .pill.on{background:var(--crayon);color:var(--crayon-ink);font-weight:700}
 .pill:disabled{opacity:.4;cursor:default}
+/* Combine: a bar along the bottom while picking the tiles to join, then a short Undo */
+#cbBar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:40;background:#161614;border:1px solid var(--line);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);width:max-content;max-width:calc(100vw - 32px);box-shadow:0 10px 30px rgba(0,0,0,.55)}
+#cbBar[hidden]{display:none}
+.pc-hint{flex-basis:100%;font-size:12px;line-height:1.35;color:var(--muted);margin:6px 0 0}
+body.cbopen .dock{visibility:hidden}
+#cbBar .msg{flex:1;min-width:0;margin-right:4px}
+#cbBar .pill.go{background:var(--crayon);color:var(--crayon-ink);border-color:transparent;font-weight:700}
 .sheet.tu footer .msg{font-size:12.5px}
 .help .link{font-size:12.5px;color:var(--muted);word-break:break-all;user-select:all;-webkit-user-select:all}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
 </style>
 
-<canvas id="wall" aria-label="Collage of drawing tiles. Drag a tile to move it, put two fingers on a tile to turn or resize it, drag the wall to look around, pinch or scroll to zoom."></canvas>
+<canvas id="wall" aria-label="Collage of drawing tiles. Tap a tile to select it, then drag it to move it or put two fingers on it to turn or resize it, drag the wall to look around, pinch or scroll to zoom."></canvas>
 
 <div class="top">
   <div class="trow">
-    <div class="badge"><h1>Drawing Wall</h1><p id="count">Loading the wall…</p></div>
+    <div class="badge"><h1>My Wall</h1><p id="count">Loading the wall…</p></div>
     <div class="tacts">
+    <button class="storybtn" id="storyBtn" title="Storybook" aria-label="Storybook">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h11"/></svg></button>
     <label class="add addchip" id="addBtn" title="Add drawings">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
       <input type="file" id="file" accept="image/*" multiple aria-label="Add drawings">
@@ -400,10 +444,12 @@ body.selopen .dock{display:none}
   <div class="trow" id="trow2">
     <button class="ibtn" id="searchBtn" aria-label="Find a tile by number or name" aria-expanded="false" aria-controls="search" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
     <div class="search" id="search" hidden role="search">
-      <input type="text" id="searchIn" placeholder="Find by number or name" aria-label="Find a tile by number or name" autocomplete="off" enterkeyhint="search">
+      <input type="text" id="searchIn" placeholder="Find by # or name" aria-label="Find a tile by number or name" autocomplete="off" enterkeyhint="search">
       <div class="sresults" id="searchOut" hidden></div>
     </div>
     <span class="tspace"></span>
+    <button class="ibtn" id="cloudBtn" aria-label="Float the tiles around like clouds" title="Float" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10.5a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.5 9.2 4.5 4.5 0 0 0 7 18z"/></svg></button>
+    <button class="ibtn" id="multiBtn" aria-label="Select multiple tiles" title="Select multiple" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="11" height="11" rx="2"/><path d="M10 21h9a2 2 0 0 0 2-2v-9"/><path d="M6 8.5l2 2 3.5-4"/></svg></button>
     <div class="hist" id="hist" hidden role="group" aria-label="Undo and redo">
       <button class="ibtn" id="histUndo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
       <button class="ibtn" id="histRedo" aria-label="Redo" title="Redo (Ctrl+Y)" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
@@ -444,15 +490,11 @@ body.selopen .dock{display:none}
   </div>
 </div>
 
-<div class="sel" id="sel" hidden>
+<div class="sel slim" id="sel" hidden>
   <div class="selhead"><div class="when" id="selWhen"></div><button class="selx" id="selClose" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="row" id="selRow"></div>
 </div>
 
-<div class="dock">
-<button class="storybtn" id="storyBtn" title="Storybook">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h11"/></svg>Storybook</button>
-</div>
 
 <div class="help" id="pickHelp" role="alertdialog" aria-labelledby="pickHelpTitle" hidden>
   <div><b id="pickHelpTitle">The photo picker didn't open.</b> The Claude app on Android can't open photos from this page yet. Open the wall in Chrome to add drawings. Everything you add there shows up here too.</div>
@@ -478,7 +520,8 @@ body.selopen .dock{display:none}
     <header><h2 id="tuTitle">Touch up</h2><p>Paint over the tile</p></header>
     <div class="tu-stage" id="tuStage"><canvas id="tuCanvas" aria-label="The tile. Paint on it to erase or bring back parts."></canvas></div>
     <div class="tu-tools">
-      <div class="seg" role="group" aria-label="Brush"><button class="pill" id="tuErase">Erase</button><button class="pill" id="tuRestore">Bring back</button></div>
+      <div class="seg" role="group" aria-label="Brush"><button class="pill" id="tuErase">Erase</button><button class="pill" id="tuRestore">Bring back</button><button class="pill" id="tuMove" title="Drag to move around when zoomed in">Move</button></div>
+      <div class="seg" id="tuZoom" role="group" aria-label="Zoom"><button class="pill" id="tuOut" aria-label="Zoom out">−</button><button class="pill" id="tuFit" aria-label="Show the whole tile">Fit</button><button class="pill" id="tuIn" aria-label="Zoom in">+</button></div>
       <div class="seg" id="tuBrush" role="group" aria-label="Brush size"><button class="pill" data-b="0.02" aria-label="Small brush">S</button><button class="pill" data-b="0.045" aria-label="Medium brush">M</button><button class="pill" data-b="0.09" aria-label="Large brush">L</button></div>
       <div class="tu-hist" role="group" aria-label="Undo">
         <button class="pill tu-undo" id="tuUndo" title="Undo last (Ctrl+Z)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Undo last<span class="tu-n" id="tuUndoN"></span></button>
@@ -507,10 +550,12 @@ body.selopen .dock{display:none}
     <div class="tu-stage" id="pcStage"><canvas id="pcCanvas" aria-label="The original photo. Drag a box around the drawing you want."></canvas></div>
     <div class="tu-tools">
       <div class="seg" id="pcMode" role="group" aria-label="What to keep"><button class="pill" data-m="all">Everything in the box</button><button class="pill" data-m="big">Biggest piece only</button></div>
+      <p class="pc-hint">Save as copy keeps the original tile so you can crop something else from it. Save replaces it.</p>
     </div>
     <footer>
       <span class="msg" id="pcMsg"></span>
       <button class="btn ghost" id="pcCancel">Cancel</button>
+      <button class="btn ghost" id="pcCopy" disabled>Save as copy</button>
       <button class="btn primary" id="pcSave" disabled>Save</button>
     </footer>
   </div>
@@ -556,7 +601,9 @@ let selected = null;
 let order = [];         // tiles in stacking order, bottom first
 let showKind = 'all';   // the top right selector: 'all', a tile type, or 'none' for tiles with no type
 // a selected tile stays visible while it's being relabelled
-const shows = p => showKind === 'all' || !!p.canvas || (p.kind || 'none') === showKind || p === selected;
+// tiles just joined into a combined tile: hidden while Undo is still offered, then removed
+const gone = new Set();
+const shows = p => !gone.has(p.id) && (showKind === 'all' || !!p.canvas || (p.kind || 'none') === showKind || p === selected);
 // a tile's natural size on the wall, before anyone resizes it
 function baseSize(w, h){
   let dw = Math.min(ROW_H * (w / h), FLOW_W), dh = dw * h / w;
@@ -564,8 +611,8 @@ function baseSize(w, h){
   return [dw, dh];
 }
 // tiles someone has dragged keep their spot (px, py); the rest flow into rows below them
-// once tiles have been arranged, new ones wait in a little group just to the right of them,
-// so they can be dragged into the collage wherever they fit
+// new tiles wait in their own little group a short gap to the right of everything already on the wall
+// (adding them pins every tile already there, see the review sheet's Add), so they're easy to find
 const SIDE_GAP = 320, SIDE_W = 1700;
 function layout(list){
   rows = [];
@@ -574,7 +621,9 @@ function layout(list){
     const [dw, dh] = baseSize(p.w, p.h), k = p.size || 1; p.dw = dw*k; p.dh = dh*k;
     if (p.px != null && p.py != null){
       p.x = p.px; p.y = p.py;
-      placed = placed ? {x0: Math.min(placed.x0, p.x), y0: Math.min(placed.y0, p.y), x1: Math.max(placed.x1, p.x + p.dw)} : {x0: p.x, y0: p.y, x1: p.x + p.dw};
+      // how far it reaches once turned, so new tiles never land on a corner of it
+      const c = Math.abs(Math.cos(p.rot || 0)), s = Math.abs(Math.sin(p.rot || 0)), ex = (p.dw*c + p.dh*s)/2, ey = (p.dw*s + p.dh*c)/2, mx = p.x + p.dw/2, my = p.y + p.dh/2;
+      placed = placed ? {x0: Math.min(placed.x0, mx - ex), y0: Math.min(placed.y0, my - ey), x1: Math.max(placed.x1, mx + ex)} : {x0: mx - ex, y0: my - ey, x1: mx + ex};
     }
     else flow.push(p);
   }
@@ -599,6 +648,7 @@ const cv = document.getElementById('wall'), ctx = cv.getContext('2d');
 let vw = 0, vh = 0, dpr = 1;
 const cam = {s:.2, tx:16, ty:90};
 let needs = true;
+let cloud = null;   // while the tiles float: {f: Map(tile → {x, y, r, vx, vy, ...}), box, t, cam, back} (see Cloud below)
 function resize(){
   dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   vw = cv.clientWidth; vh = cv.clientHeight;
@@ -693,7 +743,8 @@ function draw(){
   }
   for (const p of order){
     if (!shows(p)) continue;
-    const w = p.dw*s, h = p.dh*s, cx = cam.tx + (p.x + p.dw/2)*s, cy = cam.ty + (p.y + p.dh/2)*s, rr = Math.hypot(w, h)/2;
+    const fl = cloud && cloud.f.get(p), rot = fl ? fl.r : p.rot;
+    const w = p.dw*s, h = p.dh*s, cx = cam.tx + (fl ? fl.x : p.x + p.dw/2)*s, cy = cam.ty + (fl ? fl.y : p.y + p.dh/2)*s, rr = Math.hypot(w, h)/2;
     if (cx - rr > vw || cx + rr < 0 || cy - rr > vh || cy + rr < 0) continue;
     let im = null;
     if (p.canvas) im = p.canvas;
@@ -702,14 +753,20 @@ function draw(){
       im = wantFull ? (getImg(p,'full') || getImg(p,'thumb')) : getImg(p,'thumb');
     }
     const lifted = (tileDrag && tileDrag.moved && tileDrag.p === p) || (twist && twist.p === p);
-    ctx.save(); ctx.translate(cx, cy); if (p.rot) ctx.rotate(p.rot); if (p.fx || p.fy) ctx.scale(p.fx ? -1 : 1, p.fy ? -1 : 1);
+    ctx.save(); ctx.translate(cx, cy); if (fl && (fl.sx !== 1 || fl.sy !== 1)) ctx.scale(fl.sx || 1, fl.sy || 1); if (rot) ctx.rotate(rot); if (p.fx || p.fy) ctx.scale(p.fx ? -1 : 1, p.fy ? -1 : 1);
     if (lifted){ ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 10; }
     if (im){ ctx.drawImage(im, -w/2, -h/2, w, h); }
     else { ctx.fillStyle = 'rgba(255,248,230,0.08)'; ctx.fillRect(-w/2, -h/2, w, h); }
     if (lifted) ctx.restore();
-    if (p === selected){
-      ctx.strokeStyle = '#ffc93c'; ctx.lineWidth = 2; ctx.setLineDash([8, 6]);
-      ctx.strokeRect(-w/2-5, -h/2-5, w+10, h+10);
+    if (p === selected || (combo && combo.list.includes(p)) || (multi && multi.list.includes(p))){
+      // a thin dashed line with a soft orange glow
+      ctx.save(); ctx.strokeStyle = '#ffb04a'; ctx.lineWidth = 1.25; ctx.setLineDash([6, 5]);
+      ctx.shadowColor = 'rgba(255,128,0,0.95)'; ctx.shadowBlur = 7;
+      // around the drawing's own edge; the square box only until its shape is known
+      const ol = tileOutline(p);
+      if (ol){ ctx.beginPath(); for (const l of ol){ l.forEach(([u, v], i) => ctx[i ? 'lineTo' : 'moveTo'](-w/2 + u*w, -h/2 + v*h)); ctx.closePath(); } ctx.stroke(); }
+      else ctx.strokeRect(-w/2-5, -h/2-5, w+10, h+10);
+      ctx.restore();
     }
     ctx.restore();
   }
@@ -717,6 +774,7 @@ function draw(){
 let vel = null;
 function frame(now){
   if (anim) anim(now);
+  if (cloud){ stepCloud(now); needs = true; }
   if (vel && !drag){
     cam.tx += vel.x; cam.ty += vel.y; vel.x *= .92; vel.y *= .92;
     if (Math.hypot(vel.x, vel.y) < .3) vel = null;
@@ -759,6 +817,14 @@ function moveTwist(){
 function moveTile(sx, sy){
   const p = tileDrag.p, wx = (sx - cam.tx)/cam.s, wy = (sy - cam.ty)/cam.s;
   const b = board();
+  if (tileDrag.group){
+    // the whole group moves by the same amount, stopping where any of them would leave the wall
+    const g = tileDrag.group, me = g.find(e => e.q === p);
+    let dx = wx - tileDrag.ox - me.x, dy = wy - tileDrag.oy - me.y;
+    for (const e of g){ dx = Math.max(b.x0 - e.x, Math.min(b.x1 - e.q.dw - e.x, dx)); dy = Math.max(b.y0 - e.y, Math.min(b.y1 - e.q.dh - e.y, dy)); }
+    for (const e of g){ e.q.x = e.q.px = e.x + dx; e.q.y = e.q.py = e.y + dy; }
+    needs = true; return;
+  }
   p.x = Math.max(b.x0, Math.min(b.x1 - p.dw, wx - tileDrag.ox));
   p.y = Math.max(b.y0, Math.min(b.y1 - p.dh, wy - tileDrag.oy));
   p.px = p.x; p.py = p.y; needs = true;
@@ -772,9 +838,14 @@ function bringToFront(p){
   p.z = Math.max(0, ...pieces.map(q => q.z || 0)) + 1;
   order = order.filter(q => q !== p).concat(p);
 }
+function sendToBack(p){
+  p.z = Math.min(0, ...pieces.filter(q => q !== p).map(q => q.z || 0)) - 1;
+  order = [p].concat(order.filter(q => q !== p));
+}
 function endTileDrag(){
   const t = tileDrag; tileDrag = null; if (!t) return;
-  if (t.moved){ savePlace(t.p); if (selected === t.p) select(t.p); commitEdit('moving a tile'); } else cancelEdit();
+  if (t.moved && t.group){ for (const e of t.group) savePlace(e.q); commitEdit('moving tiles'); }
+  else if (t.moved){ savePlace(t.p); if (selected === t.p) select(t.p); commitEdit('moving a tile'); } else cancelEdit();
   needs = true;
 }
 /* ---------------- undo and redo: every change to where tiles sit ----------------
@@ -826,14 +897,18 @@ cv.addEventListener('pointerdown', e => {
   if (pts.size === 1){
     tapStart = {x:e.clientX, y:e.clientY, t:performance.now()};
     lastMove = {x:e.clientX, y:e.clientY, t:performance.now()};
-    const p = canEdit() ? hit(e.clientX, e.clientY) : null;
-    if (p && !p.canvas){
+    const p = canEdit() && !cloud ? hit(e.clientX, e.clientY) : null;
+    // a tile only moves once it's selected (or picked in Select multiple); otherwise one finger moves the wall
+    if (p && !p.canvas && (p === selected || (multi && multi.list.includes(p)))){
       beginEdit(); tileDrag = {p, ox:(e.clientX - cam.tx)/cam.s - p.x, oy:(e.clientY - cam.ty)/cam.s - p.y, moved:false, sx:e.clientX, sy:e.clientY};
+      // with several tiles selected, dragging one of them moves them all, keeping their spacing
+      if (multi && multi.list.includes(p)) tileDrag.group = multi.list.map(q => ({q, x: q.x, y: q.y}));
     } else { drag = true; cv.classList.add('dragging'); }
-  } else if (pts.size === 2 && tileDrag){
-    const p = tileDrag.p; tileDrag = null; tapStart = null; select(null); startTwist(p);
-  } else if (pts.size === 2 && !twist && canEdit() && (q => q && !q.canvas)(hit(e.clientX, e.clientY))){
-    const q = hit(e.clientX, e.clientY); drag = false; vel = null; tapStart = null; select(null); startTwist(q);
+  } else if (pts.size === 2 && tileDrag && tileDrag.p === selected && !tileDrag.group){
+    // two fingers only move, turn and resize a tile once it's selected (outlined); otherwise they zoom the wall
+    const p = tileDrag.p; tileDrag = null; tapStart = null; startTwist(p);
+  } else if (pts.size === 2 && !twist && !tileDrag && canEdit() && selected && hit(e.clientX, e.clientY) === selected){
+    drag = false; vel = null; tapStart = null; startTwist(selected);
   } else if (pts.size === 2 && !twist){
     endTileDrag(); drag = true;
     const [a,b] = [...pts.values()];
@@ -875,6 +950,7 @@ function endPointer(e){
   if (pts.size < 2) pinch = null;
   if (twist && pts.size < 2){
     const p = twist.p; twist = null; savePlace(p); needs = true; commitEdit('turning a tile');
+    if (selected === p) select(p);
     // the finger still down carries on moving the tile
     if (pts.size === 1){ const [f] = pts.values(); beginEdit(); tileDrag = {p, ox:(f.x - cam.tx)/cam.s - p.x, oy:(f.y - cam.ty)/cam.s - p.y, moved:true, sx:f.x, sy:f.y}; }
     else cv.classList.remove('dragging');
@@ -886,7 +962,8 @@ function endPointer(e){
     if (tapStart && Math.hypot(e.clientX-tapStart.x, e.clientY-tapStart.y) < 8 && performance.now()-tapStart.t < 350){
       vel = null;
       const now = performance.now();
-      if (now - lastTap < 300){ lastTap = 0; animateDoubleTap(e.clientX, e.clientY); }
+      // while picking tiles (Select multiple, Combine) quick taps pick tiles instead of zooming
+      if (now - lastTap < 300 && !multi && !combo){ lastTap = 0; animateDoubleTap(e.clientX, e.clientY); }
       else { lastTap = now; handleTap(e.clientX, e.clientY); }
     }
     tapStart = null;
@@ -929,6 +1006,50 @@ function solidAt(p, u, v){
   for (let y=cy-2; y<=cy+2; y++) for (let x=cx-2; x<=cx+2; x++) if (x>=0 && y>=0 && x<hw && y<hh && a[y*hw+x] > 40) return true;
   return false;
 }
+// the selection line follows the drawing's own edge: the tap shape above, grown a little so the line sits
+// just outside the drawing, traced into closed loops (u, v from 0 to 1 across the tile); worked out once per picture
+const MS = {1:[['l','b']], 2:[['b','r']], 3:[['l','r']], 4:[['t','r']], 5:[['l','t'],['b','r']], 6:[['t','b']], 7:[['l','t']],
+  8:[['l','t']], 9:[['t','b']], 10:[['t','r'],['l','b']], 11:[['t','r']], 12:[['l','r']], 13:[['b','r']], 14:[['l','b']]};
+function tileOutline(p){
+  if (p.canvas) return null;
+  if (p.hitMap === undefined) solidAt(p, .5, .5);
+  const hm = p.hitMap; if (!hm) return null;
+  if (hm.outline !== undefined) return hm.outline;
+  const {a, hw, hh} = hm, P = 4, R = 2, W = hw + 2*P, H = hh + 2*P, m = new Uint8Array(W*H);
+  for (let y=0;y<hh;y++) for (let x=0;x<hw;x++) if (a[y*hw+x] > 40)
+    for (let dy=-R;dy<=R;dy++) for (let dx=-R;dx<=R;dx++) if (dx*dx + dy*dy <= R*R + 1) m[(y+P+dy)*W + x+P+dx] = 1;
+  // holes inside the drawing count as inside, so only the outer edge gets a line
+  const out = new Uint8Array(W*H), st = [0]; out[0] = 1;
+  while (st.length){ const j = st.pop(), x = j % W;
+    for (const k of [x > 0 ? j-1 : -1, x < W-1 ? j+1 : -1, j-W, j+W]) if (k >= 0 && k < W*H && !m[k] && !out[k]){ out[k] = 1; st.push(k); } }
+  for (let k=0;k<W*H;k++) if (!out[k]) m[k] = 1;
+  // marching squares: each cell links the midpoints of the edges where inside meets outside (keys in half-cells)
+  const adj = new Map(), key = (x, y) => y*(2*W+2) + x, link = (k1, k2) => { (adj.get(k1) || adj.set(k1, []).get(k1)).push(k2); (adj.get(k2) || adj.set(k2, []).get(k2)).push(k1); };
+  for (let cy=0;cy<H-1;cy++) for (let cx=0;cx<W-1;cx++){
+    const c = m[cy*W+cx]*8 + m[cy*W+cx+1]*4 + m[(cy+1)*W+cx+1]*2 + m[(cy+1)*W+cx]; if (!c || c === 15) continue;
+    const e = {t: key(2*cx+1, 2*cy), r: key(2*cx+2, 2*cy+1), b: key(2*cx+1, 2*cy+2), l: key(2*cx, 2*cy+1)};
+    for (const [s1, s2] of MS[c]) link(e[s1], e[s2]);
+  }
+  const loops = [], used = new Set(), ek = (k1, k2) => k1 < k2 ? k1 + ',' + k2 : k2 + ',' + k1;
+  for (const start of adj.keys()){
+    for (const first of adj.get(start)){
+      if (used.has(ek(start, first))) continue;
+      const pts = [start]; let prev = start, cur = first; used.add(ek(start, first));
+      while (cur !== start){
+        pts.push(cur); const nx = adj.get(cur).find(n => n !== prev && !used.has(ek(cur, n))); if (nx == null) break;
+        used.add(ek(cur, nx)); prev = cur; cur = nx;
+      }
+      if (pts.length < 16) continue;   // specks get no line of their own
+      const KW = 2*W+2;
+      let loop = pts.map(k => [((k % KW)/2 - P + .5)/hw, (Math.floor(k / KW)/2 - P + .5)/hh]);
+      // round off the stair-steps
+      for (let it=0; it<2; it++){ const o = []; for (let i=0;i<loop.length;i++){ const [x1, y1] = loop[i], [x2, y2] = loop[(i+1) % loop.length]; o.push([.75*x1+.25*x2, .75*y1+.25*y2], [.25*x1+.75*x2, .25*y1+.75*y2]); } loop = o; }
+      loops.push(loop);
+    }
+  }
+  hm.outline = loops.length ? loops : null;
+  return hm.outline;
+}
 // inside a tile's (turned) outline, see-through parts included
 function inBox(p, sx, sy){
   const wx = (sx - cam.tx)/cam.s, wy = (sy - cam.ty)/cam.s, dx = wx - (p.x + p.dw/2), dy = wy - (p.y + p.dh/2), c = Math.cos(p.rot || 0), sn = Math.sin(p.rot || 0);
@@ -936,12 +1057,24 @@ function inBox(p, sx, sy){
   return Math.abs(u) <= p.dw/2 + pad && Math.abs(v) <= p.dh/2 + pad;
 }
 let wheelSaveT = null;
+// while a tile is being resized it's held: the wall's refreshes from the account can't put its old size
+// back mid-scroll (that made fast wheel scrolling jump back and forth). It's let go once the new size is saved.
+function holdTile(p){ if (!p.held){ p.held = true; p.pending = (p.pending || 0) + 1; } }
+function releaseTile(p){ if (p.held){ p.held = false; p.pending--; } }
+// wheel steps are added up and applied once per screen frame, so a fast spin is one smooth change
+let wheelAcc = null;
 function wheelResize(p, f){
-  const old = p.size || 1; let k = old*f;
-  // it stops on 100% on the way through, like the size slider
-  if ((old < 1 && k > 1) || (old > 1 && k < 1) || Math.abs(k - 1) < 0.02) k = 1;
-  beginEdit(); setTileSize(p, k); syncSizeSlider(p);
-  clearTimeout(wheelSaveT); wheelSaveT = setTimeout(() => { savePlace(p); commitEdit('resizing a tile'); }, 350);
+  holdTile(p);
+  if (wheelAcc && wheelAcc.p === p){ wheelAcc.f *= f; return; }
+  wheelAcc = {p, f};
+  requestAnimationFrame(() => {
+    const {p, f} = wheelAcc; wheelAcc = null;
+    const old = p.size || 1; let k = old*f;
+    // it stops on 100% on the way through, like the size slider
+    if ((old < 1 && k > 1) || (old > 1 && k < 1) || Math.abs(k - 1) < 0.02) k = 1;
+    beginEdit(); setTileSize(p, k); syncSizeSlider(p);
+    clearTimeout(wheelSaveT); wheelSaveT = setTimeout(() => { savePlace(p); releaseTile(p); commitEdit('resizing a tile'); }, 350);
+  });
 }
 function syncSizeSlider(p){
   const r = document.querySelector('#selRow .size input[type=range]'), pct = document.querySelector('#selRow .size .pct'); if (!r) return;
@@ -957,6 +1090,9 @@ function hit(sx, sy){
   return null;
 }
 function handleTap(sx, sy){
+  if (cloud) return;   // floating tiles can't be picked
+  if (combo){ comboTap(hit(sx, sy)); return; }
+  if (multi){ multiTap(hit(sx, sy)); return; }
   const p = hit(sx, sy);
   if (!p || p.canvas){ select(null); return; }
   select(p === selected ? null : p);
@@ -988,8 +1124,10 @@ document.getElementById('zHome').onclick = () => { closeMore(); animateTo(newest
 /* ---------------- selection card ---------------- */
 const fmtDate = t => new Date(t).toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric', year:'numeric'});
 function select(p){
+  if (p && cloud && !cloud.back) endCloud();   // picking a tile (from Find, say) brings everything home first
   selected = p; needs = true;
   const sel = document.getElementById('sel');
+  { const ae = document.activeElement; if (ae && sel.contains(ae)) ae.blur(); }   // never leave the name box open (and the keyboard up) when the tile changes
   document.body.classList.toggle('selopen', !!p);
   if (!p){ sel.hidden = true; return; }
   sel.hidden = false;
@@ -1003,7 +1141,8 @@ function showSelWhen(p){
     w._p = p; w.innerHTML = '';
     const no = document.createElement('span'); no.className = 'dno';
     let nm;
-    if (canEdit()) nm = nameField(p);
+    // the name shows as plain text; tapping it opens the typing box (so the keyboard never pops up just from picking a tile)
+    if (canEdit()) nm = nameTap(p);
     else { nm = document.createElement('b'); nm.className = 'dname'; }
     const kd = document.createElement('button'); kd.className = 'dkind'; kd.title = 'Change the type';
     kd.onclick = () => {
@@ -1015,9 +1154,18 @@ function showSelWhen(p){
     w.append(no, nm, kd);
   }
   w.querySelector('.dno').textContent = p.ref ? `No. ${p.ref}` : 'New';
-  const nb = w.querySelector('.dname'); if (nb) nb.textContent = p.name || 'Tile';
+  const nb = w.querySelector('.dname'); if (nb){ nb.textContent = p.name || (nb.tagName === 'BUTTON' ? 'Name this tile' : 'Tile'); nb.classList.toggle('unnamed', !p.name); }
   const kd = w.querySelector('.dkind'); kd.textContent = kindName(p.kind) || 'Type'; kd.disabled = !canEdit();
   kd.setAttribute('aria-label', `Type: ${kindName(p.kind) || 'none'}. Tap to change`);
+}
+function nameTap(p){
+  const b = document.createElement('button'); b.className = 'dname dnamebtn'; b.setAttribute('aria-label', 'Rename this tile');
+  b.onclick = () => {
+    const f = nameField(p), inp = f.querySelector('input');
+    inp.addEventListener('blur', () => { inp.onchange && inp.onchange(); if (f.isConnected){ const nb = nameTap(p); f.replaceWith(nb); showSelWhen(p); } });
+    b.replaceWith(f); inp.focus(); inp.select();
+  };
+  return b;
 }
 // a tile's name (the character's name, say); saved a moment after typing stops
 function nameField(p){
@@ -1065,14 +1213,14 @@ function setTileSize(p, k){
 // a size slider on the tile's card; it moves evenly from small to big (log scale) and settles on 100%
 function sizeSlider(p){
   const wrap = document.createElement('label'); wrap.className = 'size';
-  const name = document.createElement('span'); name.textContent = 'Size';
+  const name = document.createElement('span'); name.textContent = 'Scale';
   const r = document.createElement('input'); r.type = 'range'; r.min = 0; r.max = 100; r.step = 1; r.setAttribute('aria-label', 'Tile size');
   const pct = document.createElement('span'); pct.className = 'pct';
   const span = Math.log(SIZE_MAX/SIZE_MIN), toV = k => Math.round(100*Math.log(k/SIZE_MIN)/span), toK = v => SIZE_MIN*Math.exp(span*v/100);
   const show = () => { pct.textContent = Math.round((p.size || 1)*100) + '%'; };
   r.value = toV(p.size || 1); show();
-  r.oninput = () => { beginEdit(); let k = toK(+r.value); if (Math.abs(k - 1) < 0.05) k = 1; setTileSize(p, k); show(); };
-  r.onchange = () => { savePlace(p); commitEdit('resizing a tile'); };
+  r.oninput = () => { holdTile(p); beginEdit(); let k = toK(+r.value); if (Math.abs(k - 1) < 0.05) k = 1; setTileSize(p, k); show(); };
+  r.onchange = () => { savePlace(p); releaseTile(p); commitEdit('resizing a tile'); };
   wrap.append(name, r, pct);
   return wrap;
 }
@@ -1096,8 +1244,9 @@ const ICONS = {
   zoom: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/>',
   photo: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>',
   split: '<rect x="3" y="5" width="7" height="14" rx="1.5"/><rect x="14" y="5" width="7" height="14" rx="1.5"/>',
-  back: '<path d="M15 18l-6-6 6-6"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
-  smaller: '<path d="M5 12h14"/>', bigger: '<path d="M12 5v14M5 12h14"/>', front: '<path d="M12 20V5M5 11l7-7 7 7"/>',
+  back: '<path d="M15 18l-6-6 6-6"/>',
+  combine: '<rect x="3" y="3" width="9" height="9" rx="1.5"/><rect x="12" y="12" width="9" height="9" rx="1.5"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  smaller: '<path d="M5 12h14"/>', bigger: '<path d="M12 5v14M5 12h14"/>', front: '<path d="M12 20V5M5 11l7-7 7 7"/>', toback: '<path d="M12 4v15M5 13l7 7 7-7"/>',
   more: '<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>'};
 // a row of icon-and-word buttons, like the website demo's tile card
 function dgrid(items, cols){
@@ -1110,6 +1259,15 @@ function dgrid(items, cols){
     if (it.on !== undefined){ b.classList.toggle('on', it.on); b.setAttribute('aria-pressed', String(it.on)); }
     b.onclick = it.fn; g.append(b);
   }
+  return g;
+}
+// the buttons in one row that slides sideways; the right edge fades while there's more to see
+function dscroll(items){
+  const g = dgrid(items); g.className = 'dgrid dscroll'; g.style.gridTemplateColumns = '';
+  const edge = () => g.classList.toggle('end', g.scrollLeft + g.clientWidth >= g.scrollWidth - 2);
+  g.addEventListener('scroll', edge, {passive: true}); requestAnimationFrame(edge);
+  // a mouse wheel scrolls it sideways
+  g.addEventListener('wheel', e => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)){ g.scrollLeft += e.deltaY; e.preventDefault(); } e.stopPropagation(); }, {passive: false});
   return g;
 }
 function toolRow(label, items, cls){
@@ -1128,33 +1286,35 @@ function renderSelButtons(confirming, view){
   if (!confirming){
     if (!canEdit()){ row.append(dgrid([{icon:'zoom', text:'Zoom in', fn: zoomIn}], 3)); return; }
     const again = () => renderSelButtons(false);
-    const resize = k => { beginEdit(); setTileSize(p, (p.size || 1) * k); savePlace(p); commitEdit('resizing a tile'); };
     const front = () => { beginEdit(); pinAll(); bringToFront(p); needs = true; savePlace(p); commitEdit('bringing a tile to the front'); };
-    // the demo's six buttons, plus More for the rest of the tools
-    const main = dgrid([
+    const back = () => { beginEdit(); pinAll(); sendToBack(p); needs = true; savePlace(p); commitEdit('sending a tile to the back'); };
+    // every tool on the front: the Scale slider on top, then all the buttons in one sliding row
+    const tools = [
+      {icon:'left', text:'Turn left', aria:'Turn left 15 degrees', fn: () => turnTile(p, -Math.PI/12)},
       {icon:'right', text:'Turn', aria:'Turn right 15 degrees', fn: () => turnTile(p, Math.PI/12)},
-      {icon:'smaller', text:'Smaller', fn: () => resize(0.85)},
-      {icon:'bigger', text:'Bigger', fn: () => resize(1.18)},
       {icon:'mirror', text:'Mirror', aria:'Mirror the tile left to right', on: !!p.fx, fn: () => { flipTile(p, 'fx'); again(); }},
-      {icon:'front', text:'To front', fn: front},
-      {icon:'trash', text:'Remove', aria:'Remove this tile', fn: () => renderSelButtons(true)},
-      {icon:'more', text:'More', aria:'More tools', fn: () => main.replaceWith(more)}]);
-    // Recrop asks where from: the whole original photo, or the last crop; Back returns to the other tools
+      {icon:'flip', text:'Flip', aria:'Flip the tile upside down', on: !!p.fy, fn: () => { flipTile(p, 'fy'); again(); }},
+      {icon:'front', text:'Front', aria:'Bring this tile in front of all the others', fn: front},
+      {icon:'toback', text:'Back', aria:'Send this tile behind all the others', fn: back},
+      {icon:'touch', text:'Touch up', fn: () => openTouchUp(p)},
+      {icon:'crop', text:'Recrop', fn: () => main.replaceWith(recropFrom)},
+      {icon:'split', text:'Split', aria:'Split this tile into two tiles, one for each character', fn: () => splitTile(p)},
+      {icon:'combine', text:'Combine', aria:'Combine this tile with other tiles into one new tile', fn: () => startCombine(p)},
+      {icon:'zoom', text:'Zoom in', fn: zoomIn},
+      {icon:'trash', text:'Remove', aria:'Remove this tile', cls:'danger', fn: () => renderSelButtons(true)}];
+    // the slim bar: a thin Scale slider, then the icons six at a time, sliding sideways (Remove is always last)
+    const main = document.createElement('div'); main.className = 'dmore dslim';
+    const sz = sizeSlider(p); sz.firstChild.className = 'sico'; sz.firstChild.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.photo}</svg>`;
+    const dock = dscroll(tools); dock.classList.add('ddock');
+    dock.querySelectorAll('.dbtn').forEach((b, i) => { if (!b.hasAttribute('aria-label')) b.setAttribute('aria-label', tools[i].text); b.title = tools[i].text; });
+    main.append(sz, dock);
+    // Recrop asks where from: the whole original photo, or the last crop; Back returns to the tools
     const hasPhoto = !!(p.photoSrc && p.pbox);
     const recropFrom = dgrid([
       {icon:'photo', text:'Original photo', aria: hasPhoto ? 'Recrop from the original photo' : 'No original photo saved for this tile', disabled: !hasPhoto, fn: () => recropTile(p, 'photo')},
       {icon:'crop', text:'Last crop', aria:'Recrop from the last crop', fn: () => recropTile(p, 'last')},
-      {icon:'back', text:'Back', aria:'Back to more tools', fn: () => recropFrom.replaceWith(more)}], 3);
-    const more = document.createElement('div'); more.className = 'dmore';
-    more.append(sizeSlider(p), dgrid([
-      {icon:'left', text:'Turn left', aria:'Turn left 15 degrees', fn: () => turnTile(p, -Math.PI/12)},
-      {icon:'flip', text:'Flip', aria:'Flip the tile upside down', on: !!p.fy, fn: () => { flipTile(p, 'fy'); renderSelButtons(false, 'more'); }},
-      {icon:'touch', text:'Touch up', fn: () => openTouchUp(p)},
-      {icon:'crop', text:'Recrop', fn: () => more.replaceWith(recropFrom)},
-      {icon:'split', text:'Split', aria:'Split this tile into two tiles, one for each character', fn: () => splitTile(p)},
-      {icon:'zoom', text:'Zoom in', fn: zoomIn},
-      {icon:'back', text:'Back', aria:'Back to the main buttons', fn: () => more.replaceWith(main)}]));
-    row.append(view === 'more' ? more : main);
+      {icon:'back', text:'Back', aria:'Back to the tools', fn: () => recropFrom.replaceWith(main)}], 3);
+    row.append(main);
   } else {
     mk('Remove this tile', 'solid-danger', async () => {
       const target = p; select(null);
@@ -1488,7 +1648,8 @@ function refreshCount(){
       : `Showing ${seen} of ${pieces.length} tiles`;
   }
   if (c.dataset.base !== undefined) c.dataset.base = txt; else c.textContent = txt;
-  document.getElementById('orgBtn').hidden = document.getElementById('collageBtn').hidden = !canEdit() || pieces.length < 2;
+  document.getElementById('orgBtn').hidden = document.getElementById('collageBtn').hidden = document.getElementById('multiBtn').hidden = !canEdit() || pieces.length < 2;
+  document.getElementById('cloudBtn').hidden = !pieces.length; if (!pieces.length && cloud) endCloud(true);
   document.getElementById('photosBtn').hidden = document.getElementById('zFit').hidden = document.getElementById('zHome').hidden = !pieces.length;
   syncMore(); paintHist();
   refreshKindSel();
@@ -1880,6 +2041,25 @@ function analyze(src){
     // thin lines (pencil near the edge) are drawing, even when soft; a shadow is broad
     return b.crisp >= (edge ? 45 : 18) || (b.line > 0.5 && b.crisp >= 9);
   });
+  // how a piece's ink lies: how much of it hugs the sheet's edge, and how straight a line it makes
+  const EB = Math.max(e*3, Math.round(0.03*Math.max(pw,ph)));
+  const deep = (x, y) => { const X = x+px0, Y = y+py0, xa = Math.max(0,X-EB), xb = Math.min(w,X+EB+1), ya = Math.max(0,Y-EB), yb = Math.min(h,Y+EB+1);
+    return PI1[yb*(w+1)+xb] - PI1[ya*(w+1)+xb] - PI1[yb*(w+1)+xa] + PI1[ya*(w+1)+xa] === (xb-xa)*(yb-ya); };
+  const shapeStats = b => { if (b.st) return b.st;
+    const ids = new Set(b.ids); let n = 0, nE = 0, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0, sc = 0;
+    for (let y=b.oy0; y<=b.oy1; y++) for (let x=b.ox0; x<=b.ox1; x++){ const li = y*pw+x;
+      if (!clean[li] || !ids.has(lab[li])) continue; n++; if (!deep(x, y)) nE++; sx += x; sy += y; sxx += x*x; syy += y*y; sxy += x*y;
+      sc += chromaDist((y+py0)*w + x+px0, sample(bR,x,y), sample(bG,x,y)); }
+    if (!n) return b.st = {n: 0, edgeFrac: 0, straight: 1, len: 0, chroma: 0};
+    const mx = sx/n, my = sy/n, cxx = sxx/n-mx*mx, cyy = syy/n-my*my, cxy = sxy/n-mx*my;
+    const tr = cxx+cyy, dd = Math.sqrt(Math.max(0, tr*tr/4 - (cxx*cyy-cxy*cxy))), l1 = tr/2+dd, l2 = Math.max(0, tr/2-dd);
+    return b.st = {n, edgeFrac: nE/n, straight: l1 ? Math.sqrt(l2/l1) : 1, len: Math.sqrt(12*l1), chroma: sc/n}; };
+  // a piece lying along the sheet's edge (a shadow, a torn or curled edge, the table showing through a
+  // tear: colourless and touching the edge) goes before it can join a drawing
+  const edgeJunk = b => { const st = shapeStats(b); return (st.edgeFrac > 0.6 && !(st.chroma >= 0.25 && st.straight >= 0.5)) || (st.edgeFrac > 0.2 && st.chroma < 0.06 && (b.faint || 0) < 0.6); };
+  // (a vividly coloured, roundish piece by the edge is a drawing that sits there, so it stays; a long
+  //  coloured strip there is the table or something behind the sheet)
+  { const keep = boxes.filter(b => !edgeJunk(b)); if (keep.length) boxes = keep; }
   /* 6. merge pieces that sit close together */
   // a piece mostly inside another drawing's box (eyes in a face, a sun's rays) joins that drawing;
   // neighbours whose boxes merely overlap stay separate
@@ -1933,6 +2113,14 @@ function analyze(src){
   }
   // pencil on its own must add up to a real drawing's worth of lines, not a stray mark
   boxes = boxes.filter(b => b.faint <= 0.6 || b.ink >= 0.001*PN);
+  /* 7. what's left has to look like a character or object: not a ruled or folded straight line, not a strip
+     along the sheet's edge (its shadow, a torn or curled edge), not a stray mark far smaller than the drawings */
+  { const most = Math.max(0, ...boxes.map(b => shapeStats(b).n)), side = Math.max(pw, ph);
+    const keep = boxes.filter(b => { const st = shapeStats(b);
+      return st.n && !(st.straight < 0.1 && st.len > 0.03*side)                // a straight line
+        && !edgeJunk(b)                                                        // hugs the sheet's edge
+        && !(st.n < 0.03*most && Math.max(b.x1-b.x0, b.y1-b.y0) < 0.06*side); }); // a speck beside real drawings
+    if (keep.length) boxes = keep; }
   const toShape = b => {
     const F = fillOf(b), mw = F.mw, mh = F.mh, m = F.m.slice(), ids = new Set(b.ids);
     // growing the strokes left a band of bare paper round the drawing: shave it back to a thin edge
@@ -2053,6 +2241,27 @@ async function runReview(loaders, opts){
   if (run !== reviewRun) return;
   work.remove();
   updateSave();
+  warmReview(run);
+}
+// a tile's pictures are made ready while the review is open, so Add to wall only has to save them
+function prepCrop(src, cr){
+  return cr.enc || (cr.enc = (async () => { const b = cr.box;
+    const [full, thumb, plain] = await Promise.all([encode(crop(src, b, 1400)), encode(crop(src, b, 360)),
+      // the same rectangle without the cut-out, so touch up can bring parts back and recrop can look again
+      b.mask ? encodeJpeg(crop(src, {x:b.x, y:b.y, w:b.w, h:b.h}, 1400)) : null]);
+    return {full, thumb, src: plain}; })().catch(e => { cr.enc = null; throw e; }));
+}
+function prepPhoto(item){ return item.photoEnc || (item.photoEnc = encodeJpeg(scaled(item.src, 2200)).catch(e => { item.photoEnc = null; throw e; })); }
+async function warmReview(run){
+  const idle = () => new Promise(r => (window.requestIdleCallback || setTimeout)(r, {timeout: 400}));
+  for (const it of review || []){
+    if (run !== reviewRun) return;
+    if (!review.replace){ await idle(); try { await prepPhoto(it); } catch {} }
+    for (const cr of it.mode === 'page' ? [it.pageCrop] : it.crops){
+      if (run !== reviewRun || !cr || !cr.on || cr.enc) continue;
+      await idle(); try { await prepCrop(it.src, cr); } catch {}
+    }
+  }
 }
 function thumbURL(src, box){ return crop(src, box, 260).toDataURL(box.mask ? 'image/png' : 'image/jpeg', .8); }
 function renderPhoto(item, i, total, before){
@@ -2084,6 +2293,12 @@ function renderPhoto(item, i, total, before){
       btn.append(im, tick);
       btn.onclick = () => { if (saving) return; cr.on = !cr.on; paint(); updateSave(); };
       const cell = document.createElement('div'); cell.className = 'cell'; cell.append(btn);
+      // Touch up: erase stray marks or bring back a missed bit before it goes on the wall (the drawing itself is never changed)
+      const fix = document.createElement('button'); fix.className = 'pill mini tu-pill' + (cr.edited ? ' done' : '');
+      fix.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.touch + '</svg>' + (cr.edited ? 'Touched up' : 'Touch up');
+      fix.setAttribute('aria-label', 'Touch up this tile before adding it');
+      fix.onclick = () => { if (!saving) openTouchUpCrop(item, cr, () => { paint(); updateSave(); }); };
+      cell.append(fix);
       // Split: look harder for characters stuck together; Join puts a split tile back as it was
       if (item.mode !== 'page' && (cr.from || cr.box.mask)){
         const sp = document.createElement('button'); sp.className = 'pill mini';
@@ -2115,7 +2330,7 @@ function chosen(){
   const out = [];
   for (const it of review || []){
     const list = it.mode === 'page' ? [it.pageCrop] : it.crops;
-    for (const c of list) if (c && c.on) out.push({src: it.src, box: c.box});
+    for (const c of list) if (c && c.on) out.push({src: it.src, box: c.box, cr: c, it});
   }
   return out;
 }
@@ -2140,46 +2355,48 @@ function encodeJpeg(c){ return new Promise(res => c.toBlob(b => res(b), 'image/j
 saveBtn.onclick = async () => {
   const list = chosen(); if (!list.length) return;
   saving = true; updateSave();
-  const base = Date.now(), rp = review.replace, photos = new Map();
-  if (rp) pinAll();
-  let done = 0;
-  try {
-    for (const item of list){
-      msg.textContent = `Saving ${done+1} of ${list.length}…`;
-      const full = await encode(crop(item.src, item.box, 1400));
-      const thumb = await encode(crop(item.src, item.box, 360));
-      // the same rectangle without the cut-out, so touch up can bring parts back and recrop can look again
-      const src = item.box.mask ? await encodeJpeg(crop(item.src, {x:item.box.x, y:item.box.y, w:item.box.w, h:item.box.h}, 1400)) : null;
-      // the whole photo it came from (once per photo), and where on it this tile sits, for Recrop from the photo
-      let photo = null, pbox = null, keepPhoto = null;
-      // a tile redone from an old one (split, recrop) keeps the old one's original photo, and where on it it sits
-      const t = item.src.tile, o = rp && rp.pbox;
-      if (rp && rp.photoSrc && o && t){
-        const f = {x: (item.box.x - t.x)/t.w, y: (item.box.y - t.y)/t.h, w: item.box.w/t.w, h: item.box.h/t.h};
-        pbox = {x: o.x + f.x*o.w, y: o.y + f.y*o.h, w: f.w*o.w, h: f.h*o.h}; keepPhoto = rp;
-      }
-      if (!rp){
-        if (!photos.has(item.src)) photos.set(item.src, encodeJpeg(scaled(item.src, 2200)));
-        photo = await photos.get(item.src); const W = item.src.width, H = item.src.height;
-        pbox = {x: item.box.x/W, y: item.box.y/H, w: item.box.w/W, h: item.box.h/H};
-      }
-      const pkey = photo ? 'ph' + base + '-' + review.indexOf(review.find(it => it.src === item.src)) : keepPhoto ? keepPhoto.pkey : null;
-      await store.add({full, thumb, src, photo, pbox, pkey, keepPhoto, w: item.box.w, h: item.box.h, added: rp ? rp.added + done*0.001 : base + done, ...(rp ? placeLike(rp, item) : {})});
-      done++;
+  const base = Date.now(), rp = review.replace;
+  // everything already on the wall stays where it is; the new tiles then gather in their own group beside it
+  pinAll();
+  let done = 0, failed = null, next = 0;
+  msg.textContent = `Saving 1 of ${list.length}…`;
+  const saveOne = async (item, i) => {
+    const pics = await prepCrop(item.src, item.cr);
+    // the whole photo it came from (once per photo), and where on it this tile sits, for Recrop from the photo
+    let photo = null, pbox = null, keepPhoto = null;
+    // a tile redone from an old one (split, recrop) keeps the old one's original photo, and where on it it sits
+    const t = item.src.tile, o = rp && rp.pbox;
+    if (rp && rp.photoSrc && o && t){
+      const f = {x: (item.box.x - t.x)/t.w, y: (item.box.y - t.y)/t.h, w: item.box.w/t.w, h: item.box.h/t.h};
+      pbox = {x: o.x + f.x*o.w, y: o.y + f.y*o.h, w: f.w*o.w, h: f.h*o.h}; keepPhoto = rp;
     }
-    if (rp) await store.remove(rp, {keepPhoto: list.length > 0 && !!rp.photoSrc && !!rp.pbox});
+    if (!rp){
+      photo = await prepPhoto(item.it); const W = item.src.width, H = item.src.height;
+      pbox = {x: item.box.x/W, y: item.box.y/H, w: item.box.w/W, h: item.box.h/H};
+    }
+    const pkey = photo ? 'ph' + base + '-' + review.indexOf(item.it) : keepPhoto ? keepPhoto.pkey : null;
+    await store.add({...pics, photo, pbox, pkey, keepPhoto, w: item.box.w, h: item.box.h, added: rp ? rp.added + i*0.001 : base + i, ...(rp ? placeLike(rp, item) : {})});
+    item.cr.saved = true; done++;
+    if (done < list.length) msg.textContent = `Saving ${done+1} of ${list.length}…`;
+  };
+  // three at a time: the uploads overlap instead of waiting in line
+  const worker = async () => { while (!failed && next < list.length){ const i = next++; try { await saveOne(list[i], i); } catch(err){ failed = err; } } };
+  await Promise.all([worker(), worker(), worker()]);
+  if (!failed){
+    try { if (rp) await store.remove(rp, {keepPhoto: list.length > 0 && !!rp.photoSrc && !!rp.pbox}); } catch {}
     saving = false; closeSheet();
     layout(shown());
     if (!rp) setTimeout(() => animateTo(newestView()), 60);
-  } catch(err){
-    saving = false; updateSave();
+  } else {
+    saving = false;
+    // drop what already saved so a retry doesn't duplicate it
+    for (const it of list) if (it.cr.saved) it.cr.on = false;
+    updateSave();
     msg.textContent = '';
     const p = document.createElement('p'); p.className = 'err';
     p.textContent = done ? `Saved ${done} of ${list.length}. The rest didn't save. Check your connection, then tap Add again.` :
       "Nothing saved yet. Check your connection, then tap Add again.";
     body.prepend(p);
-    // drop what already saved so a retry doesn't duplicate it
-    if (done){ let k = 0; for (const it of review){ const l = it.mode==='page'?[it.pageCrop]:it.crops; for (const c of l){ if (c && c.on && k < done){ c.on = false; k++; } } } }
   }
 };
 
@@ -2234,6 +2451,190 @@ async function tileSource(p, whole){
   c.tile = {x: pad, y: pad, w: W, h: H};
   return c;
 }
+/* ---------------- select multiple: tap tiles to pick them, then move or resize them together ---------------- */
+let multi = null;   // {list} while selecting several tiles
+/* ---------------- cloud: every tile drifts and gently bounces about the screen, then flies home ----------------
+   The tiles only look moved: where they really sit (and what's saved) never changes, so turning it off brings
+   each one back to exactly its spot. */
+const cloudBtn = document.getElementById('cloudBtn');
+function paintCloudBtn(){ cloudBtn.classList.toggle('on', !!(cloud && !cloud.back)); cloudBtn.setAttribute('aria-pressed', String(!!(cloud && !cloud.back))); }
+function startCloud(){
+  if (cloud && !cloud.back) return;
+  const list = shown().filter(p => shows(p)); if (!list.length) return;
+  select(null); if (multi) endMulti();
+  const keep = cloud;   // turned on again while still flying home: carry on from where each tile is
+  const view = tilesView(), top = barTop() + 8, bottom = barBottom() - 8;
+  const box = {x0: (8 - view.tx)/view.s, y0: (top - view.ty)/view.s, x1: (vw - 8 - view.tx)/view.s, y1: (bottom - view.ty)/view.s};
+  const bw = box.x1 - box.x0, bh = box.y1 - box.y0, speed = Math.hypot(bw, bh)*0.07;   // world units a second
+  const f = new Map(), calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  list.forEach((p, i) => {
+    const was = keep && keep.f.get(p);
+    // neighbours set off in very different directions (golden-angle steps around the circle)
+    const a = i*2.39996 + Math.random()*0.4, sp = speed*(0.7 + Math.random()*0.6);
+    f.set(p, {x: was ? was.x : p.x + p.dw/2, y: was ? was.y : p.y + p.dh/2, r: was ? was.r : (p.rot || 0), r0: p.rot || 0,
+      vx: Math.cos(a)*sp, vy: Math.sin(a)*sp, ph: Math.random()*6.283, wob: 0.5 + Math.random()*0.5,
+      // each one spins its own way at its own speed, and squashes a little when it bounces off an edge
+      w: was ? was.w : calm ? 0 : (Math.random() < .5 ? -1 : 1)*(0.5 + Math.random()*1.3), sq: 0, sqa: 0, sx: 1, sy: 1, bob: 1.6 + Math.random()*1.2});
+  });
+  cloud = {f, box, t: performance.now(), last: performance.now(), cam: keep ? keep.cam : {...cam}, back: null};
+  animateTo(view); paintCloudBtn();
+}
+function stepCloud(now){
+  const c = cloud, dt = Math.min(0.05, (now - c.last)/1000), age = (now - c.t)/1000; c.last = now;
+  if (c.back){
+    // flying home: each tile glides from where it is to its own spot, a few at a time
+    let done = true;
+    for (const [p, q] of c.f){
+      const u0 = Math.max(0, Math.min(1, (now - c.back.t - q.delay)/c.back.dur)), u = u0 < .5 ? 4*u0*u0*u0 : 1 - Math.pow(-2*u0 + 2, 3)/2;
+      if (u0 < 1) done = false;
+      const hx = p.x + p.dw/2, hy = p.y + p.dh/2, hr = p.rot || 0;
+      q.x = q.bx + (hx - q.bx)*u; q.y = q.by + (hy - q.by)*u; q.sx = 1 + ((q.bsx || 1) - 1)*(1 - u); q.sy = 1 + ((q.bsy || 1) - 1)*(1 - u); q.r = q.br + (Math.atan2(Math.sin(hr - q.br), Math.cos(hr - q.br)))*u;
+    }
+    if (done){ cloud = null; paintCloudBtn(); }
+    return;
+  }
+  // floating: start slowly, drift, spin, bob, and bounce off the screen's edges with a little squash
+  const ease = Math.min(1, age/1.2), b = c.box;
+  for (const [p, q] of c.f){
+    const rad = Math.min(Math.hypot(p.dw, p.dh)*0.42, (b.x1 - b.x0)*0.4, (b.y1 - b.y0)*0.4);
+    const wx = Math.sin(age*q.wob + q.ph)*0.25, wy = Math.cos(age*q.wob*0.8 + q.ph)*0.25;
+    q.x += (q.vx*(1 + wx))*dt*ease; q.y += (q.vy*(1 + wy))*dt*ease;
+    // a bounce: turn round, squash against the edge, and get a kick of spin (often the other way)
+    const hit = (side, speed) => { q.sq = 1; q.sqa = side; q.w = -q.w*(0.6 + Math.random()*0.5) + (Math.random() - .5)*1.6;
+      if (Math.abs(q.w) < 0.4) q.w = (q.w < 0 ? -1 : 1)*0.6; if (Math.abs(q.w) > 2.6) q.w = Math.sign(q.w)*2.6; };
+    if (q.x - rad < b.x0){ q.x = b.x0 + rad; q.vx = Math.abs(q.vx); hit(0); } else if (q.x + rad > b.x1){ q.x = b.x1 - rad; q.vx = -Math.abs(q.vx); hit(0); }
+    if (q.y - rad < b.y0){ q.y = b.y0 + rad; q.vy = Math.abs(q.vy); hit(1); } else if (q.y + rad > b.y1){ q.y = b.y1 - rad; q.vy = -Math.abs(q.vy); hit(1); }
+    q.r += q.w*dt*ease;
+    // squash springs back with a wobble; in between, a soft bouncy breathing
+    q.sq = Math.max(0, q.sq - dt*3.2);
+    const k = q.sq > 0 ? Math.sin((1 - q.sq)*Math.PI*2.5)*q.sq*0.28 : 0, breathe = 1 + Math.sin(age*q.bob*2 + q.ph)*0.05*ease;
+    q.sx = breathe*(q.sqa === 0 ? 1 - k : 1 + k*0.6); q.sy = breathe*(q.sqa === 1 ? 1 - k : 1 + k*0.6);
+  }
+}
+function endCloud(now){
+  if (!cloud || cloud.back) return;
+  if (now){ cloud = null; paintCloudBtn(); needs = true; return; }
+  let i = 0; const n = cloud.f.size;
+  for (const q of cloud.f.values()){ q.bx = q.x; q.by = q.y; q.br = q.r; q.bsx = q.sx; q.bsy = q.sy; q.delay = Math.min(450, n > 1 ? 450*i/(n - 1) : 0); i++; }
+  cloud.back = {t: performance.now(), dur: matchMedia('(prefers-reduced-motion: reduce)').matches ? 300 : 1100};
+  animateTo(cloud.cam); paintCloudBtn();
+}
+cloudBtn.onclick = () => cloud && !cloud.back ? endCloud() : startCloud();
+const multiBtn = document.getElementById('multiBtn');
+function renderMulti(){
+  multiBtn.classList.toggle('on', !!multi); multiBtn.setAttribute('aria-pressed', String(!!multi));
+  if (!multi){ if (!combo && !cbUndo) hideBar(); return; }
+  const n = multi.list.length;
+  cbButtons(n ? `${n} picked. Drag one to move them all` : 'Tap tiles to select them',
+    [['Smaller', '', () => resizeMulti(0.85), !n], ['Bigger', '', () => resizeMulti(1.18), !n], ['Done', 'go', endMulti]]);
+}
+function startMulti(){
+  if (combo) endCombo(); if (cbUndo) finishCombine();
+  select(null); multi = {list: []}; renderMulti(); needs = true;
+}
+function endMulti(){ multi = null; renderMulti(); needs = true; }
+multiBtn.onclick = () => multi ? endMulti() : startMulti();
+function multiTap(q){
+  if (!multi || !q || q.canvas) return;
+  const i = multi.list.indexOf(q); if (i >= 0) multi.list.splice(i, 1); else multi.list.push(q);
+  renderMulti(); needs = true;
+}
+// grow or shrink the picked tiles together around the group's middle, so the gaps between them scale too
+function resizeMulti(f){
+  if (!multi || !multi.list.length) return;
+  const L = multi.list;
+  if (L.some(p => (p.size || 1)*f < SIZE_MIN || (p.size || 1)*f > SIZE_MAX)) return;
+  beginEdit(); pinAll();
+  const cx = L.reduce((a, p) => a + p.x + p.dw/2, 0)/L.length, cy = L.reduce((a, p) => a + p.y + p.dh/2, 0)/L.length;
+  for (const p of L){
+    const mx = cx + (p.x + p.dw/2 - cx)*f, my = cy + (p.y + p.dh/2 - cy)*f, bw = p.dw/(p.size || 1), bh = p.dh/(p.size || 1);
+    p.size = (p.size || 1)*f; p.dw = bw*p.size; p.dh = bh*p.size; p.x = p.px = mx - p.dw/2; p.y = p.py = my - p.dh/2;
+  }
+  needs = true; for (const p of L) savePlace(p); commitEdit('resizing tiles');
+}
+
+/* ---------------- combine: join two or more tiles into one new tile, just as they sit on the wall ---------------- */
+let combo = null;   // {list, busy} while picking the tiles to join
+const cbBar = document.createElement('div'); cbBar.id = 'cbBar'; cbBar.hidden = true; cbBar.setAttribute('role', 'status'); document.body.append(cbBar);
+let cbUndo = null;  // {list, stamp, timer} while Undo is offered
+function cbButtons(text, buttons){
+  cbBar.innerHTML = ''; const m = document.createElement('span'); m.className = 'msg'; m.textContent = text; cbBar.append(m);
+  for (const [label, cls, fn, off] of buttons){ const b = document.createElement('button'); b.className = 'pill ' + cls; b.textContent = label; b.disabled = !!off; b.onclick = fn; cbBar.append(b); }
+  cbBar.hidden = false; document.body.classList.add('cbopen');
+}
+function hideBar(){ cbBar.hidden = true; document.body.classList.remove('cbopen'); }
+function renderCombo(busy){
+  if (!combo){ hideBar(); return; }
+  const n = combo.list.length;
+  cbButtons(busy || (n < 2 ? 'Tap the tiles to join with it' : `${n} tiles picked. Tap more, or Combine`),
+    [['Cancel', '', endCombo, combo.busy], [n < 2 ? 'Combine' : `Combine ${n}`, 'go', combineNow, combo.busy || n < 2]]);
+}
+function startCombine(p){
+  if (cbUndo) finishCombine(); if (multi) endMulti();
+  select(null); combo = {list: [p], busy: false}; renderCombo(); needs = true;
+}
+function endCombo(){ if (combo && combo.busy) return; combo = null; renderCombo(); needs = true; }
+function comboTap(q){
+  if (!combo || combo.busy || !q || q.canvas) return;
+  const i = combo.list.indexOf(q); if (i >= 0) combo.list.splice(i, 1); else combo.list.push(q);
+  renderCombo(); needs = true;
+}
+async function combineNow(){
+  if (!combo || combo.busy || combo.list.length < 2) return;
+  const list = order.filter(p => combo.list.includes(p)).concat(combo.list.filter(p => !order.includes(p)));   // bottom tile first
+  combo.busy = true; renderCombo('Joining…');
+  try {
+    const ims = await Promise.all(list.map(p => tileCanvas(p.fullSrc)));
+    // the joined picture covers every tile's corners, turned as they are on the wall, at the sharpest tile's detail
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, k = 0;
+    list.forEach((p, i) => { const c = Math.cos(p.rot || 0), s = Math.sin(p.rot || 0), cx = p.x + p.dw/2, cy = p.y + p.dh/2;
+      for (const [u, v] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]){ const dx = u*p.dw/2, dy = v*p.dh/2, X = cx + dx*c - dy*s, Y = cy + dx*s + dy*c;
+        x0 = Math.min(x0, X); y0 = Math.min(y0, Y); x1 = Math.max(x1, X); y1 = Math.max(y1, Y); }
+      k = Math.max(k, ims[i].width / p.dw); });
+    k = Math.min(k, 2000 / Math.max(x1 - x0, y1 - y0));
+    const big = mkCanvas(Math.max(1, Math.round((x1 - x0)*k)), Math.max(1, Math.round((y1 - y0)*k))), g = big.getContext('2d');
+    g.imageSmoothingQuality = 'high';
+    list.forEach((p, i) => { g.setTransform(k, 0, 0, k, -x0*k, -y0*k); g.translate(p.x + p.dw/2, p.y + p.dh/2);
+      if (p.rot) g.rotate(p.rot); if (p.fx || p.fy) g.scale(p.fx ? -1 : 1, p.fy ? -1 : 1); g.drawImage(ims[i], -p.dw/2, -p.dh/2, p.dw, p.dh); });
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    // trim to what's drawn
+    const a = g.getImageData(0, 0, big.width, big.height).data; let tx0 = big.width, ty0 = big.height, tx1 = -1, ty1 = -1;
+    for (let y=0;y<big.height;y++) for (let x=0;x<big.width;x++) if (a[(y*big.width + x)*4 + 3] > 8){ if (x<tx0)tx0=x; if (x>tx1)tx1=x; if (y<ty0)ty0=y; if (y>ty1)ty1=y; }
+    if (tx1 < 0) throw new Error('empty');
+    const W = tx1 - tx0 + 1, H = ty1 - ty0 + 1, out = mkCanvas(W, H); out.getContext('2d').drawImage(big, -tx0, -ty0);
+    const full = await encode(scaled(out, 1400)), thumb = await encode(scaled(out, 360));
+    const [bw] = baseSize(W, H), kinds = new Set(list.map(p => p.kind || null)), stamp = Date.now();
+    pinAll();
+    await store.add({full, thumb, src: null, photo: null, pbox: null, pkey: null, w: W, h: H, added: stamp,
+      px: x0 + tx0/k, py: y0 + ty0/k, size: (W/k) / bw, rot: 0, z: Math.max(...list.map(p => p.z || 0)), fx: false, fy: false, kind: kinds.size === 1 ? [...kinds][0] : null});
+    for (const p of list) gone.add(p.id);
+    combo = null; layout(shown()); needs = true;
+    offerCombineUndo(list, stamp);
+  } catch {
+    if (combo){ combo.busy = false; renderCombo(); }
+    showToast("Couldn't join those tiles. Check your connection and try again.");
+  }
+}
+// the joined tiles stay hidden for a few seconds with Undo offered, then they're removed for good
+function offerCombineUndo(list, stamp){
+  cbUndo = {list, stamp, timer: setTimeout(finishCombine, 12000)};
+  cbButtons(`Joined ${list.length} tiles into one.`, [['Undo', 'go', undoCombine]]);
+}
+async function finishCombine(){
+  if (!cbUndo) return; const {list, timer} = cbUndo; cbUndo = null; clearTimeout(timer);
+  if (!combo) hideBar();
+  for (const p of list){ try { await store.remove(p); } catch { gone.delete(p.id); showToast("Couldn't remove an old tile. Check your connection."); } }
+  layout(shown()); needs = true; refreshCount();
+}
+async function undoCombine(){
+  if (!cbUndo) return; const {list, stamp, timer} = cbUndo; cbUndo = null; clearTimeout(timer); hideBar();
+  for (const p of list) gone.delete(p.id);
+  // the new tile can take a moment to arrive from the account
+  let made = null; for (let t = 0; t < 25 && !(made = pieces.find(q => q.added === stamp)); t++) await new Promise(r => setTimeout(r, 200));
+  try { if (made) await store.remove(made); } catch { showToast("Couldn't undo. Check your connection."); }
+  layout(shown()); needs = true;
+}
+
 /* ---------------- split in two: a tile that caught two characters becomes two tiles ---------------- */
 // one shape made of several (they all come from the same detection, so share one grid)
 function joinShapes(list){
@@ -2308,17 +2709,27 @@ async function openTouchUp(p){
   select(null);
   const w = base.width, h = base.height, mask = mkCanvas(w, h);
   mask.getContext('2d').drawImage(full, 0, 0, w, h);   // only how see-through it is matters
-  tu = {p, base, mask, comp: mkCanvas(w, h), w, h, undo: [], mode: 'erase', brush: 0.045, stroke: null, hover: null, saving: false};
+  // shown turned and mirrored the way it is on the wall; zoom (z) and pan (ox, oy) only change the view
+  tu = {p, base, mask, comp: mkCanvas(w, h), w, h, undo: [], mode: 'erase', brush: 0.045, stroke: null, hover: null, saving: false,
+    rot: p.rot || 0, fx: !!p.fx, fy: !!p.fy, z: 1, ox: 0, oy: 0, ptrs: new Map(), pinch: null, pan: null};
   tu.start = mask.getContext('2d').getImageData(0, 0, w, h);   // how it looked when touch up opened, for Start over
   tuMsg.textContent = p.srcSrc ? '' : 'This tile was added before touch up, so Bring back only returns what you erase now.';
-  tuScrim.hidden = false; setTuMode('erase'); setTuBrush(0.045); sizeTU(); paintTU(); updateTU();
+  tuScrim.hidden = false; setTuMode('erase'); setTuBrush(0.045); sizeTU(); paintTU(); updateTU(); updateZoomTU();
 }
 function sizeTU(){
   if (!tu) return;
   const st = document.getElementById('tuStage'), maxW = st.clientWidth - 24, maxH = Math.max(160, Math.min(window.innerHeight*0.5, 560));
-  const k = Math.min(maxW / tu.w, maxH / tu.h), cw = Math.max(1, Math.round(tu.w*k)), ch = Math.max(1, Math.round(tu.h*k)), d = Math.min(window.devicePixelRatio || 1, 2.5);
+  // the box the turned tile takes up
+  const c = Math.abs(Math.cos(tu.rot)), s = Math.abs(Math.sin(tu.rot)), bw = tu.w*c + tu.h*s, bh = tu.w*s + tu.h*c;
+  const fit = Math.min(maxW / bw, maxH / bh), cw = Math.max(1, Math.round(bw*fit)), ch = Math.max(1, Math.round(bh*fit)), d = Math.min(window.devicePixelRatio || 1, 2.5);
   tuCv.style.width = cw + 'px'; tuCv.style.height = ch + 'px'; tuCv.width = Math.round(cw*d); tuCv.height = Math.round(ch*d);
-  tu.k = cw / tu.w; tu.d = d; paintTU();
+  tu.fit = fit; tu.cw = cw; tu.ch = ch; tu.d = d; tu.k = fit*tu.z; paintTU();
+}
+// tile pixels → the canvas: turn, mirror and zoom about the tile's middle, then move by the pan
+function tuView(g){
+  g.setTransform(tu.d, 0, 0, tu.d, 0, 0); g.translate(tu.cw/2 + tu.ox, tu.ch/2 + tu.oy);
+  if (tu.rot) g.rotate(tu.rot); if (tu.fx || tu.fy) g.scale(tu.fx ? -1 : 1, tu.fy ? -1 : 1);
+  g.scale(tu.k, tu.k); g.translate(-tu.w/2, -tu.h/2);
 }
 function paintTU(){
   if (!tu) return;
@@ -2326,15 +2737,41 @@ function paintTU(){
   g.clearRect(0, 0, tu.w, tu.h); g.drawImage(tu.base, 0, 0);
   g.globalCompositeOperation = 'destination-in'; g.drawImage(tu.mask, 0, 0); g.globalCompositeOperation = 'source-over';
   tuCtx.setTransform(1, 0, 0, 1, 0, 0); tuCtx.clearRect(0, 0, tuCv.width, tuCv.height);
-  tuCtx.setTransform(tu.k*tu.d, 0, 0, tu.k*tu.d, 0, 0);
-  // a faint ghost of everything that can come back
-  tuCtx.globalAlpha = 0.22; tuCtx.drawImage(tu.base, 0, 0); tuCtx.globalAlpha = 1;
+  tuView(tuCtx);
+  // only while bringing back: a faint ghost of everything that can come back
+  if (tu.mode === 'restore'){ tuCtx.globalAlpha = 0.22; tuCtx.drawImage(tu.base, 0, 0); tuCtx.globalAlpha = 1; }
   tuCtx.drawImage(tu.comp, 0, 0);
-  if (tu.hover){
+  if (tu.hover && tu.mode !== 'move'){
     tuCtx.beginPath(); tuCtx.arc(tu.hover.x, tu.hover.y, tu.brush*Math.max(tu.w, tu.h), 0, 6.283);
     tuCtx.lineWidth = 2/tu.k; tuCtx.strokeStyle = tu.mode === 'erase' ? '#ff6f5c' : '#ffc93c'; tuCtx.stroke();
   }
 }
+// zoom the view by f around a point on the canvas (its middle if none); 1× always shows the whole tile
+function zoomTU(f, px, py){
+  if (!tu) return;
+  const z = Math.max(1, Math.min(8, tu.z*f)), r = z/tu.z, bx = tu.cw/2, by = tu.ch/2;
+  if (px == null){ px = bx; py = by; }
+  tu.ox = z === 1 ? 0 : (px - bx) - (px - bx - tu.ox)*r; tu.oy = z === 1 ? 0 : (py - by) - (py - by - tu.oy)*r;
+  tu.z = z; tu.k = tu.fit*z; clampTU(); paintTU(); updateZoomTU();
+}
+// keep some of the tile in view while panning
+function clampTU(){ const mx = tu.cw*tu.z/2, my = tu.ch*tu.z/2; tu.ox = Math.max(-mx, Math.min(mx, tu.ox)); tu.oy = Math.max(-my, Math.min(my, tu.oy)); }
+function updateZoomTU(){
+  document.getElementById('tuOut').disabled = document.getElementById('tuFit').disabled = !tu || tu.z <= 1;
+  document.getElementById('tuIn').disabled = !tu || tu.z >= 8;
+}
+document.getElementById('tuIn').onclick = () => zoomTU(1.5);
+document.getElementById('tuOut').onclick = () => zoomTU(1/1.5);
+document.getElementById('tuFit').onclick = () => { if (!tu) return; tu.z = 1; tu.ox = tu.oy = 0; tu.k = tu.fit; paintTU(); updateZoomTU(); };
+// wheel steps are added up and applied once per screen frame, so a fast spin zooms smoothly
+let tuWheel = null;
+tuCv.addEventListener('wheel', e => {
+  if (!tu) return; e.preventDefault();
+  const r = tuCv.getBoundingClientRect(), dy = Math.max(-240, Math.min(240, e.deltaMode === 1 ? e.deltaY*33 : e.deltaMode === 2 ? e.deltaY*400 : e.deltaY));
+  if (tuWheel){ tuWheel.f *= Math.exp(-dy*0.0015); tuWheel.x = e.clientX - r.left; tuWheel.y = e.clientY - r.top; return; }
+  tuWheel = {f: Math.exp(-dy*0.0015), x: e.clientX - r.left, y: e.clientY - r.top};
+  requestAnimationFrame(() => { const w = tuWheel; tuWheel = null; zoomTU(w.f, w.x, w.y); });
+}, {passive: false});
 function updateTU(){
   tuSave.disabled = !tu || tu.saving || !tu.undo.length;
   document.getElementById('tuUndo').disabled = !tu || tu.saving || !tu.undo.length;
@@ -2342,9 +2779,11 @@ function updateTU(){
   document.getElementById('tuReset').disabled = !tu || tu.saving || !tu.undo.length;
 }
 function setTuMode(m){
-  if (tu) tu.mode = m;
-  for (const [id, v] of [['tuErase', 'erase'], ['tuRestore', 'restore']]){ const b = document.getElementById(id); b.classList.toggle('on', m === v); b.setAttribute('aria-pressed', m === v); }
+  if (tu){ tu.mode = m; paintTU(); }
+  for (const [id, v] of [['tuErase', 'erase'], ['tuRestore', 'restore'], ['tuMove', 'move']]){ const b = document.getElementById(id); b.classList.toggle('on', m === v); b.setAttribute('aria-pressed', m === v); }
+  tuCv.style.cursor = m === 'move' ? 'grab' : 'crosshair';
 }
+document.getElementById('tuMove').onclick = () => setTuMode('move');
 function setTuBrush(v){
   if (tu) tu.brush = v;
   document.querySelectorAll('#tuBrush button').forEach(b => { const on = +b.dataset.b === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
@@ -2368,32 +2807,87 @@ window.addEventListener('keydown', e => {
   if (!tu || tuScrim.hidden || !(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'z' || e.shiftKey) return;
   e.preventDefault(); tuUndoLast();
 });
-const tuPoint = e => { const r = tuCv.getBoundingClientRect(); return {x: (e.clientX - r.left)/tu.k, y: (e.clientY - r.top)/tu.k}; };
+// the canvas point under the finger → the tile pixel there (undoing pan, zoom, turn and mirror)
+const tuLocal = e => { const r = tuCv.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top}; };
+const tuPoint = e => {
+  const q = tuLocal(e), px = q.x - tu.cw/2 - tu.ox, py = q.y - tu.ch/2 - tu.oy, c = Math.cos(tu.rot), s = Math.sin(tu.rot);
+  let x = (px*c + py*s)/tu.k, y = (-px*s + py*c)/tu.k; if (tu.fx) x = -x; if (tu.fy) y = -y;
+  return {x: x + tu.w/2, y: y + tu.h/2};
+};
+const tuPinchOf = () => { const [a, b] = [...tu.ptrs.values()]; return {d: Math.hypot(a.x - b.x, a.y - b.y) || 1, x: (a.x + b.x)/2, y: (a.y + b.y)/2}; };
 function tuDab(a, b){
   const g = tu.mask.getContext('2d');
   g.save(); g.globalCompositeOperation = tu.mode === 'erase' ? 'destination-out' : 'source-over';
   g.strokeStyle = '#000'; g.lineWidth = 2*tu.brush*Math.max(tu.w, tu.h); g.lineCap = 'round';
   g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x + 0.01, b.y); g.stroke(); g.restore();
 }
+// one finger paints (or moves the view in Move); a second finger turns it into pinch-zoom and drag
 tuCv.addEventListener('pointerdown', e => {
-  if (!tu || tu.saving || tu.stroke) return;
+  if (!tu || tu.saving) return;
   try { tuCv.setPointerCapture(e.pointerId); } catch {}
+  tu.ptrs.set(e.pointerId, tuLocal(e));
+  if (tu.ptrs.size === 2){
+    // the first finger's dab wasn't meant as paint: take it back
+    if (tu.stroke){ tu.mask.getContext('2d').putImageData(tu.undo.pop(), 0, 0); tu.stroke = null; updateTU(); }
+    tu.pan = null; const m = tuPinchOf(); tu.pinch = {...m, z: tu.z, ox: tu.ox, oy: tu.oy}; tu.hover = null; paintTU(); return;
+  }
+  if (tu.ptrs.size > 2 || tu.stroke) return;
+  if (tu.mode === 'move'){ const q = tuLocal(e); tu.pan = {id: e.pointerId, x: q.x, y: q.y, ox: tu.ox, oy: tu.oy}; tuCv.style.cursor = 'grabbing'; return; }
   tuRemember();
   const pt = tuPoint(e); tu.stroke = {id: e.pointerId, last: pt}; tu.hover = pt; tuDab(pt, pt); paintTU(); updateTU();
 });
 tuCv.addEventListener('pointermove', e => {
-  if (!tu) return; const pt = tuPoint(e); tu.hover = pt;
+  if (!tu) return;
+  if (tu.ptrs.has(e.pointerId)) tu.ptrs.set(e.pointerId, tuLocal(e));
+  if (tu.pinch && tu.ptrs.size >= 2){
+    const m = tuPinchOf(), p0 = tu.pinch, z = Math.max(1, Math.min(8, p0.z*m.d/p0.d)), r = z/p0.z, bx = tu.cw/2, by = tu.ch/2;
+    tu.z = z; tu.k = tu.fit*z; tu.ox = (m.x - bx) - (p0.x - bx - p0.ox)*r; tu.oy = (m.y - by) - (p0.y - by - p0.oy)*r;
+    if (z === 1){ tu.ox = tu.oy = 0; } clampTU(); paintTU(); updateZoomTU(); return;
+  }
+  if (tu.pan && tu.pan.id === e.pointerId){ const q = tuLocal(e); tu.ox = tu.pan.ox + q.x - tu.pan.x; tu.oy = tu.pan.oy + q.y - tu.pan.y; clampTU(); paintTU(); return; }
+  const pt = tuPoint(e); tu.hover = pt;
   if (tu.stroke && tu.stroke.id === e.pointerId){ tuDab(tu.stroke.last, pt); tu.stroke.last = pt; }
   paintTU();
 });
-const tuEnd = e => { if (!tu) return; if (tu.stroke && tu.stroke.id === e.pointerId) tu.stroke = null; if (e.pointerType !== 'mouse') tu.hover = null; paintTU(); };
+const tuEnd = e => {
+  if (!tu) return;
+  tu.ptrs.delete(e.pointerId); if (tu.ptrs.size < 2) tu.pinch = null;
+  if (tu.pan && tu.pan.id === e.pointerId){ tu.pan = null; tuCv.style.cursor = 'grab'; }
+  if (tu.stroke && tu.stroke.id === e.pointerId) tu.stroke = null; if (e.pointerType !== 'mouse') tu.hover = null; paintTU();
+};
 tuCv.addEventListener('pointerup', tuEnd); tuCv.addEventListener('pointercancel', tuEnd);
 tuCv.addEventListener('pointerleave', () => { if (tu && !tu.stroke){ tu.hover = null; paintTU(); } });
-function closeTU(){ if (tu && tu.saving) return; tuScrim.hidden = true; tu = null; backToStory(); }
+function closeTU(){ if (tu && tu.saving) return; const fromReview = tu && tu.crop; tuScrim.hidden = true; tuSave.textContent = 'Save'; tu = null; if (fromReview) scrim.hidden = false; else backToStory(); }
+// touch up a tile on the review screen, before it goes on the wall: the same brushes, kept with the tile until Add to wall
+function openTouchUpCrop(item, cr, redraw){
+  const b = cr.box, base = crop(item.src, {x: b.x, y: b.y, w: b.w, h: b.h}, 1400), w = base.width, h = base.height, mask = mkCanvas(w, h);
+  mask.getContext('2d').drawImage(cr.edited || crop(item.src, b, 1400), 0, 0, w, h);
+  tu = {p: null, crop: {item, cr, redraw}, base, mask, comp: mkCanvas(w, h), w, h, undo: [], mode: 'erase', brush: 0.045, stroke: null, hover: null, saving: false,
+    rot: 0, fx: false, fy: false, z: 1, ox: 0, oy: 0, ptrs: new Map(), pinch: null, pan: null};
+  tu.start = mask.getContext('2d').getImageData(0, 0, w, h);
+  tuMsg.textContent = ''; tuSave.textContent = 'Done';
+  scrim.hidden = true; tuScrim.hidden = false; setTuMode('erase'); setTuBrush(0.045); sizeTU(); paintTU(); updateTU(); updateZoomTU();
+}
+function saveTouchUpCrop(){
+  const {cr, redraw} = tu.crop, comp = mkCanvas(tu.w, tu.h), plain = tu.base;
+  paintTU(); comp.getContext('2d').drawImage(tu.comp, 0, 0);
+  cr.edited = comp; cr.url = scaled(comp, 260).toDataURL('image/png');
+  cr.enc = Promise.all([encode(scaled(comp, 1400)), encode(scaled(comp, 360)), encodeJpeg(plain)]).then(([full, thumb, src]) => ({full, thumb, src}));
+  cr.enc.catch(() => { cr.enc = null; });
+  // the tile's outline follows what was painted, so Split looks at the touched-up shape
+  const bx = cr.box, mw = bx.mask ? bx.mw : Math.max(8, Math.round(tu.w/4)), mh = bx.mask ? bx.mh : Math.max(8, Math.round(tu.h/4));
+  const sm = mkCanvas(mw, mh), sg = sm.getContext('2d'); sg.drawImage(comp, 0, 0, mw, mh);
+  const a = sg.getImageData(0, 0, mw, mh).data, m = new Uint8Array(mw*mh);
+  // (with a blank edge, as the detection leaves it)
+  for (let y=1;y<mh-1;y++) for (let x=1;x<mw-1;x++) m[y*mw+x] = a[(y*mw+x)*4+3] > 128 ? 1 : 0;
+  cr.box = {...bx, mask: m, mw, mh};
+  closeTU(); redraw();
+}
 document.getElementById('tuCancel').onclick = closeTU;
 tuScrim.addEventListener('click', e => { if (e.target === tuScrim) closeTU(); });
 tuSave.onclick = async () => {
   if (!tu || tu.saving) return;
+  if (tu.crop) return saveTouchUpCrop();
   tu.saving = true; updateTU(); tuMsg.textContent = 'Saving…';
   try {
     paintTU();
@@ -2408,7 +2902,9 @@ window.addEventListener('resize', () => { if (tu) sizeTU(); });
 
 /* ---------------- recrop from the photo: drag a rough box, it finds the drawing's exact outline inside ---------------- */
 const pcScrim = document.getElementById('pcScrim'), pcCv = document.getElementById('pcCanvas'), pcCtx = pcCv.getContext('2d');
-const pcSave = document.getElementById('pcSave'), pcMsg = document.getElementById('pcMsg');
+const pcSave = document.getElementById('pcSave'), pcMsg = document.getElementById('pcMsg'), pcCopy = document.getElementById('pcCopy');
+// Save and Save as copy are ready together
+const pcReady = v => { pcSave.disabled = pcCopy.disabled = !v; };
 let pc = null;   // {p, photo, box, start, cur, result, mode, k, d, saving, token}
 // fromLast: work on the last crop (the tile's own rectangle) instead of the whole original photo
 async function openPhotoCrop(p, fromLast){
@@ -2461,7 +2957,7 @@ document.querySelectorAll('#pcMode button').forEach(b => b.onclick = () => { if 
 // the detection runs on just the box, with a margin of the paper's own colour around it, so it can tell paper from drawing
 function findInBox(){
   if (!pc) return;
-  const token = ++pc.token; pc.result = null; pcSave.disabled = true; pcMsg.textContent = 'Finding the drawing…'; paintPC();
+  const token = ++pc.token; pc.result = null; pcReady(false); pcMsg.textContent = 'Finding the drawing…'; paintPC();
   setTimeout(() => {
     if (!pc || token !== pc.token) return;
     const {photo, box} = pc, bx = Math.round(box.x), by = Math.round(box.y), bw = Math.max(4, Math.round(box.w)), bh = Math.max(4, Math.round(box.h));
@@ -2483,15 +2979,18 @@ function findInBox(){
     const w = x1 - x0 + 1, h = y1 - y0 + 1, out = mkCanvas(w, h); out.getContext('2d').drawImage(u, -x0, -y0);
     pc.result = {canvas: out, x: bx - pad + x0, y: by - pad + y0, w, h};
     pcMsg.textContent = shapes.length > 1 && pc.mode === 'all' ? `Found ${shapes.length} pieces, kept together as one tile.` : 'Found it. Drag a new box to try again.';
-    pcSave.disabled = false; paintPC();
+    pcReady(true); paintPC();
   }, 30);
 }
 function closePC(){ if (pc && pc.saving) return; pcScrim.hidden = true; pc = null; backToStory(); }
 document.getElementById('pcCancel').onclick = closePC;
 pcScrim.addEventListener('click', e => { if (e.target === pcScrim) closePC(); });
-pcSave.onclick = async () => {
+// Save replaces the tile's picture; Save as copy adds the new crop as its own tile beside it and keeps the original
+pcSave.onclick = () => savePC(false);
+pcCopy.onclick = () => savePC(true);
+async function savePC(copy){
   if (!pc || !pc.result || pc.saving) return;
-  pc.saving = true; pcSave.disabled = true; pcMsg.textContent = 'Saving…';
+  pc.saving = true; pcReady(false); pcMsg.textContent = 'Saving…';
   const {p, photo, result: r} = pc;
   try {
     const plain = mkCanvas(r.w, r.h); plain.getContext('2d').drawImage(photo, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
@@ -2502,15 +3001,22 @@ pcSave.onclick = async () => {
     const t = photo.tile || {x: 0, y: 0, w: photo.width, h: photo.height}, o = p.pbox;
     const f = {x: (r.x - t.x)/t.w, y: (r.y - t.y)/t.h, w: r.w/t.w, h: r.h/t.h};
     const pbox = !pc.fromLast ? f : o ? {x: o.x + f.x*o.w, y: o.y + f.y*o.h, w: f.w*o.w, h: f.h*o.h} : null;
+    if (copy){
+      // like any new tile, it waits in the new-tiles group beside the wall
+      await store.add({full, thumb, src, photo: null, keepPhoto: p.photoSrc && pbox ? p : null, pbox, pkey: p.pkey || null, w: r.w, h: r.h, added: Date.now(), kind: p.kind || null});
+      layout(shown()); needs = true;
+      pc.saving = false; closePC(); showToast('Saved as a new tile'); setTimeout(() => animateTo(newestView()), 60);
+      return;
+    }
     await store.setImages(p, {full, thumb, src, w: r.w, h: r.h, pbox});
     p.w = r.w; p.h = r.h; const [bw, bh] = baseSize(p.w, p.h), k = p.size || 1; p.dw = bw*k; p.dh = bh*k;
     p.x = p.px = cx - p.dw/2; p.y = p.py = cy - p.dh/2; p.imgFull = p.imgThumb = null; p.hitMap = undefined; savePlace(p);
     layout(shown()); needs = true;
     pc.saving = false; closePC(); showToast('Recropped');
   } catch {
-    pc.saving = false; pcSave.disabled = false; pcMsg.textContent = "Couldn't save. Check your connection, then tap Save again.";
+    pc.saving = false; pcReady(true); pcMsg.textContent = "Couldn't save. Check your connection, then tap Save again.";
   }
-};
+}
 window.addEventListener('resize', () => { if (pc) sizePC(); });
 
 /* ---------------- photos: every uploaded photo and the tiles cut from it ---------------- */
@@ -2656,11 +3162,12 @@ function cloudStore(db, assets){
       });
     },
     async add(o){
-      const f = await assets.upload(o.full), t = await assets.upload(o.thumb), sr = o.src ? await assets.upload(o.src) : null;
+      // the pictures upload side by side; one upload per photo, shared by every tile cut from it
+      if (o.photo && !photoUploads.has(o.photo)) photoUploads.set(o.photo, assets.upload(o.photo).catch(e => { photoUploads.delete(o.photo); throw e; }));
+      const [f, t, sr, ph] = await Promise.all([assets.upload(o.full), assets.upload(o.thumb), o.src ? assets.upload(o.src) : null, o.photo ? photoUploads.get(o.photo) : null]);
       const doc = {w:o.w, h:o.h, added:o.added, fullId:f.id, fullUrl:f.url, thumbId:t.id, thumbUrl:t.url};
       if (sr){ doc.srcId = sr.id; doc.srcUrl = sr.url; }
-      // one upload per photo, shared by every tile cut from it
-      if (o.photo){ if (!photoUploads.has(o.photo)) photoUploads.set(o.photo, assets.upload(o.photo)); const ph = await photoUploads.get(o.photo); doc.photoId = ph.id; doc.photoUrl = ph.url; doc.pbox = o.pbox; doc.pkey = o.pkey || ph.id; }
+      if (ph){ doc.photoId = ph.id; doc.photoUrl = ph.url; doc.pbox = o.pbox; doc.pkey = o.pkey || ph.id; }
       // a tile redone from an old one points at the same uploaded photo
       else if (o.keepPhoto && o.keepPhoto.photoId){ const k = o.keepPhoto; doc.photoId = k.photoId; if (!k.photoSrc.startsWith('/_blob/')) doc.photoUrl = k.photoSrc; doc.pbox = o.pbox; doc.pkey = k.pkey || k.photoId; }
       for (const k of ['px', 'py', 'size', 'rot', 'z', 'fx', 'fy', 'kind']) if (o[k] != null) doc[k] = o[k];
@@ -2668,7 +3175,7 @@ function cloudStore(db, assets){
     },
     async setImages(p, o){
       const oldFull = p.fullId, oldThumb = p.thumbId, oldSrc = o.src ? p.srcId : null;
-      const f = await assets.upload(o.full), t = await assets.upload(o.thumb), sr = o.src ? await assets.upload(o.src) : null;
+      const [f, t, sr] = await Promise.all([assets.upload(o.full), assets.upload(o.thumb), o.src ? assets.upload(o.src) : null]);
       const up = {fullId:f.id, fullUrl:f.url, thumbId:t.id, thumbUrl:t.url};
       if (sr) Object.assign(up, {srcId:sr.id, srcUrl:sr.url, w:o.w, h:o.h, pbox:o.pbox});
       await col.doc(p.id).update(up);
