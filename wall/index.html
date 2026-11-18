@@ -155,7 +155,7 @@ button:focus-visible,label:focus-within{outline:2px solid var(--crayon);outline-
 .minfo[hidden]{display:none}
 .chip{pointer-events:auto;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted);white-space:nowrap}
 
-.sample-note{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 160px);background:var(--panel);border:1px dashed rgba(255,201,60,.55);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--ink);max-width:min(92vw,420px);text-align:center;pointer-events:none}
+.sample-note{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 20px);background:var(--panel);border:1px dashed rgba(255,201,60,.55);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--ink);max-width:min(92vw,420px);text-align:center;pointer-events:none}
 .sample-note b{color:var(--crayon)}
 
 /* the ⋯ menu is a plain three-dot button at the far right */
@@ -390,6 +390,9 @@ body.selopen .dock{display:none}
 body.cbopen .dock{visibility:hidden}
 #cbBar .msg{flex:1;min-width:0;margin-right:4px}
 #cbBar .pill.go{background:var(--crayon);color:var(--crayon-ink);border-color:transparent;font-weight:700}
+/* on a phone the message gets its own line above the buttons, so it isn't squeezed into a narrow column */
+@media (max-width:600px){#cbBar{flex-wrap:wrap;justify-content:center}#cbBar .msg{flex-basis:100%;text-align:center;margin:0 0 2px}}
+#cbBar .pill.on{border-color:#ffb04a;color:#ffb04a;box-shadow:0 0 8px rgba(255,128,0,.45)}
 .sheet.tu footer .msg{font-size:12.5px}
 .help .link{font-size:12.5px;color:var(--muted);word-break:break-all;user-select:all;-webkit-user-select:all}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
@@ -627,7 +630,10 @@ function layout(list){
     }
     else flow.push(p);
   }
-  const left = placed ? placed.x1 + SIDE_GAP : FLOW_X, width = placed ? SIDE_W : FLOW_W;
+  // the example doodles on an empty wall sit in a small block that suits the screen: two across on a
+  // phone held upright, three across otherwise, so they show big enough to see
+  const ex = list === samples, portrait = vw && vh && vw / vh < 0.8;
+  const left = placed ? placed.x1 + SIDE_GAP : FLOW_X, width = placed ? SIDE_W : ex ? (portrait ? 1250 : 2000) : FLOW_W;
   let x = left, y = placed ? placed.y0 : flowY();
   let row = {y, items:[]};
   for (const p of flow){
@@ -638,6 +644,12 @@ function layout(list){
     row.items.push(p); x += p.dw + GAP;
   }
   if (row.items.length) rows.push(row);
+  if (ex && rows.length > 1){
+    // centre each row of examples under the widest one
+    const span = r => r.items.length ? r.items[r.items.length-1].x + r.items[r.items.length-1].dw - r.items[0].x : 0;
+    const wide = Math.max(...rows.map(span));
+    for (const r of rows){ const dx = (wide - span(r))/2; for (const p of r.items) p.x += dx; }
+  }
   order = list.map((p, i) => [p, i]).sort((a, b) => (a[0].z || 0) - (b[0].z || 0) || a[1] - b[1]).map(e => e[0]);
 }
 const shown = () => pieces.length ? pieces : samples;
@@ -692,7 +704,12 @@ function fitView(){
 }
 // the wall's open space runs from under the header to above the bottom row
 function barTop(){ const t = document.querySelector('.top'); return t ? t.getBoundingClientRect().bottom : 0; }
-function barBottom(){ const d = document.querySelector('.dock'), r = d && d.getBoundingClientRect(); return r && r.height ? r.top : vh; }
+// the example-drawings note along the bottom counts too, so the doodles sit above it
+function barBottom(){
+  let b = vh;
+  for (const el of document.querySelectorAll('.dock, #sampleNote:not([hidden])')){ const r = el.getBoundingClientRect(); if (r.height) b = Math.min(b, r.top); }
+  return b;
+}
 // the drawings themselves filling the screen, clear of the buttons along the top and bottom
 function tilesView(){
   const list = shown().filter(p => p.x != null); if (!list.length) return fitView();
@@ -703,6 +720,8 @@ function tilesView(){
   return clampView({s, tx: vw/2 - (x0 + w/2)*s, ty: top + (vh - top - bottom)/2 - (y0 + h/2)*s});
 }
 function newestView(){
+  // the example doodles on an empty wall are shown all together, centred under the header
+  if (!pieces.length) return tilesView();
   const list = shown(); if (!list.length) return fitView();
   const p = list[list.length-1];
   const s = Math.min(S_MAX, Math.max(sMin(), Math.min((vw-48)/(p.dw*2.2), (vh-220)/(ROW_H*1.6))));
@@ -770,6 +789,13 @@ function draw(){
     }
     ctx.restore();
   }
+  // the box being drawn in Select multiple
+  if (boxSel){
+    const x = Math.min(boxSel.x0, boxSel.x1), y = Math.min(boxSel.y0, boxSel.y1), w = Math.abs(boxSel.x1 - boxSel.x0), h = Math.abs(boxSel.y1 - boxSel.y0);
+    ctx.save(); ctx.fillStyle = 'rgba(255,160,40,0.12)'; ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = '#ffb04a'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]); ctx.shadowColor = 'rgba(255,128,0,0.9)'; ctx.shadowBlur = 6;
+    ctx.strokeRect(x + .5, y + .5, w, h); ctx.restore();
+  }
 }
 let vel = null;
 function frame(now){
@@ -795,6 +821,7 @@ function frame(now){
 const pts = new Map();
 let drag = false, pinch = null, tapStart = null, lastMove = null, lastTap = 0;
 let tileDrag = null;    // {p, ox, oy, moved, sx, sy}: one finger pressed on a tile moves that tile
+let boxSel = null;      // {x0, y0, x1, y1} on screen: the box being drawn to pick tiles in Select multiple
 let twist = null;       // a second finger on a held tile turns it (and pinching resizes it)
 const fingers = () => { const [a, b] = [...pts.values()]; return {ang: Math.atan2(b.y-a.y, b.x-a.x), d: Math.max(1, Math.hypot(b.x-a.x, b.y-a.y)), mx: (a.x+b.x)/2, my: (a.y+b.y)/2}; };
 function startTwist(p){
@@ -899,7 +926,10 @@ cv.addEventListener('pointerdown', e => {
     lastMove = {x:e.clientX, y:e.clientY, t:performance.now()};
     const p = canEdit() && !cloud ? hit(e.clientX, e.clientY) : null;
     // a tile only moves once it's selected (or picked in Select multiple); otherwise one finger moves the wall
-    if (p && !p.canvas && (p === selected || (multi && multi.list.includes(p)))){
+    if (multi && multi.box && !(p && multi.list.includes(p))){
+      // Select multiple with Box on: one finger draws a box, and every tile it touches is picked
+      boxSel = {x0: e.clientX, y0: e.clientY, x1: e.clientX, y1: e.clientY};
+    } else if (p && !p.canvas && (p === selected || (multi && multi.list.includes(p)))){
       beginEdit(); tileDrag = {p, ox:(e.clientX - cam.tx)/cam.s - p.x, oy:(e.clientY - cam.ty)/cam.s - p.y, moved:false, sx:e.clientX, sy:e.clientY};
       // with several tiles selected, dragging one of them moves them all, keeping their spacing
       if (multi && multi.list.includes(p)) tileDrag.group = multi.list.map(q => ({q, x: q.x, y: q.y}));
@@ -910,7 +940,7 @@ cv.addEventListener('pointerdown', e => {
   } else if (pts.size === 2 && !twist && !tileDrag && canEdit() && selected && hit(e.clientX, e.clientY) === selected){
     drag = false; vel = null; tapStart = null; startTwist(selected);
   } else if (pts.size === 2 && !twist){
-    endTileDrag(); drag = true;
+    endTileDrag(); drag = true; if (boxSel){ boxSel = null; needs = true; }
     const [a,b] = [...pts.values()];
     pinch = {d: Math.hypot(a.x-b.x, a.y-b.y), s: cam.s, mx:(a.x+b.x)/2, my:(a.y+b.y)/2, tx:cam.tx, ty:cam.ty};
     tapStart = null;
@@ -921,6 +951,7 @@ cv.addEventListener('pointermove', e => {
   const prev = pts.get(e.pointerId);
   pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
   if (twist){ if (pts.size >= 2) moveTwist(); return; }
+  if (boxSel && pts.size === 1){ boxSel.x1 = e.clientX; boxSel.y1 = e.clientY; needs = true; return; }
   if (tileDrag && pts.size === 1){
     tileDrag.sx = e.clientX; tileDrag.sy = e.clientY;
     if (!tileDrag.moved && tapStart && Math.hypot(e.clientX-tapStart.x, e.clientY-tapStart.y) >= 8){
@@ -958,6 +989,10 @@ function endPointer(e){
   if (pts.size === 1){ const [p] = pts.values(); lastMove = {x:p.x, y:p.y, t:performance.now()}; vel = null; }
   if (pts.size === 0){
     drag = false; cv.classList.remove('dragging'); endTileDrag();
+    if (boxSel){
+      const b = boxSel; boxSel = null; needs = true;
+      if (Math.abs(b.x1 - b.x0) >= 8 || Math.abs(b.y1 - b.y0) >= 8){ tapStart = null; pickInBox(b); }
+    }
     if (lastMove && performance.now() - lastMove.t > 80) vel = null;
     if (tapStart && Math.hypot(e.clientX-tapStart.x, e.clientY-tapStart.y) < 8 && performance.now()-tapStart.t < 350){
       vel = null;
@@ -2504,7 +2539,7 @@ function stepCloud(now){
       if (Math.abs(q.w) < 0.4) q.w = (q.w < 0 ? -1 : 1)*0.6; if (Math.abs(q.w) > 2.6) q.w = Math.sign(q.w)*2.6; };
     if (q.x - rad < b.x0){ q.x = b.x0 + rad; q.vx = Math.abs(q.vx); hit(0); } else if (q.x + rad > b.x1){ q.x = b.x1 - rad; q.vx = -Math.abs(q.vx); hit(0); }
     if (q.y - rad < b.y0){ q.y = b.y0 + rad; q.vy = Math.abs(q.vy); hit(1); } else if (q.y + rad > b.y1){ q.y = b.y1 - rad; q.vy = -Math.abs(q.vy); hit(1); }
-    q.r += q.w*dt*ease;
+    q.r += q.w*dt*ease*0.55;   // spin at a bit over half the old speed
     // squash springs back with a wobble; in between, a soft bouncy breathing
     q.sq = Math.max(0, q.sq - dt*3.2);
     const k = q.sq > 0 ? Math.sin((1 - q.sq)*Math.PI*2.5)*q.sq*0.28 : 0, breathe = 1 + Math.sin(age*q.bob*2 + q.ph)*0.05*ease;
@@ -2525,14 +2560,27 @@ function renderMulti(){
   multiBtn.classList.toggle('on', !!multi); multiBtn.setAttribute('aria-pressed', String(!!multi));
   if (!multi){ if (!combo && !cbUndo) hideBar(); return; }
   const n = multi.list.length;
-  cbButtons(n ? `${n} picked. Drag one to move them all` : 'Tap tiles to select them',
-    [['Smaller', '', () => resizeMulti(0.85), !n], ['Bigger', '', () => resizeMulti(1.18), !n], ['Done', 'go', endMulti]]);
+  cbButtons(multi.box ? (n ? `${n} picked. Draw another box to add more` : 'Draw a box around the tiles you want')
+      : n ? `${n} picked. Drag one to move them all` : 'Tap tiles to select them',
+    [[multi.box ? 'Box: on' : 'Box', multi.box ? 'on' : '', () => { multi.box = !multi.box; renderMulti(); }],
+     ['Smaller', '', () => resizeMulti(0.85), !n], ['Bigger', '', () => resizeMulti(1.18), !n], ['Done', 'go', endMulti]]);
 }
 function startMulti(){
   if (combo) endCombo(); if (cbUndo) finishCombine();
-  select(null); multi = {list: []}; renderMulti(); needs = true;
+  select(null); multi = {list: [], box: false}; renderMulti(); needs = true;
 }
-function endMulti(){ multi = null; renderMulti(); needs = true; }
+function endMulti(){ multi = null; boxSel = null; renderMulti(); needs = true; }
+// every tile the box touches is added to the picked tiles
+function pickInBox(b){
+  if (!multi) return;
+  const toW = (sx, sy) => [(sx - cam.tx)/cam.s, (sy - cam.ty)/cam.s];
+  const [x0, y0] = toW(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1)), [x1, y1] = toW(Math.max(b.x0, b.x1), Math.max(b.y0, b.y1));
+  for (const p of shown()){
+    if (p.canvas || !shows(p) || multi.list.includes(p)) continue;
+    if (p.x < x1 && p.x + p.dw > x0 && p.y < y1 && p.y + p.dh > y0) multi.list.push(p);
+  }
+  renderMulti();
+}
 multiBtn.onclick = () => multi ? endMulti() : startMulti();
 function multiTap(q){
   if (!multi || !q || q.canvas) return;
@@ -3653,10 +3701,13 @@ window.__drawingWallBack = () => {
 
 /* ---------------- boot ---------------- */
 samples = makeSamples();
+document.getElementById('sampleNote').hidden = false;
 resize(); layout(shown());
 Object.assign(cam, newestView()); clampCam();
 requestAnimationFrame(frame);
-new ResizeObserver(() => { resize(); layout(shown()); clampCam(); }).observe(cv);
+// the app's screen can settle to its real size after the first frame (and phones turn), so the example
+// doodles are centred again whenever it changes
+new ResizeObserver(() => { resize(); layout(shown()); if (!pieces.length && !anim) Object.assign(cam, tilesView()); clampCam(); }).observe(cv);
 refreshCount();
 document.getElementById('sampleNote').hidden = false;
 
